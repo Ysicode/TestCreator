@@ -100,8 +100,21 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "TestCreator:build:production",
+            "firebaseProject": "testcreator-e5281",
+            "firebaseHostingSite": "testcreator-e5281"
+          }
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "f86d4775-ad2d-44ee-bc50-806aa8958777"
   }
 }

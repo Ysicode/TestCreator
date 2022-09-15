@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "testcreator-e5281": {
+      "hosting": {
+        "TestCreator": [
+          "testcreator-e5281"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "testcreator-e5281"
+  }
+}
