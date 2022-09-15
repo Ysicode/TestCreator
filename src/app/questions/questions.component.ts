@@ -13,6 +13,7 @@ export class QuestionsComponent implements OnInit {
   dataFromFirestore$: Observable<any>;
   loadedData = [];
   editMode = false;
+  currentId: string;
   @ViewChild('questionForm') form: NgForm;
 
   constructor(private firestore: Firestore) { }
@@ -28,18 +29,32 @@ export class QuestionsComponent implements OnInit {
       this.loadedData = data;
       console.log('Das sind die Daten vom Firestore', this.loadedData)
     })
+   
   }
 
   addData(question: any) {
-    console.log(question.keywords.split(','))
-    const coll: any = collection(this.firestore, '/users/JonasWeiss/fragen');
-    setDoc(doc(coll), {
-      fach: question.fach,
-      frage: { frage: question.frage, antwort: question.antwort },
-      klasse: question.klasse,
-      punktzahl: Number(question.punktzahl),
-      keywords: question.keywords.split(',')
-    })
+    if(!this.editMode) {
+      const coll: any = collection(this.firestore, '/users/JonasWeiss/fragen');
+      setDoc(doc(coll), {
+        fach: question.fach,
+        frage: { frage: question.frage, antwort: question.antwort },
+        klasse: question.klasse,
+        punktzahl: Number(question.punktzahl),
+        keywords: question.keywords.split(',')
+      })
+      this.editMode = false;
+    } else {
+      const coll: any = doc(this.firestore, '/users/JonasWeiss/fragen/' + this.currentId);
+      updateDoc(coll, {
+        fach: question.fach,
+        frage: { frage: question.frage, antwort: question.antwort },
+        klasse: question.klasse,
+        punktzahl: Number(question.punktzahl),
+        keywords: question.keywords.split(',')
+      })
+    }
+    this.clearForm();
+   
   }
 
   deletedata(id: string) {
@@ -48,13 +63,30 @@ export class QuestionsComponent implements OnInit {
   }
 
   updateData(id: string) {
-    const coll: any = doc(this.firestore, '/users/JonasWeiss/fragen/' + id);
-    updateDoc(coll, {
-      fach: 'Fach gändert',
-      frage: { frage: 'Frage geändert', antwort: 'Antwort geändert' },
-      klasse: 'Klasse geändert',
-      punktzahl: 1,
-      keywords: ['keyword1', 'keyword2', 'keyword3']
+    this.currentId = id;
+    this.editMode = true;
+    let currentQuestion = this.loadedData.find((question) => {return question.id ===id});
+    console.log(currentQuestion);
+    
+    this.form.setValue({
+      fach: currentQuestion.fach,
+      frage: currentQuestion.frage.frage, 
+      antwort: currentQuestion.frage.antwort,
+      klasse: currentQuestion.klasse,
+      punktzahl: Number(currentQuestion.punktzahl),
+      keywords: currentQuestion.keywords.join(', ')
+    })
+    
+  }
+
+  clearForm() {
+    this.form.setValue({
+      fach: '',
+      frage: '', 
+      antwort: '',
+      klasse: '',
+      punktzahl: '',
+      keywords: '',
     })
   }
 
