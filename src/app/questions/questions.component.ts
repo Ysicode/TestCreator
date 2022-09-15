@@ -11,7 +11,10 @@ import { Observable } from 'rxjs';
 })
 export class QuestionsComponent implements OnInit {
   dataFromFirestore$: Observable<any>;
-  loadedData = [];
+  loadedQuestions = [];
+  loadedUserdata = [];
+  selectedButton: number;
+  currentSubjectChoice: string;
   editMode = false;
   currentId: string;
   @ViewChild('questionForm') form: NgForm;
@@ -22,39 +25,17 @@ export class QuestionsComponent implements OnInit {
     this.getData();
   }
 
+  choiceSubject(subjectChoice: string, index: number) {
+    this.currentSubjectChoice = subjectChoice;
+    this.selectedButton = index;
+  }
+
   getData() {
     const coll: any = collection(this.firestore, '/users/JonasWeiss/fragen');
     this.dataFromFirestore$ = collectionData(coll, { idField: 'id' })
     this.dataFromFirestore$.subscribe((data) => {
-      this.loadedData = data;
-      console.log('Das sind die Daten vom Firestore', this.loadedData)
+      this.loadedQuestions = data;
     })
-   
-  }
-
-  addData(question: any) {
-    if(!this.editMode) {
-      const coll: any = collection(this.firestore, '/users/JonasWeiss/fragen');
-      setDoc(doc(coll), {
-        fach: question.fach,
-        frage: { frage: question.frage, antwort: question.antwort },
-        klasse: question.klasse,
-        punktzahl: Number(question.punktzahl),
-        keywords: question.keywords.split(',')
-      })
-      this.editMode = false;
-    } else {
-      const coll: any = doc(this.firestore, '/users/JonasWeiss/fragen/' + this.currentId);
-      updateDoc(coll, {
-        fach: question.fach,
-        frage: { frage: question.frage, antwort: question.antwort },
-        klasse: question.klasse,
-        punktzahl: Number(question.punktzahl),
-        keywords: question.keywords.split(',')
-      })
-    }
-    this.clearForm();
-   
   }
 
   deletedata(id: string) {
@@ -62,10 +43,42 @@ export class QuestionsComponent implements OnInit {
     deleteDoc(coll);
   }
 
+  addData(question: any) {
+    if(question.fach){
+      this.currentSubjectChoice = question.fach;
+    }
+   
+    if(!this.editMode) {
+      const coll: any = collection(this.firestore, '/users/JonasWeiss/fragen');
+      setDoc(doc(coll), {
+        fach: this.currentSubjectChoice,
+        frage: { frage: question.frage, antwort: question.antwort },
+        klasse: question.klasse,
+        punktzahl: Number(question.punktzahl),
+        keywords: question.keywords.split(',')
+      })
+      
+    } else {
+      const coll: any = doc(this.firestore, '/users/JonasWeiss/fragen/' + this.currentId);
+      updateDoc(coll, {
+        fach: this.currentSubjectChoice,
+        frage: { frage: question.frage, antwort: question.antwort },
+        klasse: question.klasse,
+        punktzahl: Number(question.punktzahl),
+        keywords: question.keywords.split(',')
+      })
+      this.editMode = false;
+    }
+    this.clearForm();
+   
+  }
+
+  
+
   updateData(id: string) {
     this.currentId = id;
     this.editMode = true;
-    let currentQuestion = this.loadedData.find((question) => {return question.id ===id});
+    let currentQuestion = this.loadedQuestions.find((question) => {return question.id ===id});
     console.log(currentQuestion);
     
     this.form.setValue({
@@ -88,6 +101,7 @@ export class QuestionsComponent implements OnInit {
       punktzahl: '',
       keywords: '',
     })
+    this.selectedButton = -1;
   }
 
   logID(id: string) {

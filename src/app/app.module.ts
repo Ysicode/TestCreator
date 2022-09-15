@@ -12,11 +12,13 @@ import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 import { provideStorage,getStorage } from '@angular/fire/storage';
 import { QuestionsComponent } from './questions/questions.component';
 import { FormsModule } from '@angular/forms';
+import { EditComponent } from './add/edit/edit.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    QuestionsComponent
+    QuestionsComponent,
+    EditComponent
   ],
   imports: [
     BrowserModule,

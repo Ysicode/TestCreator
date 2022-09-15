@@ -1,18 +1,22 @@
 <h1>TestCreator</h1>
+<div class="d_flex" *ngFor="let button of loadedQuestions; let i = index">
+    <button [class.selectedButton]="i == selectedButton" (click)="choiceSubject(button.fach, i)">{{ button.fach}}</button>
+
+    </div>
 <form #questionForm="ngForm" (ngSubmit)="addData(questionForm.value)">
     <div class="d_flex_column">
-        <input type="text" placeholder="Fach" name="fach" ngModel>
+       
+        <input class="lesson_button" type="text" value="" placeholder="Fach anlegen" name="fach" ngModel>
         <input type="text" placeholder="Klasse" name="klasse" ngModel>
         <textarea name="" id="" cols="30" rows="10" placeholder="Frage" name="frage" ngModel></textarea>
         <textarea name="" id="" cols="30" rows="10" placeholder="Antwort" name="antwort" ngModel></textarea>
         <input type="text" placeholder="Punktzahl" name="punktzahl" ngModel>
         <input type="text" placeholder="keywords" name="keywords" ngModel>
         <button type="submit" >{{editMode ? 'Änderungen Speichern' : 'Frage Speichern'}}</button>
-
     </div>
    
 </form>
-<div class="d_flex_column" *ngFor="let data of loadedData">
+<div class="d_flex_column" *ngFor="let data of loadedQuestions">
     <div class="question">
         <div>
             Fach: {{data.fach}}
