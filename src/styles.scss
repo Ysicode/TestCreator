@@ -1,5 +1,12 @@
 body {
     margin: 0;
+    background: #F2F3F4;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.main_wrapper {
+    max-width: 1700px;
+    width: 100%;
 }
 
 .d_flex_column {
@@ -13,5 +20,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+h2 {
+    font-size: 18px;
 }
 

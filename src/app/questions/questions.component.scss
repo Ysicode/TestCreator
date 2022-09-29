@@ -5,11 +5,58 @@
     padding: 20px;
 }
 
+.section {
+    margin-top: 50px;
+    padding-bottom: 50px;
+    border-bottom: 2px dotted black;
+}
+
 .lesson_button {
     width: 100px;
     height: 20px;
 }
+.subject_btn_wrapper {
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.addNew_btn {
+    background-color: #d4cec6 !important;
+}
+
+.addNew_container {
+    margin-top: 30px;
+}
+
+.subject_btn {
+    background-color: #f2d8b7;
+    color: #424949;
+    font-size: 17px;
+    border-radius: 7px;
+    padding: 10px;
+    margin: 15px;
+    border: none;
+    &:hover {
+        cursor: pointer;
+        opacity: 0.9;
+    }
+}
+
+.cancel_btn {
+    background-color: #f2f3f4 !important;
+}
 
 .selectedButton {
-    border-color: red;
+    border: 2px solid #2c3e50;
+}
+
+.inputfield {
+    outline: none;
+    border: none;
+    text-align: center;
+    width: 90%;
+    font-size: 20px;
+    border-bottom: 2px dotted black;
+    background: #f2f3f4;
+    padding: 10px;
 }
