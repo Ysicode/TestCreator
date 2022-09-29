@@ -48,34 +48,72 @@ export class QuestionsComponent implements OnInit {
     } else {
       this.newClass = true;
     }
-   
   }
 
   /**
-   * This function is used to set
+   * This function is used to get the value of the new subject input field and push it to the array
    * @param value : string of inputfield
    */
   addNewSubject(value: string) {
-    this.loadedUserdata[0]['subjects'].push(value);
-    document.getElementById('subjectInput').innerHTML = '';
-    this.newSubject = false;  
-
-    const coll: any = doc(this.firestore, '/users/JonasWeiss/subjects/' + this.loadedUserdata[0]['id']);
-    updateDoc(coll, {
-      subjects: this.loadedUserdata[0]['subjects']
+    if (!this.loadedUserdata[0]['subjects'].includes(value)) {
+      this.loadedUserdata[0]['subjects'].push(value);
     }
-    )
+    document.getElementById('subjectInput').innerHTML = '';
+    this.newSubject = false;
+    this.updateUserSubjectsAndClasses();
   }
 
+   /**
+   * This function is used to get the value of the new class input field and push it to the array
+   * @param value : string of inputfield
+   */
+  addNewClass(value: string) {
+    if (!this.loadedUserdata[0]['classes'].includes(value)) {
+      this.loadedUserdata[0]['classes'].push(value);
+    }
+    document.getElementById('classInput').innerHTML = '';
+    this.newClass = false;
+    this.updateUserSubjectsAndClasses();
+  }
+
+  /**
+   * This function is used to update firestore with the new data from an input field
+   */
+  updateUserSubjectsAndClasses() {
+    const coll: any = doc(this.firestore, '/users/JonasWeiss/subjects/' + this.loadedUserdata[0]['id']);
+    updateDoc(coll, {
+      classes: this.loadedUserdata[0]['classes'],
+      subjects: this.loadedUserdata[0]['subjects']
+    })
+  }
+
+  /**
+   * 
+   * @param subjectChoice This function is used to activate the clicked button
+   * @param index : number of the clicked button
+   */
   choiceSubject(subjectChoice: any, index: number) {
     this.currentSubjectChoice = subjectChoice;
     this.selectedSubjectButton = index;
   }
 
+  /**
+   * 
+   * @param subjectChoice This function is used to activate the clicked button
+   * @param index : number of the clicked button
+   */
   choiceClass(classChoice: any, index: number) {
     this.currentClassChoice = classChoice;
     this.selectedClassButton = index;
   }
+
+  setPointsOfRange(value: any) {
+console.log(value);
+
+  }
+
+
+
 
   getData() {
     //gets all questions
@@ -107,7 +145,7 @@ export class QuestionsComponent implements OnInit {
       setDoc(doc(coll), {
         fach: this.currentSubjectChoice,
         frage: { frage: question.frage, antwort: question.antwort },
-        klasse: question.klasse,
+        klasse: this.currentClassChoice,
         punktzahl: Number(question.punktzahl),
         keywords: question.keywords.split(',')
       })
@@ -117,14 +155,13 @@ export class QuestionsComponent implements OnInit {
       updateDoc(coll, {
         fach: this.currentSubjectChoice,
         frage: { frage: question.frage, antwort: question.antwort },
-        klasse: question.klasse,
+        klasse: this.currentClassChoice,
         punktzahl: Number(question.punktzahl),
         keywords: question.keywords.split(',')
       })
       this.editMode = false;
     }
     this.clearForm();
-
   }
 
 
@@ -137,7 +174,6 @@ export class QuestionsComponent implements OnInit {
     this.form.setValue({
       frage: currentQuestion.frage.frage,
       antwort: currentQuestion.frage.antwort,
-      klasse: currentQuestion.klasse,
       punktzahl: Number(currentQuestion.punktzahl),
       keywords: currentQuestion.keywords.join(', ')
     })
@@ -148,7 +184,6 @@ export class QuestionsComponent implements OnInit {
     this.form.setValue({
       frage: '',
       antwort: '',
-      klasse: '',
       punktzahl: '',
       keywords: '',
     })

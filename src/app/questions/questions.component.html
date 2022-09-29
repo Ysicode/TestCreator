@@ -28,7 +28,7 @@
 
     <div class="d_flex subject_wrapper">
         <div class="d_flex_column section">
-            <h2>Für welche Klasse soll die Frage angelegt werden?</h2>
+            <h2>Für welche Klasse soll die Frage angelegt werden? </h2>
             <div class="subject_btn_wrapper d_flex" *ngIf="loaded">    
                 <p *ngIf="loadedUserdata[0].classes == 0">{{ 'Du hast noch kein Fach angelegt!' }}</p>
                 <div *ngFor="let button of loadedUserdata[0].classes ; let i = index">
@@ -41,35 +41,60 @@
              </button>
              <div *ngIf="newClass" class="d_flex">
                 <form class="d_flex_column" action="" >
-                    <input class="inputfield" id="subjectInput" #classInput type="text" value="" placeholder="Fach name">
+                    <input class="inputfield" id="classInput" #classInput type="text" value="" placeholder="Fach name">
                     <div class="d_flex">
                         <button class="subject_btn cancel_btn" (click)="newClass = false">Abbrechen</button>
-                        <button class="subject_btn addNew_btn" (click)="addNewSubject(classInput.value)">Klasse anlegen</button>            
+                        <button class="subject_btn addNew_btn" (click)="addNewClass(classInput.value)">Klasse anlegen</button>            
                     </div>
                 </form>
             </div>
            </div>   
         </div>
     </div>
+
+    <form class="questionForm" #questionForm="ngForm" (ngSubmit)="addData(questionForm.value)">
+        <div class="d_flex_column">
+        
+            <textarea name="" id="" cols="30" rows="10" placeholder="Frage" name="frage" ngModel></textarea>
+            <textarea name="" id="" cols="30" rows="10" placeholder="Antwort" name="antwort" ngModel></textarea>
+            
+            <div class="d_flex_column section">
+                <h2>Max. Punktzahl für diese Frage?</h2>
+                <div class="subject_btn_wrapper d_flex_column" *ngIf="loaded">  
+                    <div class="points_wrapper d_flex">
+                        <p class="points_number">{{ pointsRange.value }}</p>
+                    </div>  
+                    <input class="rangebar" #pointsRange (change)="setPointsOfRange(pointsRange.value)" type="range" min="1" max="25" step="1"  value="10" placeholder="Punktzahl (nur Zahlen)" name="punktzahl" ngModel>    
+                </div>
+            </div>
+    
+            <div class="d_flex_column section">
+                <h2 class="keyword_headline">Keywords für die spätere Suche nach Aufgaben!</h2>
+                <p class="keywords_subline"><b class="important">Wichtig! </b>Keywords bitte durch Komma trennen</p>
+                <div class="subject_btn_wrapper d_flex_column" *ngIf="loaded">  
+                    <textarea class="keyword_textarea"  placeholder="z.B: Thema, Bereich, Anwendung..." name="keywords" ngModel></textarea>
+                </div>
+            </div>
+    
+    
+    
+           
+           
+            <div class="d_flex save_btn_wrapper">
+                <button class="subject_btn cancel_btn" (click)="newClass = false">Abbrechen</button>
+                <button class="subject_btn addNew_btn" type="submit" >{{editMode ? 'Änderungen Speichern' : 'Frage Speichern'}}</button>
+            </div>
+           
+        </div>
+       
+    </form>
     
 </div>
 
 
 
 
-<form #questionForm="ngForm" (ngSubmit)="addData(questionForm.value)">
-    <div class="d_flex_column">
-       
-        <input type="text" placeholder="Klasse" name="klasse" ngModel>
-        <textarea name="" id="" cols="30" rows="10" placeholder="Frage" name="frage" ngModel></textarea>
-        <textarea name="" id="" cols="30" rows="10" placeholder="Antwort" name="antwort" ngModel></textarea>
-        
-        <input type="text" placeholder="Punktzahl" name="punktzahl" ngModel>
-        <input type="text" placeholder="keywords" name="keywords" ngModel>
-        <button type="submit" >{{editMode ? 'Änderungen Speichern' : 'Frage Speichern'}}</button>
-    </div>
-   
-</form>
+
 
 
 
@@ -110,5 +135,3 @@
     </div>
 
 </div>
-<button type="button" (click)="fileInput.click()">Datei auswählen</button>
-<input style="display: none" type="file" (change)="chooseFile($event)" #fileInput>
