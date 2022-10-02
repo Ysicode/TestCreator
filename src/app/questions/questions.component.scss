@@ -164,3 +164,18 @@ style for rendered subjects
     margin-top: 0px;
     margin-bottom: 0px;
 }
+
+.tableItem {
+    border: 1px solid black;
+    height: 25px;
+    padding: 5px;
+    margin: 2px;
+}
+
+.tableRow {
+    width: 100%;
+}
+
+.bold {
+    font-weight: bold;
+}

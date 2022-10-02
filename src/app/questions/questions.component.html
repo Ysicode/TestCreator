@@ -146,17 +146,17 @@
                     <li [innerHTML]="items"></li>
                 </ul>
             </div>
-            <div  *ngIf="question['data']['table']">
-                <div *ngFor="let table of question['data']['table'][1] let i = index">
-                    <div *ngFor="let contentRows of table[i] let j = index">
-                        
-                        <div [innerHTML]="contentRows[j]"></div>
+            <div *ngIf="question['data']['table']">
+                <div [class.bold]="i == 0 && question['data']['table']['withHeadings'] == true " class="d_flex_start tableRow" *ngFor="let position of question['data']['table']['length'] let i = index">
+                    <div [ngStyle]="{'width.%': 100 / question['data']['table'][position].length }"  *ngFor="let tableItem of question['data']['table'][position]">
+                        <div  class="tableItem d_flex_start" [innerHTML]="tableItem">
+
+                        </div>
+                      
                     </div>
-    
-    
                 </div>
             </div>
-           
+
         </div>
 
         <div>

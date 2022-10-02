@@ -51,7 +51,7 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     this.initializeEditor();
   }
 
- 
+
 
   private initializeEditor(): void {
     this.editor = new EditorJS({
@@ -65,7 +65,7 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
           config: {
             defaultStyle: 'unordered'
           }
-        },  
+        },
         checklist: {
           class: this.Checklist,
           inlineToolbar: true,
@@ -78,7 +78,7 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
             }
           }
         },
-        
+
       }
     })
   }
@@ -90,19 +90,16 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
         if (data.blocks[i].data.content) {
           this.currentQuestion['blocks'][i]['data']['table'] = {};
           for (let j = 0; j < data.blocks[i].data.content.length; j++) {
-            console.log(data.blocks[i].data.content[j]);
-            this.currentQuestion['blocks'][i]['data']['table'][`${j}`] = data.blocks[i].data.content[j];  
+            this.currentQuestion['blocks'][i]['data']['table'][`${j}`] = data.blocks[i].data.content[j];
           }
+          this.currentQuestion['blocks'][i]['data']['table']['length'] = Object.keys(this.currentQuestion['blocks'][i]['data']['table']);
         }
         this.currentQuestion['blocks'][i]['data']['content'] = 'deleted';
-        
       }
       setTimeout(() => {
-       console.log(  this.currentQuestion);
-       
-      }, 1000) 
+        console.log(this.currentQuestion);
+      }, 1000)
     });
- 
   }
 
   /**
