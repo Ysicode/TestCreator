@@ -1,7 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { collection, collectionData, doc, Firestore } from '@angular/fire/firestore';
 import { NgForm } from '@angular/forms';
-import { collectionGroup, deleteDoc, setDoc, updateDoc } from '@firebase/firestore';
+import EditorJS from '@editorjs/editorjs';
+import List from '@editorjs/list';
+import Table from '@editorjs/table';
+import ImageTool from '@editorjs/image';
+import { deleteDoc, setDoc, updateDoc } from '@firebase/firestore';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -9,11 +13,16 @@ import { Observable } from 'rxjs';
   templateUrl: './questions.component.html',
   styleUrls: ['./questions.component.scss']
 })
-export class QuestionsComponent implements OnInit {
+export class QuestionsComponent implements OnInit, AfterViewInit {
+  Checklist = require('@editorjs/checklist');
+
   dataFromFirestore$: Observable<any>;
   loadedQuestions = [];
   loadedUserdata = [];
   loaded = false;
+
+  currentQuestion: any;
+  currentTable = {};
 
   selectedSubjectButton: number;
   selectedClassButton: number;
@@ -26,7 +35,11 @@ export class QuestionsComponent implements OnInit {
   currentId: string;
   @ViewChild('questionForm') form: NgForm;
 
-  public file: File = null;
+  @ViewChild('editor', { read: ElementRef, static: true })
+  editorElement: ElementRef;
+  private editor: EditorJS;
+
+
 
   constructor(private firestore: Firestore) { }
 
@@ -34,9 +47,62 @@ export class QuestionsComponent implements OnInit {
     this.getData();
   }
 
-  chooseFile(event: any) {
-    console.log(this.file.name);
-    this.file = <File>event.target.files[0];
+  ngAfterViewInit(): void {
+    this.initializeEditor();
+  }
+
+ 
+
+  private initializeEditor(): void {
+    this.editor = new EditorJS({
+      minHeight: 100,
+      holder: this.editorElement.nativeElement,
+      tools: {
+        table: Table,
+        list: {
+          class: List,
+          inlineToolbar: true,
+          config: {
+            defaultStyle: 'unordered'
+          }
+        },  
+        checklist: {
+          class: this.Checklist,
+          inlineToolbar: true,
+        },
+        image: {
+          class: ImageTool,
+          config: {
+            endpoints: {
+              byUrl: 'gs://testcreator-e5281.appspot.com/'
+            }
+          }
+        },
+        
+      }
+    })
+  }
+
+  showEditorData(): void {
+    this.editor.save().then(data => {
+      this.currentQuestion = data;
+      for (let i = 0; i < data.blocks.length; i++) { //If a table was in use of the editor nested array cannot saved in firestore
+        if (data.blocks[i].data.content) {
+          this.currentQuestion['blocks'][i]['data']['table'] = {};
+          for (let j = 0; j < data.blocks[i].data.content.length; j++) {
+            console.log(data.blocks[i].data.content[j]);
+            this.currentQuestion['blocks'][i]['data']['table'][`${j}`] = data.blocks[i].data.content[j];  
+          }
+        }
+        this.currentQuestion['blocks'][i]['data']['content'] = 'deleted';
+        
+      }
+      setTimeout(() => {
+       console.log(  this.currentQuestion);
+       
+      }, 1000) 
+    });
+ 
   }
 
   /**
@@ -63,10 +129,10 @@ export class QuestionsComponent implements OnInit {
     this.updateUserSubjectsAndClasses();
   }
 
-   /**
-   * This function is used to get the value of the new class input field and push it to the array
-   * @param value : string of inputfield
-   */
+  /**
+  * This function is used to get the value of the new class input field and push it to the array
+  * @param value : string of inputfield
+  */
   addNewClass(value: string) {
     if (!this.loadedUserdata[0]['classes'].includes(value)) {
       this.loadedUserdata[0]['classes'].push(value);
@@ -107,10 +173,6 @@ export class QuestionsComponent implements OnInit {
     this.selectedClassButton = index;
   }
 
-  setPointsOfRange(value: any) {
-console.log(value);
-
-  }
 
 
 
@@ -121,6 +183,8 @@ console.log(value);
     this.dataFromFirestore$ = collectionData(coll, { idField: 'id' })
     this.dataFromFirestore$.subscribe((data) => {
       this.loadedQuestions = data;
+      console.log(data);
+
     })
 
     //gets UserData like classes and subjects and email adress and username
@@ -144,7 +208,7 @@ console.log(value);
       const coll: any = collection(this.firestore, '/users/JonasWeiss/fragen');
       setDoc(doc(coll), {
         fach: this.currentSubjectChoice,
-        frage: { frage: question.frage, antwort: question.antwort },
+        frage: this.currentQuestion,
         klasse: this.currentClassChoice,
         punktzahl: Number(question.punktzahl),
         keywords: question.keywords.split(',')
@@ -182,7 +246,6 @@ console.log(value);
 
   clearForm() {
     this.form.setValue({
-      frage: '',
       antwort: '',
       punktzahl: '',
       keywords: '',

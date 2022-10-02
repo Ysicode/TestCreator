@@ -8,7 +8,6 @@
 .section {
     margin-top: 75px;
     padding-bottom: 75px;
-    border-bottom: 2px dotted black;
 }
 
 .lesson_button {
@@ -61,6 +60,13 @@
     padding: 10px;
 }
 
+.editor_wrapper {
+    width: 80vw;
+    max-width: 1500px;
+
+    border: 1px dotted grey;
+}
+
 .points_wrapper {
     width: 30px;
     height: 30px;
@@ -84,13 +90,13 @@
     height: 25px;
     background: #f2d8b7;
     outline: none;
-    opacity: 0.7;
+    opacity: 1;
     -webkit-transition: 0.2s;
     transition: opacity 0.2s;
 }
 
 .rangebar:hover {
-    opacity: 1;
+    opacity: 0.9;
 }
 
 .rangebar::-webkit-slider-thumb {
@@ -135,7 +141,26 @@
     padding: 20px;
 }
 
+.noBorderBottom {
+    border-bottom: none;
+}
+
 .save_btn_wrapper {
     margin-top: 50px;
     margin-bottom: 100px;
+}
+
+/*
+style for rendered subjects
+*/
+
+.ordered_list_number {
+    margin-right: 5px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.order_list_item {
+    margin-top: 0px;
+    margin-bottom: 0px;
 }

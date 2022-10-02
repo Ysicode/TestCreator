@@ -13,12 +13,14 @@ import { provideStorage,getStorage } from '@angular/fire/storage';
 import { QuestionsComponent } from './questions/questions.component';
 import { FormsModule } from '@angular/forms';
 import { EditComponent } from './add/edit/edit.component';
+import { EditorComponent } from './editor/editor.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     QuestionsComponent,
-    EditComponent
+    EditComponent,
+    EditorComponent
   ],
   imports: [
     BrowserModule,
