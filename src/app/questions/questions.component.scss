@@ -170,9 +170,13 @@ style for rendered subjects
     margin-bottom: 5px;
 }
 
+.question_head_container {
+    display: flex;
+    margin-bottom: 15px;
+}
+
 .question_info {
     font-size: 13px;
-    margin-bottom: 15px;
 }
 
 .question_info_btn {
@@ -180,6 +184,26 @@ style for rendered subjects
     border-radius: 5px;
     padding: 3px 5px 3px 5px;
     margin-right: 10px;
+}
+
+.question_add_btn {
+    background: #d4cec6;
+    border: none;
+    border-radius: 50px;  
+    padding: 5px;
+    &:hover {
+        opacity: 0.8;
+        cursor: pointer;
+    }
+
+    .add_icon {
+        width: 27px;
+        height: 27px;
+    }
+}
+
+.added {
+    border: 3px solid rgb(40, 163, 102);
 }
 
 .ordered_list_number {

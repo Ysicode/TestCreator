@@ -23,6 +23,7 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
   loaded = false;
 
   answerVisible = false;
+  addedToTest = [];
 
   currentQuestion: any;
   currentTable = {};
@@ -285,5 +286,20 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
       this.currentId = id;
     }
   }
+
+  addToTest(id: string) {
+    
+    for (let i = 0; i < this.loadedQuestions.length; i++) {
+      if ( this.loadedQuestions[i]['id'] == id) {
+        this.addedToTest.push(this.loadedQuestions[i]);
+        console.log(this.addedToTest);
+        document.getElementById('add_btn' + i).classList.add('added');
+
+      }
+    }
+  
+  }
+
+  
 
 }

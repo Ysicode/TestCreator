@@ -123,18 +123,26 @@
 <div class="questions">
     <div class="question_wrapper d_flex_column" *ngFor="let data of loadedQuestions let i = index">
         <div class="question">
-            <div class="question_info d_flex_start">
-                <div class="question_info_btn">
-                    {{data.fach}}
+            <div class="d_flex_space question_head_container">
+                <div class="question_info d_flex_start">
+                    <div class="question_info_btn">
+                        {{data.fach}}
+                    </div>
+                    <div  class="question_info_btn">
+                        {{data.klasse}}
+                    </div>
+                    <div  class="question_info_btn">
+                        {{data.punktzahl}}pt
+                    </div>     
                 </div>
-                <div  class="question_info_btn">
-                    {{data.klasse}}
+
+                <div class="question_add">
+                    <button id="{{ 'add_btn'+ i }}" (click)="addToTest(data.id)" class="question_add_btn d_flex"><img class="add_icon" src="assets/add.png" alt=""></button>
                 </div>
-                <div  class="question_info_btn">
-                    {{data.punktzahl}}pt
-                </div>
-                
             </div>
+
+            
+           
             
             
             <div *ngFor="let question of data['frage']['blocks']">
@@ -163,7 +171,6 @@
                         </div>
                     </div>
                 </div>
-    
             </div>
     
             <div class="answer_btn_container">
@@ -178,15 +185,8 @@
                         <button (click)="logID( data.id)">Log ID</button>
                     </div>
                 </div>
-               
-    
             </div>
-          
-            
-           
-    
         </div>
-    
     </div>
 </div>
 
