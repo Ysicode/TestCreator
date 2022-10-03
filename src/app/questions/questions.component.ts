@@ -22,6 +22,8 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
   loadedUserdata = [];
   loaded = false;
 
+  answerVisible = false;
+
   currentQuestion: any;
   currentTable = {};
 
@@ -56,9 +58,18 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
 
   private initializeEditor(): void {
     this.editor = new EditorJS({
-      minHeight: 100,
+      minHeight: 200,
       holder: this.editorElement.nativeElement,
       tools: {
+        header: {
+          class: this.Header,
+          inlineToolbar: true,
+          config: {
+            placeholder: 'Enter a header',
+            levels: [1, 2, 3],
+            defaultLevel: 2
+          }
+        },
         table: {
           class: Table,
           inlineToolbar: true,
@@ -72,15 +83,6 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
           inlineToolbar: true,
           config: {
             defaultStyle: 'unordered'
-          }
-        },
-        header: {
-          class: this.Header,
-          inlineToolbar: true,
-          config: {
-            placeholder: 'Enter a header',
-            levels: [1, 2, 3],
-            defaultLevel: 2
           }
         },
         checklist: {
@@ -100,7 +102,7 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     })
   }
 
-  showEditorData(): void {
+  async showEditorData(): Promise<void> {
     this.editor.save().then(data => {
       this.currentQuestion = data;
       for (let i = 0; i < data.blocks.length; i++) { //If a table was in use of the editor nested array cannot saved in firestore
@@ -117,6 +119,7 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
         console.log(this.currentQuestion);
       }, 1000)
     });
+    
   }
 
   /**
@@ -217,12 +220,15 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     deleteDoc(coll);
   }
 
-  addData(question: any) {
+ addData(question: any) {
+  this.showEditorData();
+   
     if (!this.editMode) {
       const coll: any = collection(this.firestore, '/users/JonasWeiss/fragen');
       setDoc(doc(coll), {
         fach: this.currentSubjectChoice,
         frage: this.currentQuestion,
+        antwort: 'Das ist eine Antwort',
         klasse: this.currentClassChoice,
         punktzahl: Number(question.punktzahl),
         keywords: question.keywords.split(',')
@@ -239,6 +245,8 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
       })
       this.editMode = false;
     }
+   
+    
     this.clearForm();
   }
 
@@ -260,7 +268,6 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
 
   clearForm() {
     this.form.setValue({
-      antwort: '',
       punktzahl: '',
       keywords: '',
     })
@@ -269,6 +276,14 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
 
   logID(id: string) {
     console.log(id)
+  }
+
+  toggleAnswer(id: string) { 
+    if (this.currentId == id) {
+      this.answerVisible = !this.answerVisible;
+    } else {
+      this.currentId = id;
+    }
   }
 
 }

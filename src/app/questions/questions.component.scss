@@ -1,10 +1,3 @@
-.question {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    border: 1px solid black;
-    padding: 20px;
-}
-
 .section {
     margin-top: 75px;
     padding-bottom: 75px;
@@ -63,7 +56,6 @@
 .editor_wrapper {
     width: 80vw;
     max-width: 1500px;
-    border-radius: 10px;
     box-shadow: 0 24px 24px -18px rgb(69 104 129 / 33%), 0 9px 45px 0 rgb(114 119 160 / 12%);
     background: white;
     padding-top: 50px;
@@ -157,6 +149,38 @@
 /*
 style for rendered subjects
 */
+.questions {
+    width: 80vw;
+    margin-bottom: 100px;
+}
+.question_wrapper {
+   width: 100%;
+   margin-bottom: 15px;
+}
+
+.question {
+    width: 100%;
+    box-shadow: 0 24px 24px -18px rgb(69 104 129 / 33%), 0 9px 45px 0 rgb(114 119 160 / 12%);
+    background: white;
+    padding: 20px;
+}
+
+.question_container {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.question_info {
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+.question_info_btn {
+    border: 1px solid grey;
+    border-radius: 5px;
+    padding: 3px 5px 3px 5px;
+    margin-right: 10px;
+}
 
 .ordered_list_number {
     margin-right: 5px;
@@ -182,4 +206,45 @@ style for rendered subjects
 
 .bold {
     font-weight: bold;
+}
+
+.h1 {
+    font-size: 25px;
+}
+
+.h2 {
+    font-size: 22px;
+}
+
+.h3 {
+    font-size: 17px;
+}
+
+
+/*
+Answer styles
+*/
+
+.answer_btn {
+    background: white;
+    margin-top: 10px;
+    border: none;
+    font-size: 20px;
+    font-weight: 900;
+    color: #d69542;
+    &:hover {
+        opacity: 0.8;
+        cursor: pointer;
+    }
+}
+
+.question_arrow {
+    margin-left: 5px;
+    height: 17px;
+    width: 17px;
+    transform: rotate(90deg);
+}
+
+.question_arrow_turned {
+    transform: rotate(-90deg);
 }

@@ -70,10 +70,6 @@
 
     <form class="questionForm" #questionForm="ngForm" (ngSubmit)="addData(questionForm.value)">
         <div class="d_flex_column">
-
-
-            <textarea name="" id="" cols="30" rows="10" placeholder="Antwort" name="antwort" ngModel></textarea>
-
             <div class="d_flex_column section">
                 <h2>Max. Punktzahl für diese Aufgabe?</h2>
                 <div class="subject_btn_wrapper d_flex_column" *ngIf="loaded">
@@ -87,7 +83,7 @@
             <div class="section_separator"></div>
 
 
-            <div class="d_flex_column section noBorderBottom">
+            <div (click)="showEditorData()" class="d_flex_column section noBorderBottom">
                 <h2 class="keyword_headline">Keywords für eine spätere Suche und genaue Filterung der Aufgabe!</h2>
                 <p class="keywords_subline"><b class="important">Wichtig! </b>Keywords bitte durch Komma trennen</p>
                 <div class="subject_btn_wrapper d_flex_column" *ngIf="loaded">
@@ -124,57 +120,74 @@
 
 
 
-
-
-
-<div class="d_flex_column" *ngFor="let data of loadedQuestions">
-    <div class="question">
-        <div>
-            Fach: {{data.fach}}
-        </div>
-        <div>
-            Klasse: {{data.klasse}}
-        </div>
-        <div *ngFor="let question of data['frage']['blocks']">
-            <div [innerHTML]="question['data']['text'] "></div>
-            <div *ngFor="let items of question['data']['items'] let i = index">
-                <ol class="d_flex_start" *ngIf="question['data']['style'] == 'ordered'">
-                    <p class="ordered_list_number">{{i + 1}}.</p>
-                    <p class="order_list_item" [innerHTML]="items"></p>
-                </ol>
-                <ul *ngIf="question['data']['style'] == 'unordered'">
-                    <li [innerHTML]="items"></li>
-                </ul>
+<div class="questions">
+    <div class="question_wrapper d_flex_column" *ngFor="let data of loadedQuestions let i = index">
+        <div class="question">
+            <div class="question_info d_flex_start">
+                <div class="question_info_btn">
+                    {{data.fach}}
+                </div>
+                <div  class="question_info_btn">
+                    {{data.klasse}}
+                </div>
+                <div  class="question_info_btn">
+                    {{data.punktzahl}}pt
+                </div>
+                
             </div>
-            <div *ngIf="question['data']['table']">
-                <div [class.bold]="i == 0 && question['data']['withHeadings'] == true " class="d_flex_start tableRow" *ngFor="let position of question['data']['table']['length'] let i = index">
-                    <div [ngStyle]="{'width.%': 100 / question['data']['table'][position].length }"  *ngFor="let tableItem of question['data']['table'][position]">
-                        <div  class="tableItem d_flex_start" [innerHTML]="tableItem">
-
+            
+            
+            <div *ngFor="let question of data['frage']['blocks']">
+                <div class="question_container" [class.h1]="question['data']['level'] == 1"
+                [class.h2]="question['data']['level'] == 2"
+                [class.h3]="question['data']['level'] == 3" 
+                [innerHTML]="question['data']['text'] ">
+    
+                </div>
+                <div class="question_container" *ngFor="let items of question['data']['items'] let i = index">
+                    <ol class="d_flex_start" *ngIf="question['data']['style'] == 'ordered'">
+                        <p class="ordered_list_number">{{i + 1}}.</p>
+                        <p class="order_list_item" [innerHTML]="items"></p>
+                    </ol>
+                    <ul *ngIf="question['data']['style'] == 'unordered'">
+                        <li [innerHTML]="items"></li>
+                    </ul>
+                </div>
+                <div class="question_container" *ngIf="question['data']['table']">
+                    <div [class.bold]="i == 0 && question['data']['withHeadings'] == true " class="d_flex_start tableRow" *ngFor="let position of question['data']['table']['length'] let i = index">
+                        <div [ngStyle]="{'width.%': 100 / question['data']['table'][position].length }"  *ngFor="let tableItem of question['data']['table'][position]">
+                            <div  class="tableItem d_flex_start" [innerHTML]="tableItem">
+    
+                            </div>
+                          
                         </div>
-                      
                     </div>
                 </div>
+    
             </div>
-
+    
+            <div class="answer_btn_container">
+                <button class="answer_btn d_flex" (click)="toggleAnswer(data.id)">Antwort <img [class.question_arrow_turned]="answerVisible && currentId == data.id" class="question_arrow" src="assets/question_arrow.png"></button>
+                <div *ngIf="answerVisible && currentId == data.id" class="answer_wrapper">
+                    <div class="">
+                        <h3>Hier ist Platz für eine Antwort</h3>
+                    </div>
+                    <div>
+                        <button (click)="updateData(data.id)">Edit</button>
+                        <button (click)="deletedata(data.id)">Delete</button>
+                        <button (click)="logID( data.id)">Log ID</button>
+                    </div>
+                </div>
+               
+    
+            </div>
+          
+            
+           
+    
         </div>
-
-        <div>
-            Antwort: {{data['frage']['antwort']}}
-        </div>
-        <div>
-            Punktzahl: {{data.punktzahl}}
-            ID: {{ data.id }}
-        </div>
-        <div>
-            Keywords: {{data.keywords}}
-        </div>
-        <div>
-            <button (click)="updateData(data.id)">Edit</button>
-            <button (click)="deletedata(data.id)">Delete</button>
-            <button (click)="logID( data.id)">Log ID</button>
-        </div>
-
+    
     </div>
-
 </div>
+
+
