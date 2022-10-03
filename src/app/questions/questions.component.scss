@@ -63,8 +63,12 @@
 .editor_wrapper {
     width: 80vw;
     max-width: 1500px;
-
-    border: 1px dotted grey;
+    border-radius: 10px;
+    box-shadow: 0 24px 24px -18px rgb(69 104 129 / 33%), 0 9px 45px 0 rgb(114 119 160 / 12%);
+    background: white;
+    padding-top: 50px;
+    margin-top: 30px;
+    margin-bottom: 30px;
 }
 
 .points_wrapper {

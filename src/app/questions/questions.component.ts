@@ -15,6 +15,7 @@ import { Observable } from 'rxjs';
 })
 export class QuestionsComponent implements OnInit, AfterViewInit {
   Checklist = require('@editorjs/checklist');
+  Header = require('@editorjs/header');
 
   dataFromFirestore$: Observable<any>;
   loadedQuestions = [];
@@ -58,12 +59,28 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
       minHeight: 100,
       holder: this.editorElement.nativeElement,
       tools: {
-        table: Table,
+        table: {
+          class: Table,
+          inlineToolbar: true,
+          config: {
+            rows: 2,
+            cols: 2,
+          },
+        },
         list: {
           class: List,
           inlineToolbar: true,
           config: {
             defaultStyle: 'unordered'
+          }
+        },
+        header: {
+          class: this.Header,
+          inlineToolbar: true,
+          config: {
+            placeholder: 'Enter a header',
+            levels: [1, 2, 3],
+            defaultLevel: 2
           }
         },
         checklist: {
