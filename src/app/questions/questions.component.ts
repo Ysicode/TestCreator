@@ -279,9 +279,9 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
 
   clearForm() {
     this.form.setValue({
-      punktzahl: '',
+      punktzahl: '10',
       keywords: '',
-      bearbeitungszeit: '',
+      bearbeitungszeit: '7',
     })
     this.selectedSubjectButton = -1;
   }

@@ -336,3 +336,26 @@ Answer styles
 .margin_top {
     margin-top: 75px;
 }
+
+.add_question_container {
+    position: fixed;
+    left: 200px;
+    right: 0px;
+    bottom: 0px;
+    height: 100px;
+
+}
+
+.add_question_btn {
+    background-color: #d4cec6;
+    color: #424949;
+    font-size: 17px;
+    border-radius: 7px;
+    padding: 10px 30px 10px 30px;
+    margin: 15px;
+    border: none;
+    &:hover {
+        cursor: pointer;
+        opacity: 0.8;
+    }
+}
