@@ -3,6 +3,10 @@
     padding-bottom: 75px;
 }
 
+.d_none {
+    display: none;
+}
+
 .lesson_button {
     width: 100px;
     height: 20px;
@@ -63,13 +67,23 @@
     margin-bottom: 30px;
 }
 
+.questionForm {
+    width: 100%;
+}
+
+.rangbar_wrapper {
+    margin-left: 30px;
+    margin-right: 30px;
+    width: 250px;
+}
+
 .points_wrapper {
-    width: 30px;
+    
     height: 30px;
     margin-bottom: 15px;
     margin-top: 15px;
     padding: 10px;
-    border-radius: 50px;
+  
     border: 2px solid black;
 }
 
@@ -153,6 +167,35 @@ style for rendered subjects
     width: 80vw;
     margin-bottom: 100px;
 }
+
+.headline_test_infos {
+    margin-bottom: 15px;
+}
+
+.test_info_item {
+    margin-left: 10px;
+    font-size: 17px;
+}
+
+.testname {
+    margin-left: 20px;
+    font-size: 20px;
+}
+
+.preview_btn {
+    background-color: #f2d8b7;
+    color: #424949;
+    font-size: 17px;
+    border-radius: 7px;
+    padding: 10px;
+    margin-left: 40px;
+    border: none;
+    &:hover {
+        cursor: pointer;
+        opacity: 0.9;
+    }
+}
+
 .question_wrapper {
    width: 100%;
    margin-bottom: 15px;
@@ -271,4 +314,8 @@ Answer styles
 
 .question_arrow_turned {
     transform: rotate(-90deg);
+}
+
+.margin_top {
+    margin-top: 75px;
 }

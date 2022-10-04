@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { collection, collectionData, doc, Firestore } from '@angular/fire/firestore';
-import { NgForm } from '@angular/forms';
+import { FormControl, NgForm } from '@angular/forms';
 import EditorJS from '@editorjs/editorjs';
 import List from '@editorjs/list';
 import Table from '@editorjs/table';
@@ -43,12 +43,15 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
   editorElement: ElementRef;
   private editor: EditorJS;
 
-
+  currentTestPoints: number = 0;
+  currentTestTime: number = 0;
 
   constructor(private firestore: Firestore) { }
 
   ngOnInit(): void {
     this.getData();
+
+ 
   }
 
   ngAfterViewInit(): void {
@@ -120,7 +123,7 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
         console.log(this.currentQuestion);
       }, 1000)
     });
-    
+
   }
 
   /**
@@ -221,9 +224,11 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     deleteDoc(coll);
   }
 
- addData(question: any) {
-  this.showEditorData();
-   
+
+  addData(question: any) {
+    this.showEditorData();
+    console.log(question);
+
     if (!this.editMode) {
       const coll: any = collection(this.firestore, '/users/JonasWeiss/fragen');
       setDoc(doc(coll), {
@@ -232,6 +237,7 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
         antwort: 'Das ist eine Antwort',
         klasse: this.currentClassChoice,
         punktzahl: Number(question.punktzahl),
+        bearbeitungszeit: Number(question.bearbeitungszeit),
         keywords: question.keywords.split(',')
       })
 
@@ -242,12 +248,11 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
         frage: { frage: question.frage, antwort: question.antwort },
         klasse: this.currentClassChoice,
         punktzahl: Number(question.punktzahl),
+        bearbeitungszeit: Number(question.bearbeitungszeit),
         keywords: question.keywords.split(',')
       })
       this.editMode = false;
     }
-   
-    
     this.clearForm();
   }
 
@@ -259,11 +264,10 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     let currentQuestion = this.loadedQuestions.find((question) => { return question.id === id });
 
     this.form.setValue({
-      frage: currentQuestion.frage.frage,
-      antwort: currentQuestion.frage.antwort,
-      punktzahl: Number(currentQuestion.punktzahl),
+      bearbeitungszeit: `${currentQuestion.bearbeitungszeit}`,
+      punktzahl: `${currentQuestion.punktzahl}`,
       keywords: currentQuestion.keywords.join(', ')
-    })
+    });
 
   }
 
@@ -271,15 +275,24 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     this.form.setValue({
       punktzahl: '',
       keywords: '',
+      bearbeitungszeit: '',
     })
     this.selectedSubjectButton = -1;
+  }
+
+  setForm() {
+    this.form.setValue({
+      punktzahl: '10',
+      keywords: '',
+      bearbeitungszeit: '7',
+    });
   }
 
   logID(id: string) {
     console.log(id)
   }
 
-  toggleAnswer(id: string) { 
+  toggleAnswer(id: string) {
     if (this.currentId == id) {
       this.answerVisible = !this.answerVisible;
     } else {
@@ -288,18 +301,37 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
   }
 
   addToTest(id: string) {
-    
     for (let i = 0; i < this.loadedQuestions.length; i++) {
-      if ( this.loadedQuestions[i]['id'] == id) {
+      if (this.loadedQuestions[i]['id'] == id) {
         this.addedToTest.push(this.loadedQuestions[i]);
         console.log(this.addedToTest);
-        document.getElementById('add_btn' + i).classList.add('added');
-
+        document.getElementById('add_btn' + i).classList.add('d_none');
+        document.getElementById('remove_btn' + i).classList.remove('d_none');
+        this.setTestInfo();
       }
     }
-  
   }
 
-  
+  removeFromTest(id: string) {
+    for (let i = 0; i < this.addedToTest.length; i++) {
+       if (this.addedToTest[i].id == id) {
+        this.addedToTest.splice(i, 1);
+        console.log(this.addedToTest);
+        
+        document.getElementById('add_btn' + i).classList.remove('d_none');
+        document.getElementById('remove_btn' + i).classList.add('d_none');
+        this.setTestInfo();
+       }
+    }
+  }
+
+  setTestInfo() {
+    this.currentTestPoints = 0;
+    this.currentTestTime = 0;
+    for (let i = 0; i < this.addedToTest.length; i++) {
+      this.currentTestTime += this.addedToTest[i].bearbeitungszeit; 
+      this.currentTestPoints += this.addedToTest[i].punktzahl;  
+    }
+  }
 
 }
