@@ -1,3 +1,14 @@
+.spinner {
+    position: fixed;
+    height: 100vw;
+    width: 80vw;
+    top: 0;
+}
+
+.mat-spinner::ng-deep circle {
+    stroke: #1d202b;
+}
+
 .section {
     margin-top: 75px;
     padding-bottom: 75px;
@@ -34,7 +45,7 @@
     border: none;
     &:hover {
         cursor: pointer;
-        opacity: 0.9;
+        opacity: 0.8;
     }
 }
 
@@ -168,6 +179,11 @@ style for rendered subjects
     margin-bottom: 100px;
 }
 
+.margin_zero {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
 .headline_test_infos {
     margin-bottom: 15px;
 }
@@ -180,6 +196,7 @@ style for rendered subjects
 .testname {
     margin-left: 20px;
     font-size: 20px;
+    font-weight: 900;
 }
 
 .preview_btn {
@@ -192,7 +209,7 @@ style for rendered subjects
     border: none;
     &:hover {
         cursor: pointer;
-        opacity: 0.9;
+        opacity: 0.8;
     }
 }
 
@@ -233,15 +250,15 @@ style for rendered subjects
     background: #d4cec6;
     border: none;
     border-radius: 50px;  
-    padding: 5px;
+    padding: 7px;
     &:hover {
         opacity: 0.8;
         cursor: pointer;
     }
 
     .add_icon {
-        width: 27px;
-        height: 27px;
+        width: 20px;
+        height: 20px;
     }
 }
 
@@ -294,11 +311,11 @@ Answer styles
 
 .answer_btn {
     background: white;
-    margin-top: 10px;
+    margin-top: 15px;
     border: none;
     font-size: 20px;
     font-weight: 900;
-    color: #d69542;
+    color: #a49e96;
     &:hover {
         opacity: 0.8;
         cursor: pointer;
@@ -307,8 +324,8 @@ Answer styles
 
 .question_arrow {
     margin-left: 5px;
-    height: 17px;
-    width: 17px;
+    height: 23px;
+    width: 23px;
     transform: rotate(90deg);
 }
 

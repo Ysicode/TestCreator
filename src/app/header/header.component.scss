@@ -1,0 +1,34 @@
+.header {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 50px;
+    background: #d4cec6;
+    padding: 5px;
+    box-shadow: 0px 0px 5px 0px grey;
+}
+
+.logo {
+    margin-left: 30px;
+    font-size: 30px;
+    font-weight: 900;
+}
+
+.user_photo {
+    width: 25px;
+    height: 25px;
+    object-fit: contain;
+    border-radius: 50px;
+}
+
+.username {
+    font-size: 17px;
+    margin-left: 5px;
+    margin-right: 30px;
+}
+
+.margin_zero {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}

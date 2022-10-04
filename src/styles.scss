@@ -4,9 +4,13 @@ body {
     font-family: "Montserrat", sans-serif;
 }
 
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
 .main_wrapper {
     max-width: 1700px;
     width: 80vw;
+    margin-top: 50px;
 }
 
 .d_none {
@@ -50,13 +54,8 @@ body {
     justify-content: flex-end;
 }
 
-.margin_zero {
-    margin-top: 0px;
-    margin-bottom: 0px;
-}
-
 h2 {
-    font-size: 18px;
+    font-size: 18px !important;
 }
 
 .section_separator {
@@ -64,3 +63,5 @@ h2 {
     height: 2px;
     background-color: #0000003b;
 }
+
+

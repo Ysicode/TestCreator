@@ -1,4 +1,4 @@
-<h1>TestCreator</h1>
+
 
 <div class="main_wrapper d_flex_column">
     <div class="subject_wrapper">
@@ -62,14 +62,14 @@
     </div>
 
     <h1>Frage erstellen!</h1>
-    <button type="button" (click)="showEditorData()">ShowEditorData</button>
+    <button type="button" (click)="saveEditorData()">ShowEditorData</button>
     <div #editor class="editor_wrapper">
 
 
     </div>
 
     <form class="questionForm" #questionForm="ngForm" (ngSubmit)="addData(questionForm.value)">
-        <div (click)="showEditorData()" class="d_flex_column">
+        <div  class="d_flex_column">
             <div class="d_flex section">
                 <div class="d_flex_column rangbar_wrapper">
                     <h2>Max. Punktzahl?</h2>
@@ -126,7 +126,7 @@
         <div class="headline_infos d_flex_end_end">
             <div class="test_infos_wrapper d_flex">
                 <div class="test_info_item">
-                 <p class="margin_zero">{{ currentTestTime }} min</p>   
+                 <p class="margin_zero">{{ currentTestTime }} Min</p>   
                 </div>
                 <div  class="test_info_item">
                    <p class="margin_zero">{{ currentTestPoints }} Pkt</p> 
@@ -135,8 +135,8 @@
                     <p class="margin_zero"> {{ addedToTest.length }} {{addedToTest.length !== 1 ? 'Fragen' : 'Frage'}} </p> 
                 </div>
             </div>
-            <div class="testname d_flex">
-                <h2 class="margin_zero testname">Testname</h2>
+            <div class="testname d_flex_end">
+                <p class="margin_zero testname">Testname</p>
             </div>
             <div class="d_flex">
                 <button class="preview_btn">Vorschau</button>
@@ -159,7 +159,7 @@
                         {{ data.punktzahl }}Pkt
                     </div>  
                     <div  class="question_info_btn">
-                        {{ data.bearbeitungszeit }} min
+                        {{ data.bearbeitungszeit }} Min
                     </div>      
                 </div>
 
@@ -202,7 +202,7 @@
             </div>
     
             <div class="answer_btn_container">
-                <button class="answer_btn d_flex" (click)="toggleAnswer(data.id)">Antwort <img [class.question_arrow_turned]="answerVisible && currentId == data.id" class="question_arrow" src="assets/question_arrow.png"></button>
+                <button class="answer_btn d_flex" (click)="toggleAnswer(data.id)">Antwort <img [class.question_arrow_turned]="answerVisible && currentId == data.id" class="question_arrow" src="assets/arrow.png"></button>
                 <div *ngIf="answerVisible && currentId == data.id" class="answer_wrapper">
                     <div class="">
                         <h3>Hier ist Platz für eine Antwort</h3>
@@ -216,6 +216,13 @@
             </div>
         </div>
     </div>
+</div>
+
+
+
+
+<div *ngIf="loading" class="spinner d_flex">
+    <mat-spinner class="mat-spinner" mode="indeterminate"></mat-spinner>
 </div>
 
 

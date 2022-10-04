@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { collection, collectionData, doc, Firestore } from '@angular/fire/firestore';
-import { FormControl, NgForm } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 import EditorJS from '@editorjs/editorjs';
 import List from '@editorjs/list';
 import Table from '@editorjs/table';
@@ -8,12 +8,14 @@ import ImageTool from '@editorjs/image';
 import { deleteDoc, setDoc, updateDoc } from '@firebase/firestore';
 import { Observable } from 'rxjs';
 
+
 @Component({
   selector: 'app-questions',
   templateUrl: './questions.component.html',
   styleUrls: ['./questions.component.scss']
 })
 export class QuestionsComponent implements OnInit, AfterViewInit {
+  loading: Boolean = false;
   Checklist = require('@editorjs/checklist');
   Header = require('@editorjs/header');
 
@@ -106,7 +108,7 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     })
   }
 
-  async showEditorData(): Promise<void> {
+  async saveEditorData(): Promise<void> {
     this.editor.save().then(data => {
       this.currentQuestion = data;
       for (let i = 0; i < data.blocks.length; i++) { //If a table was in use of the editor nested array cannot saved in firestore
@@ -226,9 +228,9 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
 
 
   addData(question: any) {
-    this.showEditorData();
-    console.log(question);
-
+  this.saveEditorData();
+  this.loading = true;
+   setTimeout(() => {
     if (!this.editMode) {
       const coll: any = collection(this.firestore, '/users/JonasWeiss/fragen');
       setDoc(doc(coll), {
@@ -239,8 +241,9 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
         punktzahl: Number(question.punktzahl),
         bearbeitungszeit: Number(question.bearbeitungszeit),
         keywords: question.keywords.split(',')
+      }).then(() => {
+        this.loading = false;
       })
-
     } else {
       const coll: any = doc(this.firestore, '/users/JonasWeiss/fragen/' + this.currentId);
       updateDoc(coll, {
@@ -250,10 +253,13 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
         punktzahl: Number(question.punktzahl),
         bearbeitungszeit: Number(question.bearbeitungszeit),
         keywords: question.keywords.split(',')
+      }).then(() => {
+        this.loading = false;
       })
       this.editMode = false;
     }
     this.clearForm();
+   }, 700);
   }
 
 
