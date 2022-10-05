@@ -49,14 +49,14 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
   currentTestPoints: number = 0;
   currentTestTime: number = 0;
 
+  overlay = false;
+
   file: any;
 
   constructor(private firestore: Firestore, public storage: Storage) { }
 
   ngOnInit(): void {
     this.getData();
-
-
   }
 
   ngAfterViewInit(): void {
@@ -107,22 +107,21 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
                 const storageRef = ref(storage, file.name);
                 const metadata = {
                   contentType: 'image/jpeg',
+                  size: file.size,
                 };
                 const snapshot = await uploadBytes(storageRef, file, metadata);
                 const downloadURL = await getDownloadURL(snapshot.ref);
                 return {
                   success: 1,
                   file: {
-                    url: downloadURL
+                    url: downloadURL,
+                    size: file.size,
                   }
                 };
-                
-
               }
             }
           }
         },
-
       }
     });
   }
@@ -137,8 +136,6 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
   }
 
   addPhoto() {
-    console.log(this.file);
-
     const storageRef = ref(this.storage, this.file.name)
     const uploadTask = uploadBytesResumable(storageRef, this.file)
     uploadTask.on('state_changed',
@@ -241,10 +238,6 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     this.selectedClassButton = index;
   }
 
-
-
-
-
   getData() {
     //gets all questions
     const coll: any = collection(this.firestore, '/users/JonasWeiss/fragen');
@@ -252,7 +245,9 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     this.dataFromFirestore$.subscribe((data) => {
       this.loadedQuestions = data;
       console.log(data);
-
+      this.loadedQuestions.sort((x, y) => {
+        return y.frage.time - x.frage.time
+      })
     })
 
     //gets UserData like classes and subjects and email adress and username
@@ -263,7 +258,6 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
       console.log(this.loadedUserdata)
       this.loaded = true;
     });
-
   }
 
   deletedata(id: string) {
@@ -272,9 +266,9 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
   }
 
 
-  addData(question: any) {
-    this.saveEditorData();
+  async addData(question: any) {
     this.loading = true;
+    await this.saveEditorData();
     setTimeout(() => {
       if (!this.editMode) {
         const coll: any = collection(this.firestore, '/users/JonasWeiss/fragen');
@@ -288,6 +282,8 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
           keywords: question.keywords.split(',')
         }).then(() => {
           this.loading = false;
+          this.overlay = false;
+          window.scrollTo(0, 0);
         })
       } else {
         const coll: any = doc(this.firestore, '/users/JonasWeiss/fragen/' + this.currentId);
@@ -300,6 +296,7 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
           keywords: question.keywords.split(',')
         }).then(() => {
           this.loading = false;
+          this.overlay = false;
         })
         this.editMode = false;
       }
@@ -368,7 +365,6 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
       if (this.addedToTest[i].id == id) {
         this.addedToTest.splice(i, 1);
         console.log(this.addedToTest);
-
         document.getElementById('add_btn' + i).classList.remove('d_none');
         document.getElementById('remove_btn' + i).classList.add('d_none');
         this.setTestInfo();
@@ -383,6 +379,15 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
       this.currentTestTime += this.addedToTest[i].bearbeitungszeit;
       this.currentTestPoints += this.addedToTest[i].punktzahl;
     }
+  }
+
+  showOverlay() {
+    this.overlay = true;
+    window.scrollTo(0, 0);
+  }
+
+  hideOverlay() {
+    this.overlay = false;
   }
 
 }
