@@ -29,6 +29,14 @@
             </div>
         </div>
         <div class="section_separator"></div>
+
+       
+            <label for="file"></label>
+            <input type="file" (change)="chooseFile($event)" id="input" name="file">
+        <button type="submit" (click)="addPhoto()">add photo</button>
+        <button (click)="showFile()">showfile</button>
+        
+        
     </div>
 
     <div class="subject_wrapper">
@@ -180,6 +188,10 @@
                 [innerHTML]="question['data']['text'] ">
     
                 </div>
+               <div *ngIf="question['data']['file']">
+                   <img src="{{ question['data']['file']['url'] }}" alt="">
+
+               </div>
                 <div class="question_container" *ngFor="let items of question['data']['items'] let i = index">
                     <ol class="d_flex_start" *ngIf="question['data']['style'] == 'ordered'">
                         <p class="ordered_list_number">{{i + 1}}.</p>

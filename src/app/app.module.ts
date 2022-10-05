@@ -15,7 +15,7 @@ import { FormsModule } from '@angular/forms';
 import { EditComponent } from './add/edit/edit.component';
 import { EditorComponent } from './editor/editor.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { HeaderComponent } from './header/header.component';
 
 @NgModule({

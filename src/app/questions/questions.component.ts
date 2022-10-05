@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { collection, collectionData, doc, Firestore } from '@angular/fire/firestore';
+import { Storage, ref, uploadBytesResumable, getDownloadURL, getStorage, uploadBytes } from '@angular/fire/storage';
 import { NgForm } from '@angular/forms';
 import EditorJS from '@editorjs/editorjs';
 import List from '@editorjs/list';
@@ -48,12 +49,14 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
   currentTestPoints: number = 0;
   currentTestTime: number = 0;
 
-  constructor(private firestore: Firestore) { }
+  file: any;
+
+  constructor(private firestore: Firestore, public storage: Storage) { }
 
   ngOnInit(): void {
     this.getData();
 
- 
+
   }
 
   ngAfterViewInit(): void {
@@ -98,14 +101,56 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
         image: {
           class: ImageTool,
           config: {
-            endpoints: {
-              byUrl: 'gs://testcreator-e5281.appspot.com/'
+            uploader: {
+              async uploadByFile(file: any) {
+                const storage = getStorage();
+                const storageRef = ref(storage, file.name);
+                const metadata = {
+                  contentType: 'image/jpeg',
+                };
+                const snapshot = await uploadBytes(storageRef, file, metadata);
+                const downloadURL = await getDownloadURL(snapshot.ref);
+                return {
+                  success: 1,
+                  file: {
+                    url: downloadURL
+                  }
+                };
+                
+
+              }
             }
           }
         },
 
       }
-    })
+    });
+  }
+
+  chooseFile(event: any) {
+    this.file = event.target.files[0];
+  }
+
+  showFile() {
+    console.log(this.file);
+
+  }
+
+  addPhoto() {
+    console.log(this.file);
+
+    const storageRef = ref(this.storage, this.file.name)
+    const uploadTask = uploadBytesResumable(storageRef, this.file)
+    uploadTask.on('state_changed',
+      (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log('Upload is ' + progress + '% done');
+      }, () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log('File available at', downloadURL);
+        });
+      }
+    )
   }
 
   async saveEditorData(): Promise<void> {
@@ -228,38 +273,38 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
 
 
   addData(question: any) {
-  this.saveEditorData();
-  this.loading = true;
-   setTimeout(() => {
-    if (!this.editMode) {
-      const coll: any = collection(this.firestore, '/users/JonasWeiss/fragen');
-      setDoc(doc(coll), {
-        fach: this.currentSubjectChoice,
-        frage: this.currentQuestion,
-        antwort: 'Das ist eine Antwort',
-        klasse: this.currentClassChoice,
-        punktzahl: Number(question.punktzahl),
-        bearbeitungszeit: Number(question.bearbeitungszeit),
-        keywords: question.keywords.split(',')
-      }).then(() => {
-        this.loading = false;
-      })
-    } else {
-      const coll: any = doc(this.firestore, '/users/JonasWeiss/fragen/' + this.currentId);
-      updateDoc(coll, {
-        fach: this.currentSubjectChoice,
-        frage: { frage: question.frage, antwort: question.antwort },
-        klasse: this.currentClassChoice,
-        punktzahl: Number(question.punktzahl),
-        bearbeitungszeit: Number(question.bearbeitungszeit),
-        keywords: question.keywords.split(',')
-      }).then(() => {
-        this.loading = false;
-      })
-      this.editMode = false;
-    }
-    this.clearForm();
-   }, 700);
+    this.saveEditorData();
+    this.loading = true;
+    setTimeout(() => {
+      if (!this.editMode) {
+        const coll: any = collection(this.firestore, '/users/JonasWeiss/fragen');
+        setDoc(doc(coll), {
+          fach: this.currentSubjectChoice,
+          frage: this.currentQuestion,
+          antwort: 'Das ist eine Antwort',
+          klasse: this.currentClassChoice,
+          punktzahl: Number(question.punktzahl),
+          bearbeitungszeit: Number(question.bearbeitungszeit),
+          keywords: question.keywords.split(',')
+        }).then(() => {
+          this.loading = false;
+        })
+      } else {
+        const coll: any = doc(this.firestore, '/users/JonasWeiss/fragen/' + this.currentId);
+        updateDoc(coll, {
+          fach: this.currentSubjectChoice,
+          frage: { frage: question.frage, antwort: question.antwort },
+          klasse: this.currentClassChoice,
+          punktzahl: Number(question.punktzahl),
+          bearbeitungszeit: Number(question.bearbeitungszeit),
+          keywords: question.keywords.split(',')
+        }).then(() => {
+          this.loading = false;
+        })
+        this.editMode = false;
+      }
+      this.clearForm();
+    }, 700);
   }
 
 
@@ -320,14 +365,14 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
 
   removeFromTest(id: string) {
     for (let i = 0; i < this.addedToTest.length; i++) {
-       if (this.addedToTest[i].id == id) {
+      if (this.addedToTest[i].id == id) {
         this.addedToTest.splice(i, 1);
         console.log(this.addedToTest);
-        
+
         document.getElementById('add_btn' + i).classList.remove('d_none');
         document.getElementById('remove_btn' + i).classList.add('d_none');
         this.setTestInfo();
-       }
+      }
     }
   }
 
@@ -335,8 +380,8 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     this.currentTestPoints = 0;
     this.currentTestTime = 0;
     for (let i = 0; i < this.addedToTest.length; i++) {
-      this.currentTestTime += this.addedToTest[i].bearbeitungszeit; 
-      this.currentTestPoints += this.addedToTest[i].punktzahl;  
+      this.currentTestTime += this.addedToTest[i].bearbeitungszeit;
+      this.currentTestPoints += this.addedToTest[i].punktzahl;
     }
   }
 
