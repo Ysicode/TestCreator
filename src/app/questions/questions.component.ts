@@ -3,6 +3,7 @@ import { collection, collectionData, doc, Firestore } from '@angular/fire/firest
 import { Storage, ref, uploadBytesResumable, getDownloadURL, getStorage, uploadBytes } from '@angular/fire/storage';
 import { NgForm } from '@angular/forms';
 import EditorJS from '@editorjs/editorjs';
+import Underline from '@editorjs/underline';
 import List from '@editorjs/list';
 import Table from '@editorjs/table';
 import ImageTool from '@editorjs/image';
@@ -50,6 +51,7 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
   currentTestTime: number = 0;
 
   overlay = false;
+  preview = false;
 
   file: any;
 
@@ -70,13 +72,14 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
       minHeight: 200,
       holder: this.editorElement.nativeElement,
       tools: {
+        underline: Underline,
         header: {
           class: this.Header,
           inlineToolbar: true,
           config: {
             placeholder: 'Enter a header',
-            levels: [1, 2, 3],
-            defaultLevel: 2
+            levels: [1],
+            defaultLevel: 1
           }
         },
         table: {
@@ -348,13 +351,14 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  addToTest(id: string) {
+
+  addToTest(id: string, status: string) {
     for (let i = 0; i < this.loadedQuestions.length; i++) {
       if (this.loadedQuestions[i]['id'] == id) {
-        this.addedToTest.push(this.loadedQuestions[i]);
-        console.log(this.addedToTest);
-        document.getElementById('add_btn' + i).classList.add('d_none');
-        document.getElementById('remove_btn' + i).classList.remove('d_none');
+        if (status == 'add_styling') {
+          this.addedToTest.push(this.loadedQuestions[i]);
+        }
+        this.styleAddButton(i, status);
         this.setTestInfo();
       }
     }
@@ -364,12 +368,16 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     for (let i = 0; i < this.addedToTest.length; i++) {
       if (this.addedToTest[i].id == id) {
         this.addedToTest.splice(i, 1);
-        console.log(this.addedToTest);
-        document.getElementById('add_btn' + i).classList.remove('d_none');
-        document.getElementById('remove_btn' + i).classList.add('d_none');
         this.setTestInfo();
+        this.addToTest(id, 'remove_styling');
       }
     }
+  }
+
+  styleAddButton(i: number, status: string) {
+    status == 'add_styling' ? 
+    (this.addClasslist('add_btn' + i, 'd_none'), this.removeClasslist('remove_btn' + i, 'd_none')) : 
+    (this.addClasslist('remove_btn' + i, 'd_none'), this.removeClasslist('add_btn' + i, 'd_none'))
   }
 
   setTestInfo() {
@@ -383,11 +391,24 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
 
   showOverlay() {
     this.overlay = true;
+    this. setForm();
     window.scrollTo(0, 0);
   }
 
   hideOverlay() {
     this.overlay = false;
+  }
+
+  openPreview() {
+    this.preview = !this.preview;
+  }
+
+  addClasslist(id: string, classList: string) {
+    document.getElementById(id).classList.add(classList);
+  }
+
+  removeClasslist(id: string, classList: string) {
+    document.getElementById(id).classList.remove(classList);
   }
 
 }

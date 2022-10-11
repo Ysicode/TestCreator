@@ -16,6 +16,7 @@
     z-index: 999;
     width: 100vw;
     max-width: 100%;
+    padding-bottom: 200px;
 }
 
 .section {
@@ -188,7 +189,6 @@ style for rendered subjects
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
-    margin-left: 240px;
 }
 
 .filter_wrapper {
@@ -211,16 +211,15 @@ style for rendered subjects
 .questions_container {
     width: 100%;
     display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
+    align-items: center;
+    justify-content: center;
     flex-direction: column;
 }
 
 .questions {
-    width: calc(100vw - 300px);
+    width: calc(100% - 40px);
     margin-bottom: 100px;
     max-width: 1000px;
-    margin-left: 20px;
 }
 
 .margin_zero {
@@ -232,13 +231,12 @@ style for rendered subjects
     padding-bottom: 7px;
     padding-top: 7px;
     margin-top: 100px;
-    width: calc(100vw - 245px);
+    width: 100%;
     background: #f2f3f4;
     position: sticky;
     margin-bottom: 15px;
     top: 0;
-    margin-left: -19px;
-    padding-right: 24px;
+    z-index: 99;
 }
 
 .headline_test_infos_inside_container {
@@ -271,7 +269,7 @@ style for rendered subjects
 }
 
 .question_wrapper {
-    width: 100%;
+    width: calc(100% - 40px);
     margin-bottom: 15px;
 }
 
@@ -284,6 +282,8 @@ style for rendered subjects
 
 .question_container {
     margin-top: 5px;
+    font-size: calc(100vw * 0.016);
+    font-size: max 20px;
     margin-bottom: 5px;
 }
 
@@ -338,7 +338,7 @@ style for rendered subjects
     border: 1px solid black;
     height: 25px;
     padding: 5px;
-    margin: 2px;
+    margin: -0.5px;
 }
 
 .tableRow {
@@ -355,15 +355,7 @@ style for rendered subjects
 }
 
 .h1 {
-    font-size: 25px;
-}
-
-.h2 {
-    font-size: 22px;
-}
-
-.h3 {
-    font-size: 17px;
+    font-size: calc(100vw * 0.025);
 }
 
 /*
@@ -395,7 +387,7 @@ Answer styles
 }
 
 .d_none {
-display: none;
+    display: none;
 }
 
 .margin_top {
@@ -404,8 +396,7 @@ display: none;
 
 .add_question_container {
     position: fixed;
-    left: 220px;
-    max-width: 1080px;
+    left: 0;
     right: 0px;
     bottom: 0px;
     height: 100px;
@@ -422,5 +413,93 @@ display: none;
     &:hover {
         cursor: pointer;
         opacity: 0.8;
+    }
+}
+
+/*
+Styles für die Vorschau sektion
+*/
+
+.show_onHover {
+    display: none;
+}
+
+.added_questions_empty_info {
+    font-size: 20px;
+}
+
+.added_questions_empty_container {
+    margin-top: 200px;
+}
+
+.test_dinA4 {
+    height: calc((100vw - 30px) * 1.41);
+    background: white;
+    max-height: 1414px;
+    width: calc(100vw - 30px);
+    margin-bottom: 100px;
+    max-width: 1000px;
+}
+
+.question_test {
+    width: 85%;
+    padding: 1%;
+    &:hover {
+        background: #f2f3f4;
+        cursor: pointer;
+
+        .show_onHover {
+            display: flex;
+        }
+    }
+
+    .remove_from_test_btn {
+        border: 2px solid #da5838;
+        border-radius: 40px;
+        margin-left: 20px;
+        &:hover {
+            background: #da5838;
+            cursor: pointer;
+        }
+    }
+
+    .remove_icon {
+        transform: rotate(45deg);
+        width: 2vw;
+        max-width: 25px;
+    }
+}
+
+.questio_test_number {
+    font-size: calc(100vw * 0.016);
+    font-weight: bold;
+}
+
+.questio_test_points {
+    
+    font-size: calc(100vw * 0.016);
+   
+}
+
+@media (max-width: 850px) {
+    .hide_on_mobile {
+        display: none;
+    }
+
+   
+
+    /*vorschau
+    */
+
+    
+}
+
+
+@media (min-width: 1030px) {
+    .question_container {
+        font-size: 17px;
+    }
+    .h1 {
+        font-size: 25px;
     }
 }

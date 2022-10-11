@@ -126,16 +126,18 @@
 
 
 
-<div class="questions_wrapper ">
-    <div class="filter_wrapper d_flex_start_column">
+<div [class.d_none]="overlay" class="questions_wrapper ">
+    <div *ngIf="!preview" class="filter_wrapper d_flex_start_column d_none">
         <p>filter 1</p>
         <p>filter 2</p>
         <p>filter 3</p>
-
+    </div>
+    <div *ngIf="preview" class="filter_wrapper d_flex_start_column d_none">
+        <p>style 1</p>
+        <p>style 2</p>
+        <p>style 3</p>
     </div>
     <div class="questions_container">
-
-
         <div class="headline_test_infos">
             <div class="headline_test_infos_inside_container">
                 <div class="headline_infos d_flex_end_end">
@@ -156,15 +158,14 @@
                         <p class="margin_zero testname">Testname</p>
                     </div>
                     <div class="d_flex">
-                        <button class="preview_btn">Vorschau</button>
+                        <button (click)="openPreview()" class="preview_btn">{{ !preview ? 'Vorschau' : 'Fragen hinzufügen' }}</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="questions">
+        <div [class.d_none]="preview" class="questions d_flex_column">
             <div class="question_wrapper d_flex_column" *ngFor="let data of loadedQuestions let i = index">
-
                 <div class="question">
                     <div class="d_flex_space question_head_container">
                         <div class="question_info d_flex_start">
@@ -183,7 +184,7 @@
                         </div>
 
                         <div class="question_add">
-                            <button id="{{ 'add_btn' + i }}" (click)="addToTest(data.id)"
+                            <button id="{{ 'add_btn' + i }}" (click)="addToTest(data.id, 'add_styling')"
                                 class="question_add_btn d_flex"><img class="add_icon" src="assets/add.png"
                                     alt=""></button>
                             <button id="{{ 'remove_btn' + i }}" (click)="removeFromTest(data.id)"
@@ -200,7 +201,6 @@
 
                     <div *ngFor="let question of data['frage']['blocks']">
                         <div class="question_container" [class.h1]="question['data']['level'] == 1"
-                            [class.h2]="question['data']['level'] == 2" [class.h3]="question['data']['level'] == 3"
                             [innerHTML]="question['data']['text'] ">
 
                         </div>
@@ -247,6 +247,78 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div [class.d_none]="!preview" class="test_dinA4">
+            <div class="added_questions_empty_container d_flex_column" *ngIf="addedToTest.length == 0">
+                <button class="question_add_btn d_flex"><img class="add_icon" src="assets/add.png"alt=""></button>
+                <p class="added_questions_empty_info" >Noch keine Fragen hinzugefügt</p>
+
+            </div>
+            <div class="question_wrapper d_flex_column" *ngFor="let data of addedToTest let i = index">
+                
+                <div class="question_test">
+                    <div class="d_flex_space question_head_container">
+                        <div class="question_info d_flex_start">
+                            <div class="questio_test_number">
+                                Aufgabe {{ i + 1 }}
+                            </div>
+                            
+                        </div>
+
+                        <div class="question_add d_flex"> 
+                            <div class="questio_test_points">
+                                /{{ data.punktzahl }}
+                             </div>
+                            <button id="{{ 'remove_btn' + i }}" (click)="removeFromTest(data.id)"
+                                class="remove_from_test_btn show_onHover d_flex"><img class="remove_icon" src="assets/add.png"
+                                    alt=""></button>
+                        </div>
+                    </div>
+
+                    <div class="add_question_container d_flex">
+                        <button (click)="showOverlay()" class="add_question_btn">Neue Frage anlegen</button>
+                    </div>
+
+
+
+                    <div *ngFor="let question of data['frage']['blocks']">
+                        <div class="question_container" [class.h1]="question['data']['level'] == 1"  
+                             [innerHTML]="question['data']['text'] ">
+
+                        </div>
+                        <div *ngIf="question['data']['file']">
+                            <img class="question_img" src="{{ question['data']['file']['url'] }}" alt="">
+
+                        </div>
+                        <div class="question_container" *ngFor="let items of question['data']['items'] let i = index">
+                            <ol class="d_flex_start" *ngIf="question['data']['style'] == 'ordered'">
+                                <p class="ordered_list_number">{{i + 1}}.</p>
+                                <p class="order_list_item" [innerHTML]="items"></p>
+                            </ol>
+                            <ul *ngIf="question['data']['style'] == 'unordered'">
+                                <li [innerHTML]="items"></li>
+                            </ul>
+                        </div>
+                        <div class="question_container" *ngIf="question['data']['table']">
+                            <div [class.bold]="i == 0 && question['data']['withHeadings'] == true "
+                                class="d_flex_start tableRow"
+                                *ngFor="let position of question['data']['table']['length'] let i = index">
+                                <div [ngStyle]="{'width.%': 100 / question['data']['table'][position].length }"
+                                    *ngFor="let tableItem of question['data']['table'][position]">
+                                    <div class="tableItem d_flex_start" [innerHTML]="tableItem">
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                   
                 </div>
             </div>
         </div>
