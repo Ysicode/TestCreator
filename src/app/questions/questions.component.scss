@@ -229,9 +229,10 @@ style for rendered subjects
 
 .headline_test_infos {
     padding-bottom: 7px;
+    max-width: 960px;
     padding-top: 7px;
     margin-top: 100px;
-    width: 100%;
+    width: calc(100% - 5px);
     background: #f2f3f4;
     position: sticky;
     margin-bottom: 15px;
@@ -240,18 +241,13 @@ style for rendered subjects
 }
 
 .headline_test_infos_inside_container {
-    max-width: 1040px;
+    max-width: 1000px;
+    width: calc(100% - 40px);
 }
 
 .test_info_item {
     margin-left: 10px;
     font-size: 17px;
-}
-
-.testname {
-    margin-left: 20px;
-    font-size: 20px;
-    font-weight: 900;
 }
 
 .preview_btn {
@@ -358,6 +354,10 @@ style for rendered subjects
     font-size: calc(100vw * 0.025);
 }
 
+.d_none {
+    display: none;
+}
+
 /*
 Answer styles
 */
@@ -420,6 +420,61 @@ Answer styles
 Styles für die Vorschau sektion
 */
 
+.test_head_wrapper {
+    width: 82%;
+    margin-top: 60px;
+}
+
+.test_head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.school_name {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.testname {
+    margin-top: 5px;
+    margin-bottom: 0px;
+    font-weight: bold;
+}
+
+.message {
+    font-weight: bold;
+}
+
+.test_head_infos {
+    width: 82%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.class_wrapper {
+    margin-left: 40%;
+}
+
+.test_head_data {
+    width: 82%;
+    border-bottom: 2px solid black;
+    margin-bottom: 30px;
+}
+
+.test_head_data_item {
+    width: 50%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.test_total_number {
+    margin-left: 15%;
+}
+
 .show_onHover {
     display: none;
 }
@@ -439,10 +494,11 @@ Styles für die Vorschau sektion
     width: calc(100vw - 30px);
     margin-bottom: 100px;
     max-width: 1000px;
+    font-size: calc(100vw * 0.016);
 }
 
 .question_test {
-    width: 85%;
+    width: 85.5%;
     padding: 1%;
     &:hover {
         background: #f2f3f4;
@@ -470,15 +526,9 @@ Styles für die Vorschau sektion
     }
 }
 
-.questio_test_number {
+.question_test_number {
     font-size: calc(100vw * 0.016);
     font-weight: bold;
-}
-
-.questio_test_points {
-    
-    font-size: calc(100vw * 0.016);
-   
 }
 
 @media (max-width: 850px) {
@@ -486,20 +536,16 @@ Styles für die Vorschau sektion
         display: none;
     }
 
-   
-
     /*vorschau
     */
-
-    
 }
 
-
 @media (min-width: 1030px) {
-    .question_container {
+    .question_container, .question_test_number, .test_dinA4 {
         font-size: 17px;
     }
     .h1 {
         font-size: 25px;
     }
+
 }

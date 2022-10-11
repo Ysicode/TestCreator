@@ -154,9 +154,7 @@
                             </p>
                         </div>
                     </div>
-                    <div class="testname d_flex_end">
-                        <p class="margin_zero testname">Testname</p>
-                    </div>
+                    
                     <div class="d_flex">
                         <button (click)="openPreview()" class="preview_btn">{{ !preview ? 'Vorschau' : 'Fragen hinzufügen' }}</button>
                     </div>
@@ -252,25 +250,60 @@
         </div>
 
 
-        <div [class.d_none]="!preview" class="test_dinA4">
-            <div class="added_questions_empty_container d_flex_column" *ngIf="addedToTest.length == 0">
-                <button class="question_add_btn d_flex"><img class="add_icon" src="assets/add.png"alt=""></button>
-                <p class="added_questions_empty_info" >Noch keine Fragen hinzugefügt</p>
+        <div [class.d_none]="!preview" class="test_dinA4 d_flex_column_start">
+                <div class="test_head_wrapper d_flex_space">
+                    <div class="test_head">
+                        <p class="school_name">BSZ Alois Senefelder, Fachbereich Druck- und Medientechnik</p>
+                        <p class="testname">TestName</p>
+                    </div>
+                    <div class="message_container">
+                        <p class="message">Viel <br> Erfolg!</p>
+                    </div>
+                </div>
 
-            </div>
+                <div class="test_head_infos d_flex_space">
+                    <div class="name_date_wrapper d_flex_start_column">
+                        <p class="">Name:</p>
+                        <p class="">Datum:</p>
+                    </div>
+                    <div class="class_wrapper">
+                         <p class="class">Klasse:</p>
+                         <p class="class">Note:</p>
+                    </div>
+                </div>
+
+                <div class="test_head_data d_flex_space">
+                   <p class="">Bearbeitungszeit: {{ currentTestTime }} Min.</p>
+                   <p class="test_head_data_item">Punktzahl: <b class="test_total_number">/{{ currentTestPoints }}</b></p>    
+                </div>
+
+                <div class="added_questions_empty_container d_flex_column" *ngIf="addedToTest.length == 0">
+                    <button (click)="openPreview()" class="question_add_btn d_flex"><img class="add_icon" src="assets/add.png"alt=""></button>
+                    <p class="added_questions_empty_info" >Noch keine Fragen hinzugefügt</p>
+                </div>
+            
+                <div [class.d_none]="!preview" class="add_question_container d_flex">
+                    <button (click)="showOverlay()" class="add_question_btn">Test Speichern</button>
+                    <button (click)="showOverlay()" class="add_question_btn">Drucken</button>
+                </div>
+            
+                
+           
+
+
             <div class="question_wrapper d_flex_column" *ngFor="let data of addedToTest let i = index">
                 
                 <div class="question_test">
                     <div class="d_flex_space question_head_container">
                         <div class="question_info d_flex_start">
-                            <div class="questio_test_number">
+                            <div class="question_test_number">
                                 Aufgabe {{ i + 1 }}
                             </div>
                             
                         </div>
 
                         <div class="question_add d_flex"> 
-                            <div class="questio_test_points">
+                            <div class="question_test_points">
                                 /{{ data.punktzahl }}
                              </div>
                             <button id="{{ 'remove_btn' + i }}" (click)="removeFromTest(data.id)"
@@ -279,9 +312,7 @@
                         </div>
                     </div>
 
-                    <div class="add_question_container d_flex">
-                        <button (click)="showOverlay()" class="add_question_btn">Neue Frage anlegen</button>
-                    </div>
+                   
 
 
 
