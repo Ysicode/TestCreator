@@ -1,3 +1,9 @@
+body {
+    margin: 0;
+    background: #f2f3f4;
+    font-family: "Montserrat", sans-serif;
+}
+
 .spinner {
     position: fixed;
     height: 100vw;
@@ -229,10 +235,9 @@ style for rendered subjects
 
 .headline_test_infos {
     padding-bottom: 7px;
-    max-width: 960px;
     padding-top: 7px;
     margin-top: 100px;
-    width: calc(100% - 5px);
+    width: 100%;
     background: #f2f3f4;
     position: sticky;
     margin-bottom: 15px;
@@ -242,7 +247,7 @@ style for rendered subjects
 
 .headline_test_infos_inside_container {
     max-width: 1000px;
-    width: calc(100% - 40px);
+    width: calc(100% - 20px);
 }
 
 .test_info_item {
@@ -278,7 +283,7 @@ style for rendered subjects
 
 .question_container {
     margin-top: 5px;
-    font-size: calc(100vw * 0.016);
+    font-size: calc(100vw * 0.02);
     font-size: max 20px;
     margin-bottom: 5px;
 }
@@ -289,7 +294,7 @@ style for rendered subjects
 }
 
 .question_info {
-    font-size: 13px;
+    font-size: calc(100vw * 0.018);
 }
 
 .question_info_btn {
@@ -342,7 +347,7 @@ style for rendered subjects
 }
 
 .question_img {
-    max-width: 500px;
+    max-width: 40%;
     max-height: 250px;
 }
 
@@ -420,9 +425,16 @@ Answer styles
 Styles für die Vorschau sektion
 */
 
+.preview_question_container {
+    margin-top: 5px;
+    font-size: calc(100vw * 0.016);
+    font-size: max 20px;
+    margin-bottom: 5px;
+}
+
 .test_head_wrapper {
     width: 82%;
-    margin-top: 60px;
+    margin-top: calc((100vw - 30px) * 0.07);
 }
 
 .test_head {
@@ -488,9 +500,9 @@ Styles für die Vorschau sektion
 }
 
 .test_dinA4 {
-    height: calc((100vw - 30px) * 1.41);
+    height: calc((100vw - 30px) * 1.65);
     background: white;
-    max-height: 1414px;
+    max-height: 1500px;
     width: calc(100vw - 30px);
     margin-bottom: 100px;
     max-width: 1000px;
@@ -510,19 +522,20 @@ Styles für die Vorschau sektion
     }
 
     .remove_from_test_btn {
-        border: 2px solid #da5838;
+        position: absolute;
+        object-fit: cover;
+        border: 1px solid #da5838;
         border-radius: 40px;
-        margin-left: 20px;
+        height: 25px;
+        width: 25px;
         &:hover {
-            background: #da5838;
+            background: #f9d1c9;
             cursor: pointer;
         }
     }
 
     .remove_icon {
-        transform: rotate(45deg);
-        width: 2vw;
-        max-width: 25px;
+        width: 19px;
     }
 }
 
@@ -531,21 +544,145 @@ Styles für die Vorschau sektion
     font-weight: bold;
 }
 
+.preview_question_img {
+    width: 30%;
+}
+
+/* rangebar Vorschau
+*/
+
+.rangebar_wrapper {
+    position: fixed;
+    height: 100vh;
+    top: 0;
+    right: 0;
+    width: 90vw;
+
+    .rangbar_container {
+        height: 400px;
+        width: 100px;
+    }
+
+    .rangebar_text {
+        transform: rotate(270deg);
+        margin-bottom: 170px;
+    }
+
+    .range_style {
+        -webkit-appearance: none;
+        transform: rotate(90deg);
+        width: 300px;
+        height: 25px;
+        background: #f2d8b7;
+        outline: none;
+        opacity: 1;
+        transition: opacity 0.2s;
+    }
+
+    .range_style:hover {
+        opacity: 0.9;
+    }
+
+    .range_style::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 25px;
+        height: 25px;
+        background: #b6b0a9;
+        cursor: pointer;
+    }
+
+    .range_style::-moz-range-thumb {
+        width: 25px;
+        height: 25px;
+        background: #b6b0a9;
+        cursor: pointer;
+    }
+}
+
+.height_info_wrapper {
+    cursor: pointer;
+    height: 20px;
+    width: 100%;
+    border-bottom: 1px solid rgb(40, 163, 102);
+    max-height: 34px;
+
+    &:hover {
+        background: rgb(176, 226, 200);
+    }
+
+    .double_arrows {
+        transform: rotate(90deg);
+        width: 15px;
+    }
+}
+
+.img_wrapper {
+    position: relative;
+}
+
+.img_edit_btn {
+   position: absolute;
+    left: 0;
+    background: #f2f3f4;
+    border-left: 1px solid rgb(40, 163, 102);
+    width: 20px;
+    top: 0;
+    bottom: 0px;
+
+    &:hover {
+        background: rgb(176, 226, 200);
+    }
+
+    .right_double_arrow {
+        width: 15px;
+    }
+
+    .left_double_arrow {
+        width: 15px;
+        transform: rotate(180deg);
+    }
+}
+
 @media (max-width: 850px) {
     .hide_on_mobile {
         display: none;
     }
 
-    /*vorschau
-    */
+    .question_info_btn {
+        margin-right: 5px;
+    }
 }
 
 @media (min-width: 1030px) {
-    .question_container, .question_test_number, .test_dinA4 {
+    .preview_question_container,
+    .question_test_number,
+    .test_dinA4 {
         font-size: 17px;
     }
     .h1 {
         font-size: 25px;
     }
 
+    .test_head_wrapper {
+        margin-top: 60px;
+    }
+}
+
+@media (min-width: 850px) {
+    .question_info {
+        font-size: 13px;
+    }
+    .question_container {
+        font-size: 17px;
+    }
+}
+
+@media print {
+    #test_dinA4 {
+        visibility: visible !important;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
 }

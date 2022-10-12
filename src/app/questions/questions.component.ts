@@ -17,20 +17,25 @@ import { Observable } from 'rxjs';
   styleUrls: ['./questions.component.scss']
 })
 export class QuestionsComponent implements OnInit, AfterViewInit {
-  loading: Boolean = false;
-  Checklist = require('@editorjs/checklist');
-  Header = require('@editorjs/header');
 
+  //variables for the Questions list view
+  loading: Boolean = false;
   dataFromFirestore$: Observable<any>;
   loadedQuestions = [];
   loadedUserdata = [];
   loaded = false;
 
   answerVisible = false;
-  addedToTest = [];
-
   currentQuestion: any;
   currentTable = {};
+  currentId: string;
+
+  // variables for the new question window
+  Checklist = require('@editorjs/checklist');
+  @ViewChild('questionForm') form: NgForm;
+  @ViewChild('editor', { read: ElementRef, static: true })
+  editorElement: ElementRef;
+  private editor: EditorJS;
 
   selectedSubjectButton: number;
   selectedClassButton: number;
@@ -40,18 +45,18 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
   newClass = false;
 
   editMode = false;
-  currentId: string;
-  @ViewChild('questionForm') form: NgForm;
+  overlay = false;
 
-  @ViewChild('editor', { read: ElementRef, static: true })
-  editorElement: ElementRef;
-  private editor: EditorJS;
-
+  //multi used variables
   currentTestPoints: number = 0;
   currentTestTime: number = 0;
 
-  overlay = false;
+  //variables for the preview window
+  addedToTest = [];
   preview = false;
+  editQuestionAtPreview = false;
+  editImageAtPreview = false;
+  currentEditContainer: number;
 
   file: any;
 
@@ -73,15 +78,6 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
       holder: this.editorElement.nativeElement,
       tools: {
         underline: Underline,
-        header: {
-          class: this.Header,
-          inlineToolbar: true,
-          config: {
-            placeholder: 'Enter a header',
-            levels: [1],
-            defaultLevel: 1
-          }
-        },
         table: {
           class: Table,
           inlineToolbar: true,
@@ -375,9 +371,9 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
   }
 
   styleAddButton(i: number, status: string) {
-    status == 'add_styling' ? 
-    (this.addClasslist('add_btn' + i, 'd_none'), this.removeClasslist('remove_btn' + i, 'd_none')) : 
-    (this.addClasslist('remove_btn' + i, 'd_none'), this.removeClasslist('add_btn' + i, 'd_none'))
+    status == 'add_styling' ?
+      (this.addClasslist('add_btn' + i, 'd_none'), this.removeClasslist('remove_btn' + i, 'd_none')) :
+      (this.addClasslist('remove_btn' + i, 'd_none'), this.removeClasslist('add_btn' + i, 'd_none'))
   }
 
   setTestInfo() {
@@ -391,7 +387,7 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
 
   showOverlay() {
     this.overlay = true;
-    this. setForm();
+    this.setForm();
     window.scrollTo(0, 0);
   }
 
@@ -403,6 +399,31 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     this.preview = !this.preview;
   }
 
+  showRangeToStyleQuestion(id: number) {
+    this.editQuestionAtPreview = !this.editQuestionAtPreview;
+    this.currentEditContainer = id;
+  }
+
+  showRangeToStyleImage(id: number) {
+    console.log(id);
+    
+    this.editImageAtPreview = !this.editImageAtPreview;
+    this.currentEditContainer = id;
+  }
+
+  setHeightQuestion(height: string) {
+    let questionHeight = document.getElementById(`question${this.currentEditContainer}`);
+    questionHeight.style.paddingBottom = `${Number(height) / 2}%`;
+  }
+
+  setImageSize(width: string) {
+    console.log(width);
+    
+    let image = document.getElementById(`questionImage${this.currentEditContainer}`);
+    image.style.width = `${width}%`;
+  }
+
+
   addClasslist(id: string, classList: string) {
     document.getElementById(id).classList.add(classList);
   }
@@ -411,4 +432,7 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     document.getElementById(id).classList.remove(classList);
   }
 
+  printTest() {
+    window.print();
+  }
 }

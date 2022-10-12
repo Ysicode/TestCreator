@@ -46,6 +46,13 @@ body {
     flex-direction: column;
 }
 
+.d_flex_column_end {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    flex-direction: column;
+}
+
 .d_flex_end {
     display: flex;
     align-items: center;
@@ -78,6 +85,20 @@ h3 {
     width: 500px;
     height: 2px;
     background-color: #0000003b;
+}
+
+@media print {
+    body *:not(#test_dinA4) :not(#test_dinA4 *) {
+        visibility: hidden;
+    }
+
+    @page {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    body {
+  
+    }
 }
 
 

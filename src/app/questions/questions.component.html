@@ -195,12 +195,9 @@
                         <button (click)="showOverlay()" class="add_question_btn">Neue Frage anlegen</button>
                     </div>
 
-
-
                     <div *ngFor="let question of data['frage']['blocks']">
-                        <div class="question_container" [class.h1]="question['data']['level'] == 1"
+                        <div class="question_container"
                             [innerHTML]="question['data']['text'] ">
-
                         </div>
                         <div *ngIf="question['data']['file']">
                             <img class="question_img" src="{{ question['data']['file']['url'] }}" alt="">
@@ -250,7 +247,9 @@
         </div>
 
 
-        <div [class.d_none]="!preview" class="test_dinA4 d_flex_column_start">
+
+
+        <div id="test_dinA4" [class.d_none]="!preview" class="test_dinA4 d_flex_column_start">
                 <div class="test_head_wrapper d_flex_space">
                     <div class="test_head">
                         <p class="school_name">BSZ Alois Senefelder, Fachbereich Druck- und Medientechnik</p>
@@ -282,50 +281,38 @@
                     <p class="added_questions_empty_info" >Noch keine Fragen hinzugefügt</p>
                 </div>
             
-                <div [class.d_none]="!preview" class="add_question_container d_flex">
-                    <button (click)="showOverlay()" class="add_question_btn">Test Speichern</button>
-                    <button (click)="showOverlay()" class="add_question_btn">Drucken</button>
-                </div>
-            
-                
-           
-
-
-            <div class="question_wrapper d_flex_column" *ngFor="let data of addedToTest let i = index">
-                
-                <div class="question_test">
+            <div id="question{{ i }}" class="question_wrapper d_flex_column" *ngFor="let data of addedToTest let i = index">   
+                <div  class="question_test">
                     <div class="d_flex_space question_head_container">
                         <div class="question_info d_flex_start">
                             <div class="question_test_number">
                                 Aufgabe {{ i + 1 }}
-                            </div>
-                            
+                            </div>            
                         </div>
-
                         <div class="question_add d_flex"> 
                             <div class="question_test_points">
                                 /{{ data.punktzahl }}
                              </div>
                             <button id="{{ 'remove_btn' + i }}" (click)="removeFromTest(data.id)"
-                                class="remove_from_test_btn show_onHover d_flex"><img class="remove_icon" src="assets/add.png"
+                                class="remove_from_test_btn show_onHover d_flex"><img class="remove_icon" src="assets/x_icon.png"
                                     alt=""></button>
                         </div>
                     </div>
-
-                   
-
-
-
                     <div *ngFor="let question of data['frage']['blocks']">
-                        <div class="question_container" [class.h1]="question['data']['level'] == 1"  
-                             [innerHTML]="question['data']['text'] ">
-
+                        <div class="preview_question_container"  
+                            [innerHTML]="question['data']['text'] ">
                         </div>
                         <div *ngIf="question['data']['file']">
-                            <img class="question_img" src="{{ question['data']['file']['url'] }}" alt="">
-
+                            <div class="img_wrapper d_flex_start">
+                                <img id="questionImage{{ i }}" class="preview_question_img" src="{{ question['data']['file']['url'] }}" alt="">
+                                <div (click)="showRangeToStyleImage(i)" class="img_edit_btn d_flex_column show_onHover">
+                                    <img class="right_double_arrow" src="assets/double_arrow.png" alt="">
+                                    <img class="left_double_arrow" src="assets/double_arrow.png" alt="">
+                                </div>
+                            </div>
+                            
                         </div>
-                        <div class="question_container" *ngFor="let items of question['data']['items'] let i = index">
+                        <div class="preview_question_container" *ngFor="let items of question['data']['items'] let i = index">
                             <ol class="d_flex_start" *ngIf="question['data']['style'] == 'ordered'">
                                 <p class="ordered_list_number">{{i + 1}}.</p>
                                 <p class="order_list_item" [innerHTML]="items"></p>
@@ -334,7 +321,7 @@
                                 <li [innerHTML]="items"></li>
                             </ul>
                         </div>
-                        <div class="question_container" *ngIf="question['data']['table']">
+                        <div class="preview_question_container" *ngIf="question['data']['table']">
                             <div [class.bold]="i == 0 && question['data']['withHeadings'] == true "
                                 class="d_flex_start tableRow"
                                 *ngFor="let position of question['data']['table']['length'] let i = index">
@@ -347,10 +334,33 @@
                                 </div>
                             </div>
                         </div>
+                    </div> 
+                    <div (click)="showRangeToStyleQuestion(i)" class="height_info_wrapper d_flex show_onHover">
+                        <img class="double_arrows" src="assets/double_arrow.png" alt="">                
                     </div>
-
-                   
                 </div>
+
+               
+            </div>
+        </div>
+        <div [class.d_none]="!preview" class="add_question_container d_flex">
+            <button (click)="showOverlay()" class="add_question_btn">Test Speichern</button>
+            <button (click)="printTest()" class="add_question_btn">Drucken</button>
+        </div>
+
+        <div (click)="showRangeToStyleQuestion(1)" [class.d_none]="!editQuestionAtPreview" class="rangebar_wrapper d_flex_column_end">  
+            <div (click)="$event.stopPropagation()" class="d_flex_column rangbar_container">
+                <p class="rangebar_text">{{ styleHeight.value }}mm</p>
+                <input (change)="setHeightQuestion(styleHeight.value)" class="range_style" type="range" orient="vertical" min="0" max="300"
+                step="10" id="styleHeight" #styleHeight ngModel>
+            </div>
+        </div>
+
+        <div (click)="showRangeToStyleImage(1)" [class.d_none]="!editImageAtPreview" class="rangebar_wrapper d_flex_column_end">  
+            <div (click)="$event.stopPropagation()" class="d_flex_column rangbar_container">
+                <p class="rangebar_text">{{ styleWidth.value }}%</p>
+                <input (change)="setImageSize(styleWidth.value)" class="range_style" type="range" orient="vertical" min="20" max="100"
+                step="5" id="styleHeight" #styleWidth ngModel>
             </div>
         </div>
     </div>
