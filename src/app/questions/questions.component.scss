@@ -290,7 +290,7 @@ style for rendered subjects
 
 .question_head_container {
     display: flex;
-    margin-bottom: 15px;
+    margin-bottom: 1.5%;
 }
 
 .question_info {
@@ -426,15 +426,12 @@ Styles für die Vorschau sektion
 */
 
 .preview_question_container {
-    margin-top: 5px;
     font-size: calc(100vw * 0.016);
-    font-size: max 20px;
-    margin-bottom: 5px;
 }
 
 .test_head_wrapper {
     width: 82%;
-    margin-top: calc((100vw - 30px) * 0.07);
+    margin-top: 9%;
 }
 
 .test_head {
@@ -450,17 +447,25 @@ Styles für die Vorschau sektion
 }
 
 .testname {
-    margin-top: 5px;
+    margin-top: 0px;
     margin-bottom: 0px;
     font-weight: bold;
 }
 
+.class {
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+
 .message {
+    margin-top: 0px;
+    margin-bottom: 0px;
     font-weight: bold;
 }
 
 .test_head_infos {
     width: 82%;
+    margin-top: 2%;
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
@@ -473,7 +478,7 @@ Styles für die Vorschau sektion
 .test_head_data {
     width: 82%;
     border-bottom: 2px solid black;
-    margin-bottom: 30px;
+    margin-bottom: 5%;
 }
 
 .test_head_data_item {
@@ -500,12 +505,23 @@ Styles für die Vorschau sektion
 }
 
 .test_dinA4 {
-    height: calc((100vw - 30px) * 1.65);
+    height: calc((100vw) * 1.57);
     background: white;
-    max-height: 1500px;
+    max-height: 1580px;
     width: calc(100vw - 30px);
-    margin-bottom: 100px;
+    margin-bottom: 2vw;
     max-width: 1000px;
+    font-size: calc(100vw * 0.016);
+}
+
+.second_dinA4 {
+    height: calc((100vw) * 1.57);
+    background: white;
+    max-height: 1580px;
+    width: calc(100vw - 30px);
+    margin-bottom: 2vw;
+    max-width: 1000px;
+    z-index: -1;
     font-size: calc(100vw * 0.016);
 }
 
@@ -546,6 +562,11 @@ Styles für die Vorschau sektion
 
 .preview_question_img {
     width: 30%;
+}
+
+.preview_lists {
+    margin-top: 1%;
+    margin-bottom: 1%;
 }
 
 /* rangebar Vorschau
@@ -665,8 +686,20 @@ Styles für die Vorschau sektion
     }
 
     .test_head_wrapper {
-        margin-top: 60px;
+        margin-top: 73px;
     }
+
+    .second_dinA4 {
+        margin-bottom: 22px;
+    }
+
+    .test_dinA4 {
+        margin-bottom: 22px;
+    }
+
+   
+
+   
 }
 
 @media (min-width: 850px) {
@@ -677,6 +710,19 @@ Styles für die Vorschau sektion
         font-size: 17px;
     }
 }
+
+/* Einstellen/Anpassen der DinA4 Seitenverhältnisse
+*/
+
+// @media (max-width: 1000px) {
+//     .second_dinA4 {
+//         margin-bottom: 125px;
+//     }
+
+//     .test_dinA4 {
+//         margin-bottom: 125px;
+//     }
+// }
 
 @media print {
     #test_dinA4 {

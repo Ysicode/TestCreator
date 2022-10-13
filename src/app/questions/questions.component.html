@@ -262,8 +262,8 @@
 
                 <div class="test_head_infos d_flex_space">
                     <div class="name_date_wrapper d_flex_start_column">
-                        <p class="">Name:</p>
-                        <p class="">Datum:</p>
+                        <p class="class">Name:</p>
+                        <p class="class">Datum:</p>
                     </div>
                     <div class="class_wrapper">
                          <p class="class">Klasse:</p>
@@ -272,7 +272,7 @@
                 </div>
 
                 <div class="test_head_data d_flex_space">
-                   <p class="">Bearbeitungszeit: {{ currentTestTime }} Min.</p>
+                   <p class="class">Bearbeitungszeit: {{ currentTestTime }} Min.</p>
                    <p class="test_head_data_item">Punktzahl: <b class="test_total_number">/{{ currentTestPoints }}</b></p>    
                 </div>
 
@@ -313,11 +313,11 @@
                             
                         </div>
                         <div class="preview_question_container" *ngFor="let items of question['data']['items'] let i = index">
-                            <ol class="d_flex_start" *ngIf="question['data']['style'] == 'ordered'">
+                            <ol class="d_flex_start preview_lists" *ngIf="question['data']['style'] == 'ordered'">
                                 <p class="ordered_list_number">{{i + 1}}.</p>
                                 <p class="order_list_item" [innerHTML]="items"></p>
                             </ol>
-                            <ul *ngIf="question['data']['style'] == 'unordered'">
+                            <ul class="preview_unordered_list" *ngIf="question['data']['style'] == 'unordered'">
                                 <li [innerHTML]="items"></li>
                             </ul>
                         </div>
@@ -339,10 +339,22 @@
                         <img class="double_arrows" src="assets/double_arrow.png" alt="">                
                     </div>
                 </div>
-
-               
             </div>
         </div>
+
+        <div class="second_dinA4">
+
+        </div>
+        <div class="second_dinA4">
+
+        </div>
+        <div class="second_dinA4">
+
+        </div>
+        <div class="second_dinA4">
+
+        </div>
+
         <div [class.d_none]="!preview" class="add_question_container d_flex">
             <button (click)="showOverlay()" class="add_question_btn">Test Speichern</button>
             <button (click)="printTest()" class="add_question_btn">Drucken</button>
