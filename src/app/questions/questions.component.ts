@@ -53,10 +53,12 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
 
   //variables for the preview window
   addedToTest = [];
+  dinA4Pages = [];
   preview = false;
   editQuestionAtPreview = false;
   editImageAtPreview = false;
   currentEditContainer: number;
+  heightOfAllPreviewQuestions = 0;
 
   file: any;
 
@@ -395,8 +397,28 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     this.overlay = false;
   }
 
-  openPreview() {
+  openPreview() { 
+    setTimeout(() => {
+      this.checkHeightOfAllPreviewQuestions();
+    }, 200);
     this.preview = !this.preview;
+  }
+
+  checkHeightOfAllPreviewQuestions() {
+    this.heightOfAllPreviewQuestions = 0;
+    for (let i = 0; i < this.addedToTest.length; i++) {
+      let questionHeight = document.getElementById(`question${i}`);
+      this.heightOfAllPreviewQuestions += questionHeight.clientHeight;
+      let paperHeight = document.getElementById('test_dinA4').clientHeight;
+      console.log(paperHeight);
+      if (this.heightOfAllPreviewQuestions  > paperHeight * (this.dinA4Pages.length )) {
+        this.dinA4Pages.push(this.dinA4Pages.length);
+      }
+      if (this.heightOfAllPreviewQuestions  < paperHeight * (this.dinA4Pages.length )) {
+        this.dinA4Pages.pop();
+      }
+    }
+    
   }
 
   showRangeToStyleQuestion(id: number) {
@@ -405,8 +427,6 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
   }
 
   showRangeToStyleImage(id: number) {
-    console.log(id);
-    
     this.editImageAtPreview = !this.editImageAtPreview;
     this.currentEditContainer = id;
   }
@@ -414,13 +434,17 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
   setHeightQuestion(height: string) {
     let questionHeight = document.getElementById(`question${this.currentEditContainer}`);
     questionHeight.style.paddingBottom = `${Number(height) / 2}%`;
+    setTimeout(() => {
+      this.checkHeightOfAllPreviewQuestions();
+    }, 200);
   }
 
   setImageSize(width: string) {
-    console.log(width);
-    
     let image = document.getElementById(`questionImage${this.currentEditContainer}`);
     image.style.width = `${width}%`;
+    setTimeout(() => {
+      this.checkHeightOfAllPreviewQuestions();
+    }, 200);
   }
 
 

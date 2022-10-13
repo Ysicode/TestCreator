@@ -199,20 +199,35 @@
                         <div class="question_container"
                             [innerHTML]="question['data']['text'] ">
                         </div>
-                        <div *ngIf="question['data']['file']">
+
+                        <div ngClass="question_container" *ngIf="question['type'] == 'checklist'" class="margin_left ">
+                            <div class="element_margin_text d_flex_start" *ngFor="let item of question['data']['items'] let k = index">
+                                <div class="checkfield">
+                                </div>
+                                <p class="checkbox_item" [innerHTML]="item['text']"></p>
+                            </div>
+                        </div>
+
+                        <div class="element_margin_text" *ngIf="question['data']['file']">
                             <img class="question_img" src="{{ question['data']['file']['url'] }}" alt="">
 
                         </div>
+
                         <div class="question_container" *ngFor="let items of question['data']['items'] let i = index">
-                            <ol class="d_flex_start" *ngIf="question['data']['style'] == 'ordered'">
-                                <p class="ordered_list_number">{{i + 1}}.</p>
-                                <p class="order_list_item" [innerHTML]="items"></p>
-                            </ol>
-                            <ul *ngIf="question['data']['style'] == 'unordered'">
-                                <li [innerHTML]="items"></li>
-                            </ul>
+                            <div class="margin_left element_margin_text" *ngIf="question['data']['style'] == 'ordered'">
+                                <ol class="d_flex_start">
+                                    <p class="ordered_list_number">{{i + 1}}.</p>
+                                    <p class="order_list_item" [innerHTML]="items"></p>
+                                </ol>
+                            </div>
+                            <div class="margin_left element_margin_text" *ngIf="question['data']['style'] == 'unordered'">
+                                <ul>
+                                    <li [innerHTML]="items"></li>
+                                </ul>
+                            </div>
                         </div>
-                        <div class="question_container" *ngIf="question['data']['table']">
+
+                        <div class="question_container element_margin_text" *ngIf="question['data']['table']">
                             <div [class.bold]="i == 0 && question['data']['withHeadings'] == true "
                                 class="d_flex_start tableRow"
                                 *ngFor="let position of question['data']['table']['length'] let i = index">
@@ -225,6 +240,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
 
                     <div class="answer_btn_container">
@@ -247,6 +263,8 @@
         </div>
 
 
+
+<div id="test_print">
 
 
         <div id="test_dinA4" [class.d_none]="!preview" class="test_dinA4 d_flex_column_start">
@@ -302,7 +320,16 @@
                         <div class="preview_question_container"  
                             [innerHTML]="question['data']['text'] ">
                         </div>
-                        <div *ngIf="question['data']['file']">
+
+                        <div *ngIf="question['type'] == 'checklist'" class="margin_left ">
+                            <div class="element_margin_text d_flex_start" *ngFor="let item of question['data']['items'] let k = index">
+                                <div class="checkfield">
+                                </div>
+                                <p class="checkbox_item" [innerHTML]="item['text']"></p>
+                            </div>
+                        </div>
+                        
+                        <div class="element_margin_text" *ngIf="question['data']['file']">
                             <div class="img_wrapper d_flex_start">
                                 <img id="questionImage{{ i }}" class="preview_question_img" src="{{ question['data']['file']['url'] }}" alt="">
                                 <div (click)="showRangeToStyleImage(i)" class="img_edit_btn d_flex_column show_onHover">
@@ -313,15 +340,22 @@
                             
                         </div>
                         <div class="preview_question_container" *ngFor="let items of question['data']['items'] let i = index">
-                            <ol class="d_flex_start preview_lists" *ngIf="question['data']['style'] == 'ordered'">
-                                <p class="ordered_list_number">{{i + 1}}.</p>
-                                <p class="order_list_item" [innerHTML]="items"></p>
-                            </ol>
-                            <ul class="preview_unordered_list" *ngIf="question['data']['style'] == 'unordered'">
-                                <li [innerHTML]="items"></li>
-                            </ul>
+                            <div class="margin_left element_margin_text" *ngIf="question['data']['style'] == 'ordered'">
+                                <ol class="d_flex_start preview_lists">
+                                    <p class="ordered_list_number">{{i + 1}}.</p>
+                                    <p class="order_list_item" [innerHTML]="items"></p>
+                                </ol>
+                            </div>
+                            <div class="margin_left element_margin_text" *ngIf="question['data']['style'] == 'unordered'">
+                                <ul class="preview_unordered_list">
+                                    <li [innerHTML]="items"></li>
+                                </ul>
+                            </div>
+
+                           
+                            
                         </div>
-                        <div class="preview_question_container" *ngIf="question['data']['table']">
+                        <div class="preview_question_container element_margin_text" *ngIf="question['data']['table']">
                             <div [class.bold]="i == 0 && question['data']['withHeadings'] == true "
                                 class="d_flex_start tableRow"
                                 *ngFor="let position of question['data']['table']['length'] let i = index">
@@ -340,20 +374,18 @@
                     </div>
                 </div>
             </div>
+            <div class="page_number_wrapper d_flex">
+                <p class="page_number"> 1/{{ dinA4Pages.length + 1 }}</p>
+            </div>
         </div>
 
-        <div class="second_dinA4">
-
+        <div id="page{{ k }}" *ngFor="let page of dinA4Pages let k = index " [class.d_none]="!preview" class="second_dinA4">
+            <div class="page_number_wrapper d_flex">
+                <p class="page_number">{{ k + 2 }}/{{ dinA4Pages.length + 1}}</p>
+            </div>
+            
         </div>
-        <div class="second_dinA4">
-
-        </div>
-        <div class="second_dinA4">
-
-        </div>
-        <div class="second_dinA4">
-
-        </div>
+    </div>
 
         <div [class.d_none]="!preview" class="add_question_container d_flex">
             <button (click)="showOverlay()" class="add_question_btn">Test Speichern</button>
@@ -361,7 +393,7 @@
         </div>
 
         <div (click)="showRangeToStyleQuestion(1)" [class.d_none]="!editQuestionAtPreview" class="rangebar_wrapper d_flex_column_end">  
-            <div (click)="$event.stopPropagation()" class="d_flex_column rangbar_container">
+            <div (click)="$event.stopPropagation()" class="d_flex_column_start rangbar_container">
                 <p class="rangebar_text">{{ styleHeight.value }}mm</p>
                 <input (change)="setHeightQuestion(styleHeight.value)" class="range_style" type="range" orient="vertical" min="0" max="300"
                 step="10" id="styleHeight" #styleHeight ngModel>
@@ -369,7 +401,7 @@
         </div>
 
         <div (click)="showRangeToStyleImage(1)" [class.d_none]="!editImageAtPreview" class="rangebar_wrapper d_flex_column_end">  
-            <div (click)="$event.stopPropagation()" class="d_flex_column rangbar_container">
+            <div (click)="$event.stopPropagation()" class="d_flex_column_start rangbar_container">
                 <p class="rangebar_text">{{ styleWidth.value }}%</p>
                 <input (change)="setImageSize(styleWidth.value)" class="range_style" type="range" orient="vertical" min="20" max="100"
                 step="5" id="styleHeight" #styleWidth ngModel>

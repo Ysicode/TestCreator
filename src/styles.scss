@@ -4,6 +4,14 @@ body {
     font-family: "Montserrat", sans-serif;
 }
 
+ol {
+    padding-left: 0px;
+}
+
+ul {
+    padding-left: 0px;
+}
+
 .main_wrapper {
     max-width: 1700px;
     width: 80vw;
@@ -75,7 +83,6 @@ h1 {
     font-weight: bold !important;
 }
 
-
 h3 {
     font-size: 17px !important;
     font-weight: bold !important;
@@ -88,7 +95,7 @@ h3 {
 }
 
 @media print {
-    body *:not(#test_dinA4) :not(#test_dinA4 *) {
+    body *:not(#test_print):not(#test_print *) {
         visibility: hidden;
     }
 
@@ -96,7 +103,4 @@ h3 {
         margin-top: 0;
         margin-bottom: 0;
     }
-    
 }
-
-

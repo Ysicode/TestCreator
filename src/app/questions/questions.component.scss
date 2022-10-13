@@ -123,7 +123,7 @@ body {
 .rangebar {
     -webkit-appearance: none;
     width: 100%;
-    height: 25px;
+    height: 15px;
     background: #f2d8b7;
     outline: none;
     opacity: 1;
@@ -271,7 +271,7 @@ style for rendered subjects
 
 .question_wrapper {
     width: calc(100% - 40px);
-    margin-bottom: 15px;
+    margin-bottom: 1%;
 }
 
 .question {
@@ -337,8 +337,8 @@ style for rendered subjects
 
 .tableItem {
     border: 1px solid black;
-    height: 25px;
-    padding: 5px;
+    height: 2.3vw;
+    padding: 1%;
     margin: -0.5px;
 }
 
@@ -349,6 +349,28 @@ style for rendered subjects
 .question_img {
     max-width: 40%;
     max-height: 250px;
+}
+
+.margin_left {
+    margin-left: 4vw;
+}
+
+.element_margin_text {
+    margin-bottom: 1vw;
+    margin-top: 1vw;
+}
+
+.checkfield {
+    width: 2vw;
+    margin-right: 1.5vw;
+    height: 2vw;
+    border-radius: 50px;
+    border: 1px solid black;
+}
+
+.checkbox_item {
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
 .bold {
@@ -505,19 +527,33 @@ Styles für die Vorschau sektion
 }
 
 .test_dinA4 {
+    position: relative;
     height: calc((100vw) * 1.57);
     background: white;
-    max-height: 1580px;
+    max-height: 1615px;
     width: calc(100vw - 30px);
     margin-bottom: 2vw;
     max-width: 1000px;
     font-size: calc(100vw * 0.016);
 }
 
+.page_number_wrapper {
+    position: absolute;
+    bottom: 5vw;
+    left: 0;
+    right: 0;
+
+    .page_number {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+}
+
 .second_dinA4 {
+    position: relative;
     height: calc((100vw) * 1.57);
     background: white;
-    max-height: 1580px;
+    max-height: 1615px;
     width: calc(100vw - 30px);
     margin-bottom: 2vw;
     max-width: 1000px;
@@ -578,6 +614,7 @@ Styles für die Vorschau sektion
     top: 0;
     right: 0;
     width: 90vw;
+    z-index: 999;
 
     .rangbar_container {
         height: 400px;
@@ -593,7 +630,8 @@ Styles für die Vorschau sektion
         -webkit-appearance: none;
         transform: rotate(90deg);
         width: 300px;
-        height: 25px;
+        height: 15px;
+        box-shadow: 0px 0px 59px 0px #bcbbbb;
         background: #f2d8b7;
         outline: none;
         opacity: 1;
@@ -643,7 +681,7 @@ Styles für die Vorschau sektion
 }
 
 .img_edit_btn {
-   position: absolute;
+    position: absolute;
     left: 0;
     background: #f2f3f4;
     border-left: 1px solid rgb(40, 163, 102);
@@ -675,18 +713,47 @@ Styles für die Vorschau sektion
     }
 }
 
+@media (max-width: 600px) {
+    .test_info_item {
+        font-size: 15px;
+    }
+
+    .preview_btn {
+        font-size: 15px;
+        padding: 8px;
+        border-radius: 5px;
+    }
+
+    .question_add_btn {
+        padding: 5px;
+    }
+
+    .added {
+        border: 2px solid rgb(40, 163, 102);
+    }
+
+    .answer_btn {
+        font-size: 17px;
+    }
+
+    .question_arrow {
+        height: 19px;
+        width: 19px;
+    }
+}
+
 @media (min-width: 1030px) {
     .preview_question_container,
     .question_test_number,
     .test_dinA4 {
-        font-size: 17px;
+        font-size: 16.5px;
     }
     .h1 {
         font-size: 25px;
     }
 
     .test_head_wrapper {
-        margin-top: 73px;
+        margin-top: 90px;
     }
 
     .second_dinA4 {
@@ -697,9 +764,27 @@ Styles für die Vorschau sektion
         margin-bottom: 22px;
     }
 
-   
+    .tableItem {
+        border: 1px solid black;
+        padding: 4.3px;
+        height: 23px;
+        margin: -0.5px;
+    }
 
-   
+    .element_margin_text {
+        margin-top: 10.5px;
+        margin-bottom: 10.5px;
+    }
+
+    .checkfield {
+        width: 20px;
+        margin-right: 15px;
+        height: 20px;
+    }
+
+    .margin_left {
+        margin-left: 42px;
+    }
 }
 
 @media (min-width: 850px) {
@@ -711,21 +796,8 @@ Styles für die Vorschau sektion
     }
 }
 
-/* Einstellen/Anpassen der DinA4 Seitenverhältnisse
-*/
-
-// @media (max-width: 1000px) {
-//     .second_dinA4 {
-//         margin-bottom: 125px;
-//     }
-
-//     .test_dinA4 {
-//         margin-bottom: 125px;
-//     }
-// }
-
 @media print {
-    #test_dinA4 {
+    #test_print {
         visibility: visible !important;
         position: absolute;
         top: 0;
