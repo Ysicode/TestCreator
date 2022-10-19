@@ -1,6 +1,6 @@
 body {
     margin: 0;
-    background: #f2f3f4;
+    background: linear-gradient(to right, #c2c2c280, #c8d4d16e);
     font-family: "Montserrat", sans-serif;
 }
 
@@ -94,10 +94,15 @@ h3 {
     background-color: #0000003b;
 }
 
-@media print {
-    body *:not(#test_print):not(#test_print *) {
-        visibility: hidden;
+@media (max-width: 850px) {
+    h2 {
+        font-size: 17px !important;
+        text-align: center;
     }
+}
+
+@media print {
+   
 
     @page {
         margin-top: 0;

@@ -5,11 +5,10 @@ import { NgForm } from '@angular/forms';
 import EditorJS from '@editorjs/editorjs';
 import Underline from '@editorjs/underline';
 import List from '@editorjs/list';
-import Table from '@editorjs/table';
 import ImageTool from '@editorjs/image';
+import Table from '@editorjs/table';
 import { deleteDoc, setDoc, updateDoc } from '@firebase/firestore';
 import { Observable } from 'rxjs';
-
 
 @Component({
   selector: 'app-questions',
@@ -21,6 +20,7 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
   //variables for the Questions list view
   loading: Boolean = false;
   dataFromFirestore$: Observable<any>;
+  testHeadFromFirestore$: Observable<any>;
   loadedQuestions = [];
   loadedUserdata = [];
   loaded = false;
@@ -31,8 +31,10 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
   currentId: string;
 
   // variables for the new question window
+  @ViewChild("rangeSliderForm") rangebars: NgForm;
   Checklist = require('@editorjs/checklist');
   @ViewChild('questionForm') form: NgForm;
+
   @ViewChild('editor', { read: ElementRef, static: true })
   editorElement: ElementRef;
   private editor: EditorJS;
@@ -53,19 +55,31 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
 
   //variables for the preview window
   addedToTest = [];
+  currentTestHead: any;
   dinA4Pages = [];
   preview = false;
   editQuestionAtPreview = false;
   editImageAtPreview = false;
-  currentEditContainer: number;
+  currentEditContainer: string;
   heightOfAllPreviewQuestions = 0;
+  test = {
+    pages: <any>[{
+      0: [],
+    },
+  ]
+  };
 
   file: any;
 
+  question_number= 1;
+  
   constructor(private firestore: Firestore, public storage: Storage) { }
+
 
   ngOnInit(): void {
     this.getData();
+    console.log(this.test);
+
   }
 
   ngAfterViewInit(): void {
@@ -133,7 +147,6 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
 
   showFile() {
     console.log(this.file);
-
   }
 
   addPhoto() {
@@ -168,7 +181,6 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
         console.log(this.currentQuestion);
       }, 1000)
     });
-
   }
 
   /**
@@ -240,6 +252,12 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
   }
 
   getData() {
+    this.loadQuestions();
+    this.loadSubjectsAndClasses();
+    this.loadtestHead();
+  }
+
+  async loadQuestions() {
     //gets all questions
     const coll: any = collection(this.firestore, '/users/JonasWeiss/fragen');
     this.dataFromFirestore$ = collectionData(coll, { idField: 'id' })
@@ -250,13 +268,24 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
         return y.frage.time - x.frage.time
       })
     })
+  }
 
+  async loadSubjectsAndClasses() {
     //gets UserData like classes and subjects and email adress and username
     const subject: any = collection(this.firestore, '/users/JonasWeiss/subjects');
     this.dataFromFirestore$ = collectionData(subject, { idField: 'id' });
     this.dataFromFirestore$.subscribe((data) => {
       this.loadedUserdata = data;
       console.log(this.loadedUserdata)
+    });
+  }
+
+  async loadtestHead() {
+    const testHead: any = collection(this.firestore, '/users/JonasWeiss/testHead');
+    this.testHeadFromFirestore$ = collectionData(testHead, { idField: 'id' });
+    this.testHeadFromFirestore$.subscribe((data) => {
+      this.currentTestHead = data;
+      console.log(this.currentTestHead)
       this.loaded = true;
     });
   }
@@ -306,7 +335,7 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
   }
 
 
-
+  //Das muss noch gemacht werden!!!!!!!!! Edit function
   updateData(id: string) {
     this.currentId = id;
     this.editMode = true;
@@ -354,28 +383,45 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     for (let i = 0; i < this.loadedQuestions.length; i++) {
       if (this.loadedQuestions[i]['id'] == id) {
         if (status == 'add_styling') {
+          this.test.pages[this.test.pages.length - 1]['0'].push(this.loadedQuestions[i]);
           this.addedToTest.push(this.loadedQuestions[i]);
         }
         this.styleAddButton(i, status);
         this.setTestInfo();
       }
     }
+    this.checkHeightOfAllPreviewQuestions();
+    console.log(this.test.pages[this.test.pages.length - 1]['0'].length);
+    
   }
 
   removeFromTest(id: string) {
     for (let i = 0; i < this.addedToTest.length; i++) {
-      if (this.addedToTest[i].id == id) {
+      if (this.addedToTest[i]['id'] == id) {
         this.addedToTest.splice(i, 1);
-        this.setTestInfo();
-        this.addToTest(id, 'remove_styling');
+      }
+    }
+    for (let i = 0; i < this.test.pages.length; i++) {
+      for (let j = 0; j < this.test.pages[i][0].length; j++) {
+        if (this.test.pages[i][0][j].id == id) {
+          this.test.pages[i][0].splice(j, 1);
+          this.setTestInfo();
+          this.addToTest(id, 'remove_styling');
+        }
       }
     }
   }
 
   styleAddButton(i: number, status: string) {
-    status == 'add_styling' ?
-      (this.addClasslist('add_btn' + i, 'd_none'), this.removeClasslist('remove_btn' + i, 'd_none')) :
-      (this.addClasslist('remove_btn' + i, 'd_none'), this.removeClasslist('add_btn' + i, 'd_none'))
+    status == 'add_styling'
+      ?
+      (this.addClasslist('add_btn' + i, 'd_none'),
+        this.addClasslist('question_list' + i, 'question_added'),
+        this.removeClasslist('remove_btn' + i, 'd_none'))
+      :
+      (this.addClasslist('remove_btn' + i, 'd_none'),
+        this.removeClasslist('question_list' + i, 'question_added'),
+        this.removeClasslist('add_btn' + i, 'd_none'))
   }
 
   setTestInfo() {
@@ -397,38 +443,42 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     this.overlay = false;
   }
 
-  openPreview() { 
+  openPreview() {
     setTimeout(() => {
       this.checkHeightOfAllPreviewQuestions();
     }, 200);
     this.preview = !this.preview;
+    window.scrollTo(0, 0);
   }
 
   checkHeightOfAllPreviewQuestions() {
-    this.heightOfAllPreviewQuestions = 0;
-    for (let i = 0; i < this.addedToTest.length; i++) {
-      let questionHeight = document.getElementById(`question${i}`);
-      this.heightOfAllPreviewQuestions += questionHeight.clientHeight;
-      let paperHeight = document.getElementById('test_dinA4').clientHeight;
-      console.log(paperHeight);
-      if (this.heightOfAllPreviewQuestions  > paperHeight * (this.dinA4Pages.length )) {
-        this.dinA4Pages.push(this.dinA4Pages.length);
+    for (let i = 0; i < this.test.pages.length; i++) {
+      let pageContent = document.getElementById(`test_content${i}`).clientHeight;
+      let paperHeight = document.getElementById(`test_dinA4${i}`).clientHeight;
+      if (pageContent > paperHeight) {
+        const question = this.test.pages[i][0].pop();
+        this.test.pages.push({ [0]: []});
+        this.test.pages[i + 1][0].push(question)
+        this.test.pages[i + 1][0].reverse();
       }
-      if (this.heightOfAllPreviewQuestions  < paperHeight * (this.dinA4Pages.length )) {
-        this.dinA4Pages.pop();
-      }
+
     }
-    
   }
 
-  showRangeToStyleQuestion(id: number) {
+
+  showRangeToStyleQuestion(pageIndex: number, pagePosition: number) {
     this.editQuestionAtPreview = !this.editQuestionAtPreview;
-    this.currentEditContainer = id;
+    this.currentEditContainer = `${pageIndex}${pagePosition}`;
+    let questionHeight = document.getElementById(`question${this.currentEditContainer}`);
+    let questionPadding = window.getComputedStyle(questionHeight, null)
+    let padding = questionPadding.getPropertyValue('padding-bottom').replace('px', '') ;
+    this.rangebars.setValue({ styleHeight: Number(padding) / 3.139555 });
   }
 
-  showRangeToStyleImage(id: number) {
+
+  showRangeToStyleImage(pageIndex: number, pagePosition: number) {
     this.editImageAtPreview = !this.editImageAtPreview;
-    this.currentEditContainer = id;
+    this.currentEditContainer = `${pageIndex} + ${pagePosition}`;
   }
 
   setHeightQuestion(height: string) {
