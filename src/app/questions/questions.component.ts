@@ -66,15 +66,30 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     pages: <any>[{
       0: [],
     },
-  ]
+    ]
   };
 
   file: any;
 
-  question_number= 1;
-  
+  question_number = 0;
+
   constructor(private firestore: Firestore, public storage: Storage) { }
 
+  async setQuestionNumber() {
+    this.question_number = 0
+    for (let i = 0; i < this.test.pages.length; i++) {
+      for (let j = 0; j < this.test.pages[i][0].length; j++) {
+        this.question_number++;
+        await this.stopLoop(10);
+        let number = document.getElementById(`question_number${i}${j}`)
+        number.innerHTML = `${this.question_number}`;
+      }
+    }
+  }
+
+  stopLoop = (time: any) => {
+    return new Promise((resolve) => setTimeout(resolve, time))
+  }
 
   ngOnInit(): void {
     this.getData();
@@ -391,8 +406,7 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
       }
     }
     this.checkHeightOfAllPreviewQuestions();
-    console.log(this.test.pages[this.test.pages.length - 1]['0'].length);
-    
+    this.setQuestionNumber();
   }
 
   removeFromTest(id: string) {
@@ -410,6 +424,7 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
         }
       }
     }
+    this.setQuestionNumber();
   }
 
   styleAddButton(i: number, status: string) {
@@ -449,32 +464,40 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     }, 200);
     this.preview = !this.preview;
     window.scrollTo(0, 0);
+    this.setQuestionNumber();
   }
 
-  checkHeightOfAllPreviewQuestions() {
+  async checkHeightOfAllPreviewQuestions() {
     for (let i = 0; i < this.test.pages.length; i++) {
+      await this.stopLoop(30);
       let pageContent = document.getElementById(`test_content${i}`).clientHeight;
       let paperHeight = document.getElementById(`test_dinA4${i}`).clientHeight;
       if (pageContent > paperHeight) {
         const question = this.test.pages[i][0].pop();
-        this.test.pages.push({ [0]: []});
+        if (i == this.test.pages.length - 1) {
+          this.test.pages.push({ [0]: [] });
+        }
+
         this.test.pages[i + 1][0].push(question)
         this.test.pages[i + 1][0].reverse();
       }
-
     }
+    this.setQuestionNumber();
   }
 
 
-  showRangeToStyleQuestion(pageIndex: number, pagePosition: number) {
+  async showRangeToStyleQuestion(pageIndex: number, pagePosition: number) {
     this.editQuestionAtPreview = !this.editQuestionAtPreview;
     this.currentEditContainer = `${pageIndex}${pagePosition}`;
-    let questionHeight = document.getElementById(`question${this.currentEditContainer}`);
-    let questionPadding = window.getComputedStyle(questionHeight, null)
-    let padding = questionPadding.getPropertyValue('padding-bottom').replace('px', '') ;
-    this.rangebars.setValue({ styleHeight: Number(padding) / 3.139555 });
+    for (let i = 0; i < this.test.pages.length; i++) { // sets the padding_bottom of last question in a page to zero 
+      let questionHeight = document.getElementById(`question${i}${this.test.pages[i][0].length - 1}`);
+      questionHeight.style.paddingBottom = `${0}%`;
+    }
+    let questionHeight = document.getElementById(`question${this.currentEditContainer}`).style.paddingBottom;
+    let padding = questionHeight.replace('%', '');
+    this.rangebars.setValue({ styleHeight: Number(padding) * 2 });
   }
-
+//alter wert 3.139555
 
   showRangeToStyleImage(pageIndex: number, pagePosition: number) {
     this.editImageAtPreview = !this.editImageAtPreview;
@@ -486,7 +509,7 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     questionHeight.style.paddingBottom = `${Number(height) / 2}%`;
     setTimeout(() => {
       this.checkHeightOfAllPreviewQuestions();
-    }, 200);
+    }, 100);
   }
 
   setImageSize(width: string) {

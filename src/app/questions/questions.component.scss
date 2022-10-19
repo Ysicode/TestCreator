@@ -284,6 +284,7 @@ style for rendered subjects
 .question_wrapper {
     width: calc(100% - 40px);
     margin-bottom: 1%;
+    padding-bottom: 0;
 }
 
 .question {
@@ -684,6 +685,10 @@ Styles für die Vorschau sektion
     font-weight: bold;
 }
 
+.test_number {
+    margin-left: 0.5vw;
+}
+
 .preview_question_img {
     width: 30%;
 }
@@ -802,6 +807,10 @@ Styles für die Vorschau sektion
     opacity: 0;
 }
 
+.paddingBottom0 {
+    padding-bottom: 0px;
+}
+
 @media (max-width: 850px) {
     .hide_on_mobile {
         display: none;
@@ -913,6 +922,10 @@ Styles für die Vorschau sektion
         .page_number {
             font-size: 16.5px;
         }
+    }
+
+    .test_number {
+        margin-left: 5px;
     }
 
     .tableItem {

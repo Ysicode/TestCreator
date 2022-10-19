@@ -304,18 +304,19 @@
                 </div>
                    
     
-                    <div class="added_questions_empty_container d_flex_column" *ngIf="test['pages'][0][0].length == 0 && j == 0">
+                    <div class="added_questions_empty_container d_flex_column" *ngIf="test['pages'][0][0].length == 0 && j == 0 && test['pages'].length < 2 ">
                         <button (click)="openPreview()" class="question_add_btn d_flex"><img class="add_icon" src="assets/add.png"alt=""></button>
                         <p class="added_questions_empty_info" >Noch keine Fragen hinzugefügt</p>
                     </div>
                 
-                <div id="question{{ j }}{{ i }}" class="question_wrapper d_flex_column" *ngFor="let data of pages[0] let i = index">   
+                <div [class.paddingBottom0]="test['pages'][j][0].length == i + 1" id="question{{ j }}{{ i }}" class="question_wrapper d_flex_column" *ngFor="let data of pages[0] let i = index">   
                     <div  class="question_test">
                         <div class="d_flex_space question_head_container">
                             <div class="question_info d_flex_start">
-                                <div class="question_test_number">
-                                    Aufgabe {{ j != 0 ? test['pages'][j]['0'].length + i + 1  : i + 1 }}
-                                </div>            
+                                <div class="question_test_number d_flex">
+                                    Aufgabe <p class="test_number" id="question_number{{ j }}{{ i }}"></p>
+                                </div>  
+                                <!-- {{ j != 0 ? test['pages'][j]['0'].length + i + 1  : i + 1 }}           -->
                             </div>
                             <div class="question_add d_flex"> 
                                 <div class="question_test_points">
@@ -377,7 +378,7 @@
                                 </div>
                             </div>
                         </div> 
-                        <div (click)="showRangeToStyleQuestion(j, i)" class="height_info_wrapper d_flex show_onHover">
+                        <div *ngIf="test['pages'][j][0].length != i + 1" (click)="showRangeToStyleQuestion(j, i)" class="height_info_wrapper d_flex show_onHover">
                             <img class="double_arrows" src="assets/double_arrow.png" alt="">                
                         </div>
                     </div>
@@ -410,7 +411,7 @@
             <div (click)="$event.stopPropagation()" class="d_flex_column_start rangbar_container">
                 <p class="rangebar_text">{{ styleWidth.value }}%</p>
                 <input (input)="setImageSize(styleWidth.value)" (change)="setImageSize(styleWidth.value)" class="range_style" type="range" orient="vertical" min="20" max="100"
-                step="5" id="styleHeight" #styleWidth ngModel>
+                step="5" id="styleWidth" #styleWidth ngModel>
             </div>
         </div>
     </form>
