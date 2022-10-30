@@ -469,7 +469,7 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
 
   async checkHeightOfAllPreviewQuestions() {
     for (let i = 0; i < this.test.pages.length; i++) {
-      await this.stopLoop(30);
+      await this.stopLoop(10);
       let pageContent = document.getElementById(`test_content${i}`).clientHeight;
       let paperHeight = document.getElementById(`test_dinA4${i}`).clientHeight;
       if (pageContent > paperHeight) {
@@ -495,13 +495,24 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     }
     let questionHeight = document.getElementById(`question${this.currentEditContainer}`).style.paddingBottom;
     let padding = questionHeight.replace('%', '');
-    this.rangebars.setValue({ styleHeight: Number(padding) * 2 });
+    this.rangebars.setValue({
+      styleHeight: Number(padding) * 2,
+      styleWidth: 10
+    }); 
   }
-//alter wert 3.139555
+  //alter wert 3.139555
 
   showRangeToStyleImage(pageIndex: number, pagePosition: number) {
     this.editImageAtPreview = !this.editImageAtPreview;
-    this.currentEditContainer = `${pageIndex} + ${pagePosition}`;
+    if (pageIndex >= 0) {
+      this.currentEditContainer = `${pageIndex}${pagePosition}`;
+      let image = document.getElementById(`questionImage${this.currentEditContainer}`).style.width;
+      let imageSize = image.replace('%', '');
+      this.rangebars.setValue({
+        styleHeight: 10,
+        styleWidth: Number(imageSize),
+      });
+    }
   }
 
   setHeightQuestion(height: string) {
@@ -509,15 +520,16 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     questionHeight.style.paddingBottom = `${Number(height) / 2}%`;
     setTimeout(() => {
       this.checkHeightOfAllPreviewQuestions();
-    }, 100);
+    }, 10);
   }
 
   setImageSize(width: string) {
     let image = document.getElementById(`questionImage${this.currentEditContainer}`);
     image.style.width = `${width}%`;
+
     setTimeout(() => {
       this.checkHeightOfAllPreviewQuestions();
-    }, 200);
+    }, 50);
   }
 
 

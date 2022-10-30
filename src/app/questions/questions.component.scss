@@ -542,6 +542,7 @@ Styles für die Vorschau sektion
 
 .testHead {
    width: 100%;
+   position: relative;
 }
 
 .test_head {
@@ -549,6 +550,31 @@ Styles für die Vorschau sektion
     align-items: flex-start;
     justify-content: center;
     flex-direction: column;
+}
+
+.edit_testhead_wrapper {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 3%;
+    align-items: center;
+    justify-content: center;
+  display: flex;
+}
+
+.edit_testhead_btn {
+    width: 84%;
+    height: 2vw;
+    color: #13bfa4;
+    font-size: calc(100vw * 0.016);
+    border: none;
+    border-bottom: 1px solid #13bfa4;
+    background: white;
+    &:hover {
+        background: rgb(19 191 164 / 34%);
+        cursor: pointer;
+    }
+
 }
 
 .school_name {
@@ -690,7 +716,7 @@ Styles für die Vorschau sektion
 }
 
 .preview_question_img {
-    width: 30%;
+    width: 20%;
 }
 
 .preview_lists {
@@ -757,7 +783,7 @@ Styles für die Vorschau sektion
 
 .height_info_wrapper {
     cursor: pointer;
-    height: 20px;
+    height: 2.5vw;
     width: 100%;
     border-bottom: 1px solid #13bfa4;
     max-height: 34px;
@@ -768,7 +794,7 @@ Styles für die Vorschau sektion
 
     .double_arrows {
         transform: rotate(90deg);
-        width: 15px;
+        width: calc(100vw * 0.016);
     }
 }
 
@@ -790,11 +816,11 @@ Styles für die Vorschau sektion
     }
 
     .right_double_arrow {
-        width: 15px;
+        width: calc(100vw * 0.016);
     }
 
     .left_double_arrow {
-        width: 15px;
+        width: calc(100vw * 0.016);
         transform: rotate(180deg);
     }
 }
@@ -901,7 +927,7 @@ Styles für die Vorschau sektion
 @media (min-width: 1030px) {
     .preview_question_container,
     .question_test_number,
-    .test_dinA4 {
+    .test_dinA4, .edit_testhead_btn {
         font-size: 16.5px;
     }
     .h1 {
@@ -965,7 +991,8 @@ Styles für die Vorschau sektion
       display: none;
   }
 
-
-    
+  #test_print {
+      visibility: visible !important;
+  }
   
 }

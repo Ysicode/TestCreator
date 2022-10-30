@@ -205,7 +205,7 @@
                         </div>
 
                         <div class="element_margin_text" *ngIf="question['data']['file']">
-                            <img class="question_img" src="{{ question['data']['file']['url'] }}" alt="">
+                            <img loading="lazy" class="question_img" src="{{ question['data']['file']['url'] }}" alt="">
 
                         </div>
 
@@ -301,6 +301,9 @@
                        <p class="class">Bearbeitungszeit: {{ currentTestHead[0]['testHead']['totalTesttime']}} Min.</p>
                        <p class="test_head_data_item">Punktzahl: <b class="test_total_number">/{{ currentTestPoints }}</b></p>    
                     </div>
+                    <div class="edit_testhead_wrapper">
+                        <button class="edit_testhead_btn">Testkopf Bearbeiten</button>
+                    </div>
                 </div>
                    
     
@@ -342,7 +345,7 @@
                             
                             <div class="element_margin_text" *ngIf="question['data']['file']">
                                 <div class="img_wrapper d_flex_start">
-                                    <img id="questionImage{{ i }}" class="preview_question_img" src="{{ question['data']['file']['url'] }}" alt="">
+                                    <img id="questionImage{{ j }}{{ i }}" class="preview_question_img" src="{{ question['data']['file']['url'] }}" alt="">
                                     <div (click)="showRangeToStyleImage(j, i)" class="img_edit_btn d_flex_column show_onHover">
                                         <img class="right_double_arrow" src="assets/double_arrow.png" alt="">
                                         <img class="left_double_arrow" src="assets/double_arrow.png" alt="">
@@ -407,11 +410,11 @@
             </div>
         </div>
 
-        <div (click)="showRangeToStyleImage(0, 1)" [class.d_none]="!editImageAtPreview" class="rangebar_wrapper d_flex_column_end">  
+        <div (click)="showRangeToStyleImage(-1, -1)" [class.d_none]="!editImageAtPreview" class="rangebar_wrapper d_flex_column_end">  
             <div (click)="$event.stopPropagation()" class="d_flex_column_start rangbar_container">
                 <p class="rangebar_text">{{ styleWidth.value }}%</p>
                 <input (input)="setImageSize(styleWidth.value)" (change)="setImageSize(styleWidth.value)" class="range_style" type="range" orient="vertical" min="20" max="100"
-                step="5" id="styleWidth" #styleWidth ngModel>
+                step="5" id="styleWidth" #styleWidth name="styleWidth" ngModel>
             </div>
         </div>
     </form>
