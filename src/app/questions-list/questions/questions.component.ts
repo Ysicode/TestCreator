@@ -90,19 +90,7 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
         this.wrongPassword = false;
       }, 1000);
     }
-    
-  }
 
-  async setQuestionNumber() {
-    this.question_number = 0
-    for (let i = 0; i < this.test.pages.length; i++) {
-      for (let j = 0; j < this.test.pages[i][0].length; j++) {
-        this.question_number++;
-        await this.stopLoop(10);
-        let number = document.getElementById(`question_number${i}${j}`)
-        number.innerHTML = `${this.question_number}`;
-      }
-    }
   }
 
   stopLoop = (time: any) => {
@@ -290,6 +278,22 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     });
   }
 
+  /**
+   * This function is used to show the add question overlay
+   */
+  showOverlay() {
+    this.overlay = true;
+    this.setForm();
+    window.scrollTo(0, 0);
+  }
+
+  /**
+   * This function is used to hide the add question overlay
+   */
+  hideOverlay() {
+    this.overlay = false;
+  }
+
 
 
 
@@ -308,10 +312,10 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     this.loadtestHead();
   }
 
-/**
-   * this function is used to load all Questions from firebase
-   * and store it in a local object (loadedQuestions)
-   */
+  /**
+     * this function is used to load all Questions from firebase
+     * and store it in a local object (loadedQuestions)
+     */
   async loadQuestions() {
     //gets all questions
     const coll: any = collection(this.firestore, '/users/JonasWeiss/fragen');
@@ -362,8 +366,8 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     deleteDoc(coll);
   }
 
-   //Das muss noch gemacht werden!!!!!!!!! Edit function
-   updateData(id: string) {
+  //Das muss noch gemacht werden!!!!!!!!! Edit function
+  updateData(id: string) {
     this.currentId = id;
     this.editMode = true;
     let currentQuestion = this.loadedQuestions.find((question) => { return question.id === id });
@@ -414,17 +418,17 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     }, 700);
   }
 
-//
-// Functions all questions list view
-//
+  //
+  // Functions all questions list view
+  //
 
-/**
- * This fucntion is used to show the answer of a question as dropdown
- * @param id the firebase id of the question 
- */
+  /**
+   * This fucntion is used to show the answer of a question as dropdown
+   * @param id the firebase id of the question 
+   */
   toggleAnswer(id: string) {
     console.log(id);
-    
+
     if (this.currentId == id) {
       this.answerVisible = !this.answerVisible;
     } else {
@@ -432,11 +436,11 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     }
   }
 
-/**
- * This function is used to add a question to the current test and add a styling to the button
- * @param id is the firebase id of the question
- * @param status is a given string (add_styling) as an argument to add styling to the button
- */
+  /**
+   * This function is used to add a question to the current test and add a styling to the button
+   * @param id is the firebase id of the question
+   * @param status is a given string (add_styling) as an argument to add styling to the button
+   */
   addToTest(id: string, status: string) {
     for (let i = 0; i < this.loadedQuestions.length; i++) {
       if (this.loadedQuestions[i]['id'] == id) {
@@ -454,6 +458,7 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
 
   /**
    * This function is used to remove a question from the current test and add a styling to the button
+   * executes setTestInfo & addToTest
    * @param id is the firebase id of the question
    */
   removeFromTest(id: string) {
@@ -492,7 +497,9 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
   }
 
 
-
+  /**
+   * This function is used to update the test information like totaltime, total questions and total points
+   */
   setTestInfo() {
     this.currentTestPoints = 0;
     this.currentTestTime = 0;
@@ -502,16 +509,21 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  showOverlay() {
-    this.overlay = true;
-    this.setForm();
-    window.scrollTo(0, 0);
-  }
 
-  hideOverlay() {
-    this.overlay = false;
-  }
 
+
+
+
+
+  //
+  // Functions test preview overlay
+  //
+
+
+  /**
+   * This function is used to toggle the test preview 
+   * executes checkHeightOfAllPreviewQuestions & setQuestionNumber
+   */
   openPreview() {
     setTimeout(() => {
       this.checkHeightOfAllPreviewQuestions();
@@ -521,6 +533,11 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     this.setQuestionNumber();
   }
 
+  /**
+   * this function is used to check the height of qll questions insode all dina4 pages
+   * if its too high for a dina4 page it pushs the question to the next page array
+   * executes setQuestionNumber
+   */
   async checkHeightOfAllPreviewQuestions() {
     for (let i = 0; i < this.test.pages.length; i++) {
       await this.stopLoop(10);
@@ -539,7 +556,28 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     this.setQuestionNumber();
   }
 
+  /**
+   * This function is used to refresh the question numbers on any changes 
+   * the numbers are ordered 1 to ...
+   */
+  async setQuestionNumber() {
+    this.question_number = 0
+    for (let i = 0; i < this.test.pages.length; i++) {
+      for (let j = 0; j < this.test.pages[i][0].length; j++) {
+        this.question_number++;
+        await this.stopLoop(10);
+        let number = document.getElementById(`question_number${i}${j}`)
+        number.innerHTML = `${this.question_number}`;
+      }
+    }
+  }
 
+  /**
+   * This function is used to open the rangbar to set the height / padding bottom of a question 
+   * When this function is called the current padding bottom of a question is set to default styleHeight
+   * @param pageIndex is the index of the dina4 page, first page is index 0
+   * @param pagePosition is the index of the question in a dinA4 page, starts at 0
+   */
   async showRangeToStyleQuestion(pageIndex: number, pagePosition: number) {
     this.editQuestionAtPreview = !this.editQuestionAtPreview;
     this.currentEditContainer = `${pageIndex}${pagePosition}`;
@@ -555,6 +593,12 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     });
   }
 
+  /**
+   * This function is used to open the rangbar to set the width of a image in a question 
+   * When this function is called the current width of an image is set to default width
+   * @param pageIndex is the index of the dina4 page, first page is index 0
+   * @param pagePosition is the index of the question/Photo in a dinA4 page, starts at 0
+   */
   showRangeToStyleImage(pageIndex: number, pagePosition: number) {
     this.editImageAtPreview = !this.editImageAtPreview;
     if (pageIndex >= 0) {
