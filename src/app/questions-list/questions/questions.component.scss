@@ -21,6 +21,19 @@ body {
     top: 0;
 }
 
+.tooltip_btn {
+    border: none;
+    border-radius: 30px;
+    height: 25px;
+    width: 25px;
+    background: linear-gradient(to right, #c2c2c2, #c8d4d1);
+
+    .info_icon {
+        width: 13px;
+        height: 13px;
+    }
+}
+
 .page_break {
     page-break-after: always;
 }
@@ -104,12 +117,15 @@ body {
 
 .editor_wrapper {
     width: 80vw;
-    max-width: 1500px;
+    max-width: 1100px;
     box-shadow: 0 24px 24px -18px rgb(69 104 129 / 33%), 0 9px 45px 0 rgb(114 119 160 / 12%);
     background: white;
-    padding-top: 50px;
-    margin-top: 30px;
-    margin-bottom: 30px;
+    margin-bottom: 60px;
+}
+
+.editor_headline {
+    text-align: center;
+    margin-right: 10px;
 }
 
 .questionForm {

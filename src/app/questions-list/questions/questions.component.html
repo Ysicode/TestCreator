@@ -73,12 +73,24 @@
             </div>
         </div>
 
-        <h1>Frage erstellen!</h1>
-        <button type="button" (click)="saveEditorData()">ShowEditorData</button>
-        <div #editor class="editor_wrapper">
 
-
+        <div #questionEditor class="editor_wrapper">
+            <div class="d_flex">
+                <h2 class="editor_headline">Aufgabe erstellen</h2>
+                <button class="tooltip_btn" matTooltip="Hier können sie eine Aufgabe erstellen und sie später ihrem Test hinzufügen. - Die Größe eines Bildes kann später im Test noch bearbeitet werden"
+                    matTooltipPosition="above"><img class="info_icon" src="assets/info.png" alt=""></button>
+            </div>    
         </div>
+        
+        <div #answerEditor class="editor_wrapper">
+            <div class="d_flex">
+                <h2 class="editor_headline">Lösung für diese Aufgabe erstellen</h2>
+                <button class="tooltip_btn" matTooltip="Für die Musterlösung können sie hier die Antwort für diese Aufgabe erstellen und später ihre Aufgaben mit Lösung anzeigen lassen"
+                matTooltipPosition="above"><img class="info_icon" src="assets/info.png" alt=""></button>
+            </div>
+           
+        </div>
+        <button type="button" (click)="saveEditorData()">ShowEditorData</button>
 
         <form class="questionForm" #questionForm="ngForm" (ngSubmit)="addData(questionForm.value)">
             <div class="d_flex_column">

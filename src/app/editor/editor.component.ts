@@ -8,9 +8,13 @@ import EditorJS from '@editorjs/editorjs';
 })
 export class EditorComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('editor', { read: ElementRef, static: true })
-  editorElement: ElementRef;
-  private editor: EditorJS;
+  @ViewChild('questionEditor', { read: ElementRef, static: true })
+  questionEditorElement: ElementRef;
+  private questionEditor: EditorJS;
+
+  @ViewChild('answerEditor', { read: ElementRef, static: true })
+  answerEditorElement: ElementRef;
+  private answerEditor: EditorJS;
   
   constructor() { }
 
@@ -18,13 +22,21 @@ export class EditorComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.initializeEditor();
+    this.initializeQuestionEditor();
+    this.initializeAnswerEditor();
 }
 
-private initializeEditor(): void {
-  this.editor = new EditorJS({
+private initializeQuestionEditor(): void {
+  this.questionEditor = new EditorJS({
     minHeight: 200,
-    holder: this.editorElement.nativeElement
+    holder: this.questionEditorElement.nativeElement
+  })
+}
+
+private initializeAnswerEditor() {
+  this.questionEditor = new EditorJS({
+    minHeight: 200,
+    holder: this.answerEditorElement.nativeElement
   })
 }
 

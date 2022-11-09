@@ -29,6 +29,7 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
 
   answerVisible = false;
   currentQuestion: any;
+  currentAnswer: any;
   currentTable = {};
   currentId: string;
 
@@ -37,9 +38,13 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
   Checklist = require('@editorjs/checklist');
   @ViewChild('questionForm') form: NgForm;
 
-  @ViewChild('editor', { read: ElementRef, static: true })
-  editorElement: ElementRef;
-  private editor: EditorJS;
+  @ViewChild('questionEditor', { read: ElementRef, static: true })
+  questionEditorElement: ElementRef;
+  private questionEditor: EditorJS;
+
+  @ViewChild('answerEditor', { read: ElementRef, static: true })
+  answerEditorElement: ElementRef;
+  private answerEditor: EditorJS;
 
   selectedSubjectButton: number;
   selectedClassButton: number;
@@ -102,11 +107,9 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.initializeEditor();
+    this.initializeQuestionEditor();
+    this.initializeAnswerEditor();
   }
-
-
-
 
 
   //
@@ -114,10 +117,64 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
   //
 
   //Standard Questions Editor
-  private initializeEditor(): void {
-    this.editor = new EditorJS({
-      minHeight: 200,
-      holder: this.editorElement.nativeElement,
+  private initializeQuestionEditor(): void {
+    this.questionEditor = new EditorJS({
+      minHeight: 100,
+      holder: this.questionEditorElement.nativeElement,
+      tools: {
+        underline: Underline,
+        table: {
+          class: Table,
+          inlineToolbar: true,
+          config: {
+            rows: 2,
+            cols: 2,
+          },
+        },
+        list: {
+          class: List,
+          inlineToolbar: true,
+          config: {
+            defaultStyle: 'unordered'
+          }
+        },
+        checklist: {
+          class: this.Checklist,
+          inlineToolbar: true,
+        },
+        image: {
+          class: ImageTool,
+          config: {
+            uploader: {
+              async uploadByFile(file: any) {
+                const storage = getStorage();
+                const storageRef = ref(storage, file.name);
+                const metadata = {
+                  contentType: 'image/jpeg',
+                  size: file.size,
+                };
+                const snapshot = await uploadBytes(storageRef, file, metadata);
+                const downloadURL = await getDownloadURL(snapshot.ref);
+                return {
+                  success: 1,
+                  file: {
+                    url: downloadURL,
+                    size: file.size,
+                  }
+                };
+              }
+            }
+          }
+        },
+      }
+    });
+  }
+
+  //Standard Answer Editor
+  initializeAnswerEditor(): void {
+    this.answerEditor = new EditorJS({
+      minHeight: 100,
+      holder: this.answerEditorElement.nativeElement,
       tools: {
         underline: Underline,
         table: {
@@ -172,7 +229,7 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
    * this function is used to save a table as an object
    */
   async saveEditorData(): Promise<void> {
-    this.editor.save().then(data => {
+    this.questionEditor.save().then(data => {
       this.currentQuestion = data;
       for (let i = 0; i < data.blocks.length; i++) { //If a table was in use of the editor nested array cannot saved in firestore
         if (data.blocks[i].data.content) {
@@ -185,6 +242,26 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
         this.currentQuestion['blocks'][i]['data']['content'] = 'deleted';
       }
     });
+    setTimeout(() => {
+      console.log('Das ist die Aufgabe',this.currentQuestion);
+    }, 500);
+
+    this.answerEditor.save().then(data => {
+      this.currentAnswer = data;
+      for (let i = 0; i < data.blocks.length; i++) { //If a table was in use of the editor nested array cannot saved in firestore
+        if (data.blocks[i].data.content) {
+          this.currentAnswer['blocks'][i]['data']['table'] = {};
+          for (let j = 0; j < data.blocks[i].data.content.length; j++) {
+            this.currentAnswer['blocks'][i]['data']['table'][`${j}`] = data.blocks[i].data.content[j];
+          }
+          this.currentAnswer['blocks'][i]['data']['table']['length'] = Object.keys(this.currentAnswer['blocks'][i]['data']['table']);
+        }
+        this.currentAnswer['blocks'][i]['data']['content'] = 'deleted';
+      }
+    });
+    setTimeout(() => {
+      console.log('Das ist die Antwort', this.currentAnswer);
+    }, 500);
   }
 
   /**
@@ -389,7 +466,7 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
         setDoc(doc(coll), {
           fach: this.currentSubjectChoice,
           frage: this.currentQuestion,
-          antwort: 'Das ist eine Antwort',
+          antwort: this.currentAnswer,
           klasse: this.currentClassChoice,
           punktzahl: Number(question.punktzahl),
           bearbeitungszeit: Number(question.bearbeitungszeit),
@@ -595,7 +672,7 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
 
   /**
    * This function is used to open the rangbar to set the width of a image in a question 
-   * When this function is called the current width of an image is set to default width
+   * When this function is called the current width of an image is set to the default width of the image
    * @param pageIndex is the index of the dina4 page, first page is index 0
    * @param pagePosition is the index of the question/Photo in a dinA4 page, starts at 0
    */
