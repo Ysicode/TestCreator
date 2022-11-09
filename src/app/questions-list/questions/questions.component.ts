@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { collection, collectionData, doc, Firestore } from '@angular/fire/firestore';
-import { Storage, ref, uploadBytesResumable, getDownloadURL, getStorage, uploadBytes } from '@angular/fire/storage';
+import { Storage, ref, getDownloadURL, getStorage, uploadBytes } from '@angular/fire/storage';
 import { NgForm } from '@angular/forms';
 import EditorJS from '@editorjs/editorjs';
 import Underline from '@editorjs/underline';
@@ -9,11 +9,13 @@ import ImageTool from '@editorjs/image';
 import Table from '@editorjs/table';
 import { deleteDoc, setDoc, updateDoc } from '@firebase/firestore';
 import { Observable } from 'rxjs';
+import { firebaseService } from '../../services/firebase.service';
 
 @Component({
   selector: 'app-questions',
   templateUrl: './questions.component.html',
-  styleUrls: ['./questions.component.scss']
+  styleUrls: ['./questions.component.scss'],
+  providers: [firebaseService]
 })
 export class QuestionsComponent implements OnInit, AfterViewInit {
 
@@ -60,6 +62,7 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
   preview = false;
   editQuestionAtPreview = false;
   editImageAtPreview = false;
+  public editTesthead = false;
   currentEditContainer: string;
   heightOfAllPreviewQuestions = 0;
   test = {
@@ -69,11 +72,26 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     ]
   };
 
+  //help variables
+  wrongPassword: boolean = false;
+  logedIn: Boolean = false;
   file: any;
 
   question_number = 0;
 
-  constructor(private firestore: Firestore, public storage: Storage) { }
+  constructor(private firestore: Firestore, private storage: Storage, private service: firebaseService) { }
+
+  login(password: string) {
+    if (password == 'superPin1984!') {
+      this.logedIn = true;
+    } else {
+      this.wrongPassword = true;
+      setTimeout(() => {
+        this.wrongPassword = false;
+      }, 1000);
+    }
+    
+  }
 
   async setQuestionNumber() {
     this.question_number = 0
@@ -93,8 +111,6 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.getData();
-    console.log(this.test);
-
   }
 
   ngAfterViewInit(): void {
@@ -103,6 +119,13 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
 
 
 
+
+
+  //
+  //Functions add Question Overlay
+  //
+
+  //Standard Questions Editor
   private initializeEditor(): void {
     this.editor = new EditorJS({
       minHeight: 200,
@@ -156,29 +179,10 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  chooseFile(event: any) {
-    this.file = event.target.files[0];
-  }
-
-  showFile() {
-    console.log(this.file);
-  }
-
-  addPhoto() {
-    const storageRef = ref(this.storage, this.file.name)
-    const uploadTask = uploadBytesResumable(storageRef, this.file)
-    uploadTask.on('state_changed',
-      (snapshot) => {
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log('Upload is ' + progress + '% done');
-      }, () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log('File available at', downloadURL);
-        });
-      }
-    )
-  }
-
+  /**
+   * As firebase cant save nested arrays
+   * this function is used to save a table as an object
+   */
   async saveEditorData(): Promise<void> {
     this.editor.save().then(data => {
       this.currentQuestion = data;
@@ -192,9 +196,6 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
         }
         this.currentQuestion['blocks'][i]['data']['content'] = 'deleted';
       }
-      setTimeout(() => {
-        console.log(this.currentQuestion);
-      }, 1000)
     });
   }
 
@@ -266,12 +267,51 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     this.selectedClassButton = index;
   }
 
+  /**
+   * This function is used to set the form of the rangebars in the add question overlay to default
+   */
+  clearForm() {
+    this.form.setValue({
+      punktzahl: '10',
+      keywords: '',
+      bearbeitungszeit: '7',
+    })
+    this.selectedSubjectButton = -1;
+  }
+
+  /**
+   * This function is used to set the form of the rangebars in the add question overlay to given values
+   */
+  setForm() {
+    this.form.setValue({
+      punktzahl: '10',
+      keywords: '',
+      bearbeitungszeit: '7',
+    });
+  }
+
+
+
+
+
+
+  //
+  // Functions to load data from firebase
+  //
+
+  /**
+   * This function is triggered OnInit and loads all Questions, all Subjects/Classes and the testHead
+   */
   getData() {
     this.loadQuestions();
     this.loadSubjectsAndClasses();
     this.loadtestHead();
   }
 
+/**
+   * this function is used to load all Questions from firebase
+   * and store it in a local object (loadedQuestions)
+   */
   async loadQuestions() {
     //gets all questions
     const coll: any = collection(this.firestore, '/users/JonasWeiss/fragen');
@@ -285,6 +325,10 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     })
   }
 
+  /**
+   * this function is used to load all subject and classes from firebase
+   * and store it in a local object (loadedUserData)
+   */
   async loadSubjectsAndClasses() {
     //gets UserData like classes and subjects and email adress and username
     const subject: any = collection(this.firestore, '/users/JonasWeiss/subjects');
@@ -295,6 +339,10 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     });
   }
 
+  /**
+   * This function is used to load the current testHead from firebase
+   * and store it in a local object (currenttestHead)
+   */
   async loadtestHead() {
     const testHead: any = collection(this.firestore, '/users/JonasWeiss/testHead');
     this.testHeadFromFirestore$ = collectionData(testHead, { idField: 'id' });
@@ -305,9 +353,26 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     });
   }
 
+  /**
+   * This function is used to delete a question form firebase
+   * @param id is the firebase id of the question to delete it
+   */
   deletedata(id: string) {
     const coll: any = doc(this.firestore, '/users/JonasWeiss/fragen/' + id);
     deleteDoc(coll);
+  }
+
+   //Das muss noch gemacht werden!!!!!!!!! Edit function
+   updateData(id: string) {
+    this.currentId = id;
+    this.editMode = true;
+    let currentQuestion = this.loadedQuestions.find((question) => { return question.id === id });
+
+    this.form.setValue({
+      bearbeitungszeit: `${currentQuestion.bearbeitungszeit}`,
+      punktzahl: `${currentQuestion.punktzahl}`,
+      keywords: currentQuestion.keywords.join(', ')
+    });
   }
 
 
@@ -349,43 +414,17 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     }, 700);
   }
 
+//
+// Functions all questions list view
+//
 
-  //Das muss noch gemacht werden!!!!!!!!! Edit function
-  updateData(id: string) {
-    this.currentId = id;
-    this.editMode = true;
-    let currentQuestion = this.loadedQuestions.find((question) => { return question.id === id });
-
-    this.form.setValue({
-      bearbeitungszeit: `${currentQuestion.bearbeitungszeit}`,
-      punktzahl: `${currentQuestion.punktzahl}`,
-      keywords: currentQuestion.keywords.join(', ')
-    });
-
-  }
-
-  clearForm() {
-    this.form.setValue({
-      punktzahl: '10',
-      keywords: '',
-      bearbeitungszeit: '7',
-    })
-    this.selectedSubjectButton = -1;
-  }
-
-  setForm() {
-    this.form.setValue({
-      punktzahl: '10',
-      keywords: '',
-      bearbeitungszeit: '7',
-    });
-  }
-
-  logID(id: string) {
-    console.log(id)
-  }
-
+/**
+ * This fucntion is used to show the answer of a question as dropdown
+ * @param id the firebase id of the question 
+ */
   toggleAnswer(id: string) {
+    console.log(id);
+    
     if (this.currentId == id) {
       this.answerVisible = !this.answerVisible;
     } else {
@@ -393,7 +432,11 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     }
   }
 
-
+/**
+ * This function is used to add a question to the current test and add a styling to the button
+ * @param id is the firebase id of the question
+ * @param status is a given string (add_styling) as an argument to add styling to the button
+ */
   addToTest(id: string, status: string) {
     for (let i = 0; i < this.loadedQuestions.length; i++) {
       if (this.loadedQuestions[i]['id'] == id) {
@@ -409,6 +452,10 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     this.setQuestionNumber();
   }
 
+  /**
+   * This function is used to remove a question from the current test and add a styling to the button
+   * @param id is the firebase id of the question
+   */
   removeFromTest(id: string) {
     for (let i = 0; i < this.addedToTest.length; i++) {
       if (this.addedToTest[i]['id'] == id) {
@@ -427,6 +474,11 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     this.setQuestionNumber();
   }
 
+  /**
+   * 
+   * @param i index of the question in the array loadedQuestions
+   * @param status is a given string (add_styling or remove_styling) as an argument to style the button
+   */
   styleAddButton(i: number, status: string) {
     status == 'add_styling'
       ?
@@ -438,6 +490,8 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
         this.removeClasslist('question_list' + i, 'question_added'),
         this.removeClasslist('add_btn' + i, 'd_none'))
   }
+
+
 
   setTestInfo() {
     this.currentTestPoints = 0;
@@ -498,9 +552,8 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     this.rangebars.setValue({
       styleHeight: Number(padding) * 2,
       styleWidth: 10
-    }); 
+    });
   }
-  //alter wert 3.139555
 
   showRangeToStyleImage(pageIndex: number, pagePosition: number) {
     this.editImageAtPreview = !this.editImageAtPreview;
@@ -532,7 +585,6 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     }, 50);
   }
 
-
   addClasslist(id: string, classList: string) {
     document.getElementById(id).classList.add(classList);
   }
@@ -541,7 +593,45 @@ export class QuestionsComponent implements OnInit, AfterViewInit {
     document.getElementById(id).classList.remove(classList);
   }
 
+  toggleEditTestHead() {
+    this.editTesthead = true;
+  }
+
+  closeEditTestHead() {
+    this.editTesthead = false;
+  }
+
   printTest() {
     window.print();
   }
+
+  logID(id: string) {
+    console.log(id)
+  }
+
+
 }
+
+
+ // showFile() {
+  //   console.log(this.file);
+  // }
+
+  // chooseFile(event: any) {
+  //   this.file = event.target.files[0];
+  // }
+
+  // addPhoto() {
+  //   const storageRef = ref(this.storage, this.file.name)
+  //   const uploadTask = uploadBytesResumable(storageRef, this.file)
+  //   uploadTask.on('state_changed',
+  //     (snapshot) => {
+  //       const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+  //       console.log('Upload is ' + progress + '% done');
+  //     }, () => {
+  //       getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+  //         console.log('File available at', downloadURL);
+  //       });
+  //     }
+  //   )
+  // }

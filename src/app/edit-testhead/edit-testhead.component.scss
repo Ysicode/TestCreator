@@ -1,0 +1,106 @@
+.inputs_container {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+    z-index: 99;
+    cursor: pointer;
+}
+
+.inputs_wrapper {
+    width: 100%;
+    height: 100%;
+    background-color: #f2f3f4;
+    cursor: auto;
+}
+
+.form_wrapper {
+    width: 90%;
+}
+
+.inputfield {
+    width: 80%;
+    max-width: 800px;
+    outline: none;
+    border: none;
+    text-align: center;
+    font-size: 17px;
+    border-bottom: 2px dotted black;
+    background: #f2f3f4;
+    padding: 10px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.save_btn {
+    background: linear-gradient(to right, #c2c2c2, #c7c7c7);
+    color: #424949;
+    border-radius: 30px;
+    font-size: 17px;
+    padding: 10px 30px 10px 30px;
+    margin: 15px;
+    border: none;
+
+    &:hover {
+        opacity: 0.8;
+        cursor: pointer;
+    }
+}
+
+.cancel_btn {
+    background-color: #f2f3f4;
+    color: #424949;
+    border-radius: 30px;
+    font-size: 17px;
+    padding: 10px 30px 10px 30px;
+    margin: 15px;
+    border: none;
+
+    &:hover {
+        opacity: 0.8;
+        cursor: pointer;
+    }
+}
+
+.timeNumber {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.rangebar {
+    -webkit-appearance: none;
+    width: 50%;
+    max-width: 500px;
+    border-radius: 10px;
+    height: 15px;
+    background: linear-gradient(to right, #26d3bf, #0ebfa2);
+    outline: none;
+    opacity: 1;
+    -webkit-transition: 0.2s;
+    transition: opacity 0.2s;
+    margin-bottom: 100px;
+}
+
+.rangebar:hover {
+    opacity: 0.9;
+}
+
+.rangebar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    border-radius: 20px;
+    height: 25px;
+    background: #c7c7c7;
+    cursor: pointer;
+}
+
+.rangebar::-moz-range-thumb {
+    width: 25px;
+    border-radius: 20px;
+    height: 25px;
+    background: #c7c7c7;
+    cursor: pointer;
+}
+

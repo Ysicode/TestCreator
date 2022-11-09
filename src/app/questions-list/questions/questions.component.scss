@@ -4,6 +4,16 @@ body {
     font-family: "Montserrat", sans-serif;
 }
 
+.login {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background: white;
+    z-index: 999;
+}
+
 .spinner {
     position: fixed;
     height: 100vw;
@@ -485,6 +495,7 @@ Answer styles
     margin-right: 10px;
     display: flex;
     border-radius: 50px;
+    background: #e7eceb;
     height: 40px;
     align-items: center;
     justify-content: center;
@@ -543,6 +554,11 @@ Styles für die Vorschau sektion
 .testHead {
    width: 100%;
    position: relative;
+   &:hover {
+    .edit_testhead_btn {
+        visibility: visible;
+    }
+}
 }
 
 .test_head {
@@ -559,12 +575,14 @@ Styles für die Vorschau sektion
     bottom: 3%;
     align-items: center;
     justify-content: center;
-  display: flex;
+    display: flex;
 }
 
 .edit_testhead_btn {
+   visibility: hidden;
     width: 84%;
-    height: 2vw;
+    height: 2.5vw;
+    max-height: 25px;
     color: #13bfa4;
     font-size: calc(100vw * 0.016);
     border: none;
@@ -677,11 +695,11 @@ Styles für die Vorschau sektion
 }
 
 .question_test {
+    position: relative;
     width: 85.5%;
     padding: 1%;
     &:hover {
         background: #f2f3f4;
-        cursor: pointer;
 
         .show_onHover {
             display: flex;
@@ -690,11 +708,13 @@ Styles für die Vorschau sektion
 
     .remove_from_test_btn {
         position: absolute;
+        background: none;
+        top: 0;
+        right: 0;
+        border: none;
         object-fit: cover;
-        border: 1px solid #da5838;
-        border-radius: 40px;
-        height: 25px;
-        width: 25px;
+        border-right: 1px solid #da5838;
+        border-top: 1px solid #da5838;
         &:hover {
             background: #f9d1c9;
             cursor: pointer;
@@ -702,7 +722,8 @@ Styles für die Vorschau sektion
     }
 
     .remove_icon {
-        width: 19px;
+        width: 2.5vw;
+        max-width: 20px;
     }
 }
 
@@ -784,9 +805,9 @@ Styles für die Vorschau sektion
 .height_info_wrapper {
     cursor: pointer;
     height: 2.5vw;
+    max-height: 20px;
     width: 100%;
     border-bottom: 1px solid #13bfa4;
-    max-height: 34px;
 
     &:hover {
         background: rgb(19 191 164 / 34%);
@@ -795,6 +816,7 @@ Styles für die Vorschau sektion
     .double_arrows {
         transform: rotate(90deg);
         width: calc(100vw * 0.016);
+        max-width: 20px;
     }
 }
 
@@ -807,7 +829,8 @@ Styles für die Vorschau sektion
     left: 0;
     background: #f2f3f4;
     border-left: 1px solid #13bfa4;
-    width: 20px;
+    width: 2.5vw;
+    max-width: 25px;
     top: 0;
     bottom: 0px;
 

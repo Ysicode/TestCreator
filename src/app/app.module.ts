@@ -10,13 +10,15 @@ import { provideAuth,getAuth } from '@angular/fire/auth';
 import { provideDatabase,getDatabase } from '@angular/fire/database';
 import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 import { provideStorage,getStorage } from '@angular/fire/storage';
-import { QuestionsComponent } from './questions/questions.component';
+import { QuestionsComponent } from './questions-list/questions/questions.component';
 import { FormsModule } from '@angular/forms';
 import { EditComponent } from './add/edit/edit.component';
 import { EditorComponent } from './editor/editor.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { HeaderComponent } from './header/header.component';
+import { EditTestheadComponent } from './edit-testhead/edit-testhead.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,8 @@ import { HeaderComponent } from './header/header.component';
     QuestionsComponent,
     EditComponent,
     EditorComponent,
-    HeaderComponent
+    HeaderComponent,
+    EditTestheadComponent
   ],
   imports: [
     BrowserModule,
@@ -32,6 +35,7 @@ import { HeaderComponent } from './header/header.component';
     AppRoutingModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
+    MatTooltipModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAnalytics(() => getAnalytics()),
     provideAuth(() => getAuth()),
