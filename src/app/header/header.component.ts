@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { firebaseService } from '../services/firebase.service';
 
 @Component({
   selector: 'app-header',

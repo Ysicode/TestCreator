@@ -1,161 +1,15 @@
-<div *ngIf="logedIn" class="login d_flex_column">
+<div *ngIf="logedIn" class="login d_flex_column" style="z-index: 9999999;">
     <p *ngIf="!wrongPassword">LOGIN</p>
     <p *ngIf="wrongPassword">Falsches Password</p>
     <input #pin type="password" placeholder="login Pin">
     <button class="subject_btn" (click)="login(pin.value)">Anmelden</button>
 </div>
 
-<div [class.d_none]="!overlay" class="overlay_bg d_flex">
+<app-edit class="add_question_overlay" [class.d_none]="!overlay" (closeAddQuestionOverlay)="overlay = false">
 
-    <div *ngIf="loading" class="spinner d_flex">
-        <mat-spinner class="mat-spinner" mode="indeterminate"></mat-spinner>
-    </div>
-
-    <div class="main_wrapper d_flex_column ">
-        <div class="subject_wrapper d_flex_column">
-            <div class="d_flex_column section">
-                <h2>Für welches Fach soll die Aufgabe angelegt werden?</h2>
-                <div (click)="setForm()" class="subject_btn_wrapper d_flex" *ngIf="loaded">
-                    <p *ngIf="loadedUserdata[0].subjects == 0">{{ 'Du hast noch kein Fach angelegt!' }}</p>
-                    <div *ngFor="let button of loadedUserdata[0].subjects ; let i = index">
-                        <button class="subject_btn" [class.selectedButton]="i == selectedSubjectButton"
-                            (click)="choiceSubject(button, i)">{{ button }}</button>
-                    </div>
-                </div>
-                <div class="addNew_container">
-                    <button *ngIf="!newSubject" class="subject_btn addNew_btn"
-                        (click)="showInputForNewSubject('subject')">
-                        + Neues Fach anlegen
-                    </button>
-                    <div *ngIf="newSubject" class="d_flex">
-                        <form class="d_flex_column" action="">
-                            <input class="inputfield" id="subjectInput" #subjectInput type="text" value=""
-                                placeholder="Name Fach">
-                            <div class="d_flex">
-                                <button class="subject_btn cancel_btn" (click)="newSubject = false">Abbrechen</button>
-                                <button class="subject_btn addNew_btn" (click)="addNewSubject(subjectInput.value)">Fach
-                                    anlegen</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="section_separator"></div>
-        </div>
-
-        <div class="subject_wrapper">
-            <div class="d_flex_column section">
-                <h2>Für welche Klasse soll die Aufgabe angelegt werden? </h2>
-                <div class="subject_btn_wrapper d_flex" *ngIf="loaded">
-                    <p *ngIf="loadedUserdata[0].classes == 0">{{ 'Du hast noch kein Fach angelegt!' }}</p>
-                    <div *ngFor="let button of loadedUserdata[0].classes ; let i = index">
-                        <button class="subject_btn" [class.selectedButton]="i == selectedClassButton"
-                            (click)="choiceClass(button, i)">{{ button }}</button>
-                    </div>
-                </div>
-                <div class="addNew_container">
-                    <button *ngIf="!newClass" class="subject_btn addNew_btn" (click)="showInputForNewSubject('class')">
-                        + Neue Klasse anlegen
-                    </button>
-                    <div *ngIf="newClass" class="d_flex">
-                        <form class="d_flex_column" action="">
-                            <input class="inputfield" id="classInput" #classInput type="text" value=""
-                                placeholder="Name Klasse">
-                            <div class="d_flex">
-                                <button class="subject_btn cancel_btn" (click)="newClass = false">Abbrechen</button>
-                                <button class="subject_btn addNew_btn" (click)="addNewClass(classInput.value)">Klasse
-                                    anlegen</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="section_separator margin_top"></div>
-            </div>
-        </div>
-
-
-        <div #questionEditor class="editor_wrapper">
-            <div class="d_flex">
-                <h2 class="editor_headline">Aufgabe erstellen</h2>
-                <button class="tooltip_btn" matTooltip="Hier können sie eine Aufgabe erstellen und sie später ihrem Test hinzufügen. - Die Größe eines Bildes kann später im Test noch bearbeitet werden"
-                    matTooltipPosition="above"><img class="info_icon" src="assets/info.png" alt=""></button>
-            </div>    
-        </div>
-        
-        <div #answerEditor class="editor_wrapper">
-            <div class="d_flex">
-                <h2 class="editor_headline">Lösung für diese Aufgabe erstellen</h2>
-                <button class="tooltip_btn" matTooltip="Für die Musterlösung können sie hier die Antwort für diese Aufgabe erstellen und später ihre Aufgaben mit Lösung anzeigen lassen"
-                matTooltipPosition="above"><img class="info_icon" src="assets/info.png" alt=""></button>
-            </div>
-           
-        </div>
-        <button type="button" (click)="saveEditorData()">ShowEditorData</button>
-
-        <form class="questionForm" #questionForm="ngForm" (ngSubmit)="addData(questionForm.value)">
-            <div class="d_flex_column">
-                <div class="d_flex section">
-                    <div class="d_flex_column rangbar_wrapper">
-                        <h2>Max. Punktzahl?</h2>
-                        <div class="subject_btn_wrapper d_flex_column" *ngIf="loaded">
-                            <div class="points_wrapper d_flex">
-                                <p class="points_number">{{ pointsRange.value }} Pkt</p>
-                            </div>
-                            <input class="rangebar" #pointsRange type="range" min="1" max="25" step="1" value="10"
-                                name="punktzahl" ngModel>
-                        </div>
-                    </div>
-                    <div class="d_flex_column rangbar_wrapper">
-                        <h2>Max. Bearbeitungszeit?</h2>
-                        <div class="subject_btn_wrapper d_flex_column" *ngIf="loaded">
-                            <div class="points_wrapper d_flex">
-                                <p class="points_number">{{ timeRange.value }} Min</p>
-                            </div>
-                            <input id="bearbeitungszeit" class="rangebar" #timeRange type="range" min="1" max="90"
-                                step="1" value="7" name="bearbeitungszeit" ngModel>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="section_separator"></div>
-
-
-                <div class="d_flex_column section noBorderBottom">
-                    <h2 class="keyword_headline">Keywords für eine spätere Suche und genaue Filterung der Aufgabe!</h2>
-                    <p class="keywords_subline"><b class="important">Wichtig! </b>Keywords bitte durch Komma trennen</p>
-                    <div class="subject_btn_wrapper d_flex_column" *ngIf="loaded">
-                        <textarea class="keyword_textarea" placeholder="z.B: Erstes Halbjahr, Grammatik, ..."
-                            name="keywords" ngModel></textarea>
-                    </div>
-                </div>
-
-
-                <div class="d_flex save_btn_wrapper">
-                    <button type="button" class="subject_btn cancel_btn" (click)="hideOverlay()">Abbrechen</button>
-                    <button class="subject_btn addNew_btn" type="submit">
-                        {{editMode ? 'Änderungen Speichern' : 'Frage Speichern'}}</button>
-                </div>
-
-            </div>
-
-        </form>
-
-    </div>
-</div>
-
-
+</app-edit>
 
 <div [class.d_none]="overlay" class="questions_wrapper ">
-    <div *ngIf="!preview" class="filter_wrapper d_flex_start_column d_none">
-        <p>filter 1</p>
-        <p>filter 2</p>
-        <p>filter 3</p>
-    </div>
-    <div *ngIf="preview" class="filter_wrapper d_flex_start_column d_none">
-        <p>style 1</p>
-        <p>style 2</p>
-        <p>style 3</p>
-    </div>
     <div class="questions_container">
         <div class="headline_test_infos d_flex">
             <div class="headline_test_infos_inside_container">
@@ -182,11 +36,20 @@
             </div>
         </div>
 
+
+
+        <!-- All Questions View  with solution-->
         <div [class.d_none]="preview" class="questions d_flex_column">
             <div class="question_wrapper d_flex_column" *ngFor="let data of loadedQuestions let i = index">
                 <div id="question_list{{ i }}" class="question">
                     <div class="d_flex_space question_head_container">
                         <div class="question_info d_flex_start">
+                            <div class="question_info__difficulty_btn d_flex"
+                                [class.dificulty_leicht_btn]="data.schwierigkeit == 'Leicht'"
+                                [class.dificulty_mittel_btn]="data.schwierigkeit == 'Mittel'"
+                                [class.dificulty_schwer_btn]="data.schwierigkeit == 'Schwer'">
+                                <p class="margin_zero">{{ data.schwierigkeit }}</p>
+                            </div>
                             <div class="question_info_btn">
                                 {{ data.fach }}
                             </div>
@@ -202,11 +65,12 @@
                         </div>
 
                         <div class="question_add">
-                            <button id="{{ 'add_btn' + i }}" (click)="addToTest(data.id, 'add_styling')"
+                            <button id="{{ 'add_btn' + i }}"
+                                (click)="addToTest(data.id, 'add_styling', data.schwierigkeit)"
                                 class="question_add_btn d_flex"><img class="add_icon" src="assets/plus_icon.png"
                                     alt=""></button>
-                            <button id="{{ 'remove_btn' + i }}" (click)="removeFromTest(data.id)"
-                                class="question_add_btn added d_none d_flex"><img class="add_icon"
+                            <button id="{{ 'remove_btn' + i }}" (click)="removeFromTest(data.id, data.schwierigkeit)"
+                                class="question_add_btn d_none d_flex"><img class="remove_icon"
                                     src="assets/plus_icon.png" alt=""></button>
                         </div>
                     </div>
@@ -261,17 +125,78 @@
                     </div>
 
                     <div class="answer_btn_container ">
-                        <button class="answer_btn d_flex" (click)="toggleAnswer(data.id)">Antwort <img
-                                [class.question_arrow_turned]="answerVisible && currentId == data.id"
-                                class="question_arrow" src="assets/arrow_slim.png"></button>
-                        <div *ngIf="answerVisible && currentId == data.id" class="answer_wrapper">
+                        <div class="answer_btn_wrapper d_flex_end" (click)="toggleAnswer(data.id)">
+                            <button [class.answer_btn_schwer]="data.schwierigkeit == 'Schwer'"
+                                [class.answer_btn_mittel]="data.schwierigkeit == 'Mittel'"
+                                [class.answer_btn_leicht]="data.schwierigkeit == 'Leicht'"
+                                class="answer_btn d_flex"><img [class.question_arrow_turned]="currentId == data.id"
+                                    class="question_arrow" src="assets/arrow_slim.png">
+                                Antwort
+                            </button>
+                        </div>
+
+
+                        <div *ngIf="currentId == data.id" class="answer_wrapper">
                             <div class="">
-                                <h3>Hier ist Platz für eine Antwort</h3>
+                                <div *ngFor="let question of data['antwort']['blocks']">
+                                    <div class="question_container" [innerHTML]="question['data']['text'] ">
+                                    </div>
+
+                                    <div ngClass="question_container" *ngIf="question['type'] == 'checklist'"
+                                        class="margin_left ">
+                                        <div class="element_margin_text d_flex_start"
+                                            *ngFor="let item of question['data']['items'] let k = index">
+                                            <div class="checkfield">
+                                            </div>
+                                            <p class="checkbox_item" [innerHTML]="item['text']"></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="element_margin_text" *ngIf="question['data']['file']">
+                                        <img loading="lazy" class="question_img"
+                                            src="{{ question['data']['file']['url'] }}" alt="">
+
+                                    </div>
+
+                                    <div class="question_container"
+                                        *ngFor="let items of question['data']['items'] let i = index">
+                                        <div class="margin_left element_margin_text"
+                                            *ngIf="question['data']['style'] == 'ordered'">
+                                            <ol class="d_flex_start">
+                                                <p class="ordered_list_number">{{i + 1}}.</p>
+                                                <p class="order_list_item" [innerHTML]="items"></p>
+                                            </ol>
+                                        </div>
+                                        <div class="margin_left element_margin_text"
+                                            *ngIf="question['data']['style'] == 'unordered'">
+                                            <ul>
+                                                <li [innerHTML]="items"></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div class="question_container element_margin_text"
+                                        *ngIf="question['data']['table']">
+                                        <div [class.bold]="i == 0 && question['data']['withHeadings'] == true "
+                                            class="d_flex_start tableRow"
+                                            *ngFor="let position of question['data']['table']['length'] let i = index">
+                                            <div [ngStyle]="{'width.%': 100 / question['data']['table'][position].length }"
+                                                *ngFor="let tableItem of question['data']['table'][position]">
+                                                <div class="tableItem d_flex_start" [innerHTML]="tableItem">
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
                             </div>
-                            <div>
-                                <button (click)="updateData(data.id)">Edit</button>
-                                <button (click)="deletedata(data.id)">Delete</button>
-                                <button (click)="logID( data.id)">Log ID</button>
+                            <div class="question_edit_btn_wrapper">
+                                <button class="question_edit_btn">Edit</button>
+                                <button class="question_edit_btn" (click)="deletedata(data.id)">Delete</button>
+                                <button class="question_edit_btn" (click)="logID( data.id)">Log ID</button>
                             </div>
                         </div>
                     </div>
@@ -279,7 +204,7 @@
             </div>
             <div class="add_question_container d_flex">
                 <div class="add_question_btn_wrapper">
-                    <button (click)="showOverlay()" class="add_question_btn" matTooltip="Neue Aufgabe anlegen"
+                    <button (click)="overlay = true; service.windowScrollTop();" class="add_question_btn" matTooltip="Neue Aufgabe anlegen"
                         matTooltipPosition="above">
                         Hinzufügen</button>
 
@@ -356,7 +281,8 @@
                                         /{{ data['punktzahl'] }}
                                     </div>
                                 </div>
-                                <button id="{{ 'remove_btn' + i }}" (click)="removeFromTest(data['id'])"
+                                <button id="{{ 'remove_btn' + i }}"
+                                    (click)="removeFromTest(data['id'], data['schwierigkeit'])"
                                     class="remove_from_test_btn show_onHover d_flex"><img class="remove_icon"
                                         src="assets/x_icon.png" alt=""></button>
                             </div>
@@ -433,7 +359,13 @@
 
         <div class="add_question_container d_flex" [class.d_none]="!preview">
             <div class="add_question_btn_wrapper">
-                <button (click)="showOverlay()" class="add_question_btn">Speichern</button>
+                <button class="add_question_btn">Speichern</button>
+                <div class="menu_burger" matTooltip="Menü" matTooltipPosition="above">
+                    <span class="burger_top">
+                    </span>
+                    <span class="burger_bottom">
+                    </span>
+                </div>
                 <button (click)="printTest()" class="add_question_btn">download</button>
             </div>
         </div>

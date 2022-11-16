@@ -15,7 +15,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
   @ViewChild('answerEditor', { read: ElementRef, static: true })
   answerEditorElement: ElementRef;
   private answerEditor: EditorJS;
-  
+
   constructor() { }
 
   ngOnInit(): void {
@@ -24,20 +24,20 @@ export class EditorComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.initializeQuestionEditor();
     this.initializeAnswerEditor();
-}
+  }
 
-private initializeQuestionEditor(): void {
-  this.questionEditor = new EditorJS({
-    minHeight: 200,
-    holder: this.questionEditorElement.nativeElement
-  })
-}
+  private initializeQuestionEditor(): void {
+    this.questionEditor = new EditorJS({
+      minHeight: 200,
+      holder: this.questionEditorElement.nativeElement
+    })
+  }
 
-private initializeAnswerEditor() {
-  this.questionEditor = new EditorJS({
-    minHeight: 200,
-    holder: this.answerEditorElement.nativeElement
-  })
-}
+  private initializeAnswerEditor() {
+    this.answerEditor = new EditorJS({
+      minHeight: 200,
+      holder: this.answerEditorElement.nativeElement
+    })
+  }
 
 }

@@ -4,6 +4,12 @@ body {
     font-family: "Montserrat", sans-serif;
 }
 
+.add_question_overlay {
+    position: absolute;
+    top: 0;
+    z-index: 99999;
+}
+
 .login {
     position: absolute;
     top: 0;
@@ -14,43 +20,10 @@ body {
     z-index: 999;
 }
 
-.spinner {
-    position: fixed;
-    height: 100vw;
-    width: 80vw;
-    top: 0;
-}
-
-.tooltip_btn {
-    border: none;
-    border-radius: 30px;
-    height: 25px;
-    width: 25px;
-    background: linear-gradient(to right, #c2c2c2, #c8d4d1);
-
-    .info_icon {
-        width: 13px;
-        height: 13px;
-    }
-}
-
 .page_break {
     page-break-after: always;
 }
 
-.mat-spinner::ng-deep circle {
-    stroke: #1d202b;
-}
-
-.overlay_bg {
-    position: absolute;
-    top: 0;
-    background-color: #f2f3f4;
-    z-index: 999;
-    width: 100vw;
-    max-width: 100%;
-    padding-bottom: 200px;
-}
 
 .section {
     margin-top: 75px;
@@ -100,8 +73,26 @@ body {
     background: #f2f3f4 !important;
 }
 
+.close_overlay_window_btn {
+    position: fixed;
+    right: 20px;
+    top: 20px;
+}
+
 .selectedButton {
     border: 2px solid #2c3e50;
+}
+
+.dificulty_leicht_btn {
+   background: linear-gradient(to right, #bdbdbd, #dbd5d5);
+}
+
+.dificulty_mittel_btn {
+    background: linear-gradient(to right, #4babc3, #5fc1d8);
+}
+
+.dificulty_schwer_btn {
+    background: linear-gradient(to right, rgb(248 190 86), #f5d619);
 }
 
 .inputfield {
@@ -150,7 +141,7 @@ body {
 .points_number {
     margin-top: 0px;
     margin-bottom: 0px;
-    font-size: 20px;
+    font-size: 17px;
     font-weight: bold;
 }
 
@@ -203,7 +194,12 @@ body {
     color: #da5838;
 }
 
+.d_none {
+    display: none;
+}
+
 .keyword_textarea {
+    font-family: "Montserrat", sans-serif;
     outline: none;
     text-align: center;
     width: 90%;
@@ -309,7 +305,7 @@ style for rendered subjects
 
 .question_wrapper {
     width: calc(100% - 40px);
-    margin-bottom: 1%;
+    margin-bottom: 2%;
     padding-bottom: 0;
 }
 
@@ -317,17 +313,28 @@ style for rendered subjects
     width: 100%;
     box-shadow: 0 24px 24px -18px rgb(69 104 129 / 33%), 0 9px 45px 0 rgb(114 119 160 / 12%);
     background: white;
-    padding: 20px 20px 10px 20px;
+    padding: 15px;
 }
 
 .question_added {
-    border-right: 3px solid #13bfa4;
+    border-right: 2px solid black;
+}
+
+.question_added_leicht {
+    border-right: 3px solid #9f9f9e;
+}
+
+.question_added_mittel {
+    border-right: 3px solid #5fc1d8;
+}
+
+.question_added_schwer {
+    border-right: 3px solid #f5af19;
 }
 
 .question_container {
     margin-top: 5px;
     font-size: calc(100vw * 0.02);
-    font-size: max 20px;
     margin-bottom: 5px;
 }
 
@@ -338,12 +345,18 @@ style for rendered subjects
 
 .question_info {
     font-size: calc(100vw * 0.018);
+    width: 100%;
 }
 
 .question_info_btn {
     border-bottom: 1px solid #aaaaaa;
-    padding: 3px 5px 3px 5px;
     margin-right: 15px;
+}
+
+.question_info__difficulty_btn {
+    display: flex;
+    padding: 3px 20px 3px 20px;
+    margin-right: 20px;
 }
 
 .question_add {
@@ -364,10 +377,25 @@ style for rendered subjects
         width: 20px;
         height: 20px;
     }
+
+    .remove_icon {
+        width: 20px;
+        height: 20px;
+        transform: rotate(45deg);
+    }
 }
 
-.added {
-    border: 3px solid #13bfa4;
+
+.added_difficulty_leicht {
+    border: 3px solid #9f9f9e;
+}
+
+.added_difficulty_mittel {
+    border:  3px solid #5fc1d8;
+}
+
+.added_difficulty_schwer {
+    border: 3px solid #f5af19;
 }
 
 .ordered_list_number {
@@ -442,26 +470,70 @@ Answer styles
     justify-content: center;
 }
 
+.answer_btn_wrapper {
+    width: 100%;
+    margin-top: 20px;
+    &:hover {
+        cursor: pointer;
+        .answer_btn {
+            opacity: 0.8;
+        }
+    }
+}
+
 .answer_btn {
     background: none;
-    margin-top: 20px;
     border: none;
-    border-top: 1px solid #aaaaaa;
     font-size: calc(100vw * 0.018);
+    padding: 3px 10px 3px 10px;
     &:hover {
-        border-top: 1px solid #21ccb6;
         cursor: pointer;
     }
 }
 
+.answer_btn_leicht {
+    color: #9f9f9e;  
+}
+
+.answer_btn_mittel {
+    color: #5fc1d8;
+}
+
+.answer_btn_schwer {
+    color: #f5af19;
+}
+
+.answer_wrapper {
+    border-top: 1px dotted black;
+    padding-top: 25px;
+    width: 100%;
+}
+
 .question_arrow {
-    margin-left: 5px;
+    margin-right: 5px;
     height: 15px;
     width: 15px;
 }
 
 .question_arrow_turned {
     transform: rotate(180deg);
+}
+
+.question_edit_btn {
+    border: none;
+    margin-right: 10px;
+    padding: 3px 20px 3px 20px;
+    font-size: calc(100vw * 0.018);
+    border-radius: 40px;
+    background: #e3e5e5;
+    &:hover {
+        cursor: pointer;
+        opacity: 0.8;
+    }
+}
+
+.question_edit_btn_wrapper {
+    margin-top: 1.5%;
 }
 
 .d_none {
@@ -478,6 +550,7 @@ Answer styles
     right: 0px;
     bottom: 0px;
     height: 100px;
+    z-index: 999999;
 }
 
 .add_question_btn_wrapper {
@@ -524,7 +597,7 @@ Answer styles
 }
 
 .burger_top {
-    width: 25px;
+    width: 20px;
     margin-bottom: 2px;
     height: 3px;
     background: black;
@@ -532,7 +605,7 @@ Answer styles
 }
 
 .burger_bottom {
-    width: 25px;
+    width: 20px;
     margin-top: 2px;
     height: 3px;
     background: black;
@@ -568,13 +641,13 @@ Styles für die Vorschau sektion
 }
 
 .testHead {
-   width: 100%;
-   position: relative;
-   &:hover {
-    .edit_testhead_btn {
-        visibility: visible;
+    width: 100%;
+    position: relative;
+    &:hover {
+        .edit_testhead_btn {
+            visibility: visible;
+        }
     }
-}
 }
 
 .test_head {
@@ -595,7 +668,7 @@ Styles für die Vorschau sektion
 }
 
 .edit_testhead_btn {
-   visibility: hidden;
+    visibility: hidden;
     width: 84%;
     height: 2.5vw;
     max-height: 25px;
@@ -608,7 +681,6 @@ Styles für die Vorschau sektion
         background: rgb(19 191 164 / 34%);
         cursor: pointer;
     }
-
 }
 
 .school_name {
@@ -761,6 +833,10 @@ Styles für die Vorschau sektion
     margin-bottom: 1%;
 }
 
+.d_none {
+    display: none;
+}
+
 /* rangebar Vorschau
 */
 
@@ -885,10 +961,6 @@ Styles für die Vorschau sektion
         width: 95vw;
     }
 
-    .question_info_btn {
-        margin-right: 5px;
-    }
-
     .section {
         flex-direction: column;
     }
@@ -899,30 +971,35 @@ Styles für die Vorschau sektion
     }
 
     .points_number {
-        font-size: 17px;
+        font-size: 15px;
     }
 }
 
 @media (max-width: 600px) {
-    .test_info_item {
+    .test_info_item,
+    .add_question_btn,
+    .subject_btn,
+    .keyword_textarea {
         font-size: 13px;
     }
 
     .preview_btn {
         font-size: 13px;
         margin-left: 25px;
+        padding: 0px 25px 0px 25px;
+        height: 30px;
     }
 
     .question_add_btn {
-        padding: 5px;
+        padding: 4.5px;
+    }
+
+    .question_info_btn {
+        margin-right: 7px;
     }
 
     .added {
         border: 2px solid #13bfa4;
-    }
-
-    .answer_btn {
-        font-size: 13px;
     }
 
     .question_arrow {
@@ -933,11 +1010,46 @@ Styles für die Vorschau sektion
     .added_questions_empty_info {
         font-size: 15px;
     }
+
+    .questions {
+        width: calc(100% - 25px);
+    }
+
+    .question {
+        padding: 5px;
+    }
+
+    .question_wrapper {
+        width: 100%;
+        margin-bottom: 3%;
+    }
+
+    .add_question_btn_wrapper {
+        height: 30px;
+        width: 300px;
+    }
+
+    .add_question_btn {
+        padding: 0px 25px 0px 25px;
+    }
+
+    .add_question_container {
+        height: 60px;
+    }
+    .tooltip_btn {
+        height: 20px;
+        width: 20px;
+
+        .info_icon {
+            width: 10px;
+            height: 10px;
+        }
+    }
 }
 
 @media (max-width: 450px) {
     .question_add_btn {
-        padding: 4px;
+        padding: 2px;
     }
 
     .answer_btn {
@@ -949,15 +1061,6 @@ Styles für die Vorschau sektion
         width: 10px;
     }
 
-    .add_question_container {
-        height: 60px;
-    }
-
-    .add_question_btn {
-        font-size: 15px;
-        border-radius: 5px;
-    }
-
     .added_questions_empty_info {
         font-size: 13px;
     }
@@ -966,7 +1069,8 @@ Styles für die Vorschau sektion
 @media (min-width: 1030px) {
     .preview_question_container,
     .question_test_number,
-    .test_dinA4, .edit_testhead_btn {
+    .test_dinA4,
+    .edit_testhead_btn {
         font-size: 16.5px;
     }
     .h1 {
@@ -1017,21 +1121,30 @@ Styles für die Vorschau sektion
 }
 
 @media (min-width: 850px) {
-    .question_info, .answer_btn {
-        font-size: 13px;
+    .question_info {
+        font-size: 15px;
     }
-    .question_container {
-        font-size: 17px;
+}
+
+@media (min-width: 750px) {
+    .question_container,.answer_btn {
+        font-size: 15px;
+    }
+}
+
+@media (min-width: 725px) {
+    .question_info, .question_edit_btn {
+        font-size: 13px;
     }
 }
 
 @media print {
-  .headline_test_infos, .add_question_container {
-      display: none;
-  }
+    .headline_test_infos,
+    .add_question_container {
+        display: none;
+    }
 
-  #test_print {
-      visibility: visible !important;
-  }
-  
+    #test_print {
+        visibility: visible !important;
+    }
 }

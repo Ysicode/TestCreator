@@ -1,1 +1,165 @@
-<p>edit works!</p>
+<div class="overlay_bg d_flex">
+    <div *ngIf="loading" class="spinner d_flex">
+        <mat-spinner class="mat-spinner" mode="indeterminate"></mat-spinner>
+    </div>
+
+    <div class="main_wrapper d_flex_column ">
+        <div class="subject_wrapper d_flex_column">
+            <div class="d_flex_column section">
+                <h2 id="choice_Subject">Für welches Fach soll die Aufgabe angelegt werden?</h2>
+                <div (click)="setForm()" class="subject_btn_wrapper d_flex" *ngIf="loaded">
+                    <p *ngIf="loadedUserdata[0].subjects == 0">{{ 'Du hast noch kein Fach angelegt!' }}</p>
+                    <div *ngFor="let button of loadedUserdata[0].subjects ; let i = index">
+                        <button class="subject_btn" [class.selectedButton]="i == selectedSubjectButton"
+                            (click)="choiceSubject(button, i)">{{ button }}</button>
+                    </div>
+                </div>
+                <div class="addNew_container">
+                    <button *ngIf="!newSubject" class="subject_btn addNew_btn"
+                        (click)="showInputForNewSubject('subject')">
+                        + Neues Fach anlegen
+                    </button>
+                    <div *ngIf="newSubject" class="d_flex">
+                        <form class="d_flex_column" action="">
+                            <input class="inputfield" id="subjectInput" #subjectInput type="text" value=""
+                                placeholder="Name Fach">
+                            <div class="d_flex">
+                                <button class="subject_btn cancel_btn" (click)="newSubject = false">Abbrechen</button>
+                                <button class="subject_btn addNew_btn" (click)="addNewSubject(subjectInput.value)">Fach
+                                    anlegen</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="section_separator margin_top_bottom"></div>
+        </div>
+
+        <div class="subject_wrapper">
+            <div class="d_flex_column section">
+                <h2 id="choice_class">Für welche Klasse soll die Aufgabe angelegt werden? </h2>
+                <div class="subject_btn_wrapper d_flex" *ngIf="loaded">
+                    <p *ngIf="loadedUserdata[0].classes == 0">{{ 'Du hast noch kein Fach angelegt!' }}</p>
+                    <div *ngFor="let button of loadedUserdata[0].classes; let i = index">
+                        <button class="subject_btn" [class.selectedButton]="i == selectedClassButton"
+                            (click)="choiceClass(button, i)">{{ button }}</button>
+                    </div>
+                </div>
+                <div class="addNew_container">
+                    <button *ngIf="!newClass" class="subject_btn addNew_btn" (click)="showInputForNewSubject('class')">
+                        + Neue Klasse anlegen
+                    </button>
+                    <div *ngIf="newClass" class="d_flex">
+                        <form class="d_flex_column" action="">
+                            <input class="inputfield" id="classInput" #classInput type="text" value=""
+                                placeholder="Name Klasse">
+                            <div class="d_flex">
+                                <button class="subject_btn cancel_btn" (click)="newClass = false">Abbrechen</button>
+                                <button class="subject_btn addNew_btn" (click)="addNewClass(classInput.value)">Klasse
+                                    anlegen</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="section_separator margin_top_bottom plus_margin_top"></div>
+            </div>
+        </div>
+
+        <div #questionEditor class="editor_wrapper">
+            <div class="d_flex">
+                <h2 id="edit_question" class="editor_headline">Aufgabe erstellen</h2>
+                <button class="tooltip_btn d_flex"
+                    matTooltip="Hier können sie eine Aufgabe erstellen und sie später ihrem Test hinzufügen. - Die Größe eines Bildes kann später im Test noch bearbeitet werden"
+                    matTooltipPosition="above"><img class="info_icon" src="assets/info.png" alt=""></button>
+            </div>
+        </div>
+
+        <div #answerEditor class="editor_wrapper">
+            <div class="d_flex">
+                <h2 id="edit_solution" class="editor_headline">Lösung für diese Aufgabe erstellen</h2>
+                <button class="tooltip_btn d_flex"
+                    matTooltip="Für die Musterlösung können sie hier die Antwort für diese Aufgabe erstellen und später ihre Aufgaben mit Lösung anzeigen lassen"
+                    matTooltipPosition="above"><img class="info_icon" src="assets/info.png" alt=""></button>
+            </div>
+
+        </div>
+
+        <div class="section_separator margin_top_bottom"></div>
+
+
+        <div class="d_flex rangbar_wrapper section">
+            <div class="d_flex_column">
+                <h2 id="difficulty">Schwierigkeit</h2>
+                <div class="d_flex">
+                    <div>
+                        <button class="subject_btn dificulty_leicht_btn"
+                            [class.selectedButton]="currentDifficulty == 'Leicht'"
+                            (click)="selectDifficulty('Leicht')">Leicht</button>
+                    </div>
+                    <div>
+                        <button class="subject_btn dificulty_mittel_btn"
+                            [class.selectedButton]="currentDifficulty == 'Mittel'"
+                            (click)="selectDifficulty('Mittel')">Mittel</button>
+                    </div>
+                    <div>
+                        <button class="subject_btn dificulty_schwer_btn"
+                            [class.selectedButton]="currentDifficulty == 'Schwer'"
+                            (click)="selectDifficulty('Schwer')">Schwer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form class="questionForm" #questionForm="ngForm" (ngSubmit)="addData(questionForm.value)">
+            <div class="d_flex_column">
+                <div class="d_flex section">
+                    <div class="d_flex_column rangbar_wrapper">
+                        <h2>Max. Punktzahl?</h2>
+                        <div class="subject_btn_wrapper d_flex_column" *ngIf="loaded">
+                            <div class="points_wrapper d_flex">
+                                <p class="points_number">{{ pointsRange.value }} Pkt</p>
+                            </div>
+                            <input class="rangebar" #pointsRange type="range" min="1" max="25" step="1" value="10"
+                                name="punktzahl" ngModel>
+                        </div>
+                    </div>
+                    <div class="d_flex_column rangbar_wrapper">
+                        <h2>Max. Bearbeitungszeit?</h2>
+                        <div class="subject_btn_wrapper d_flex_column" *ngIf="loaded">
+                            <div class="points_wrapper d_flex">
+                                <p class="points_number">{{ timeRange.value }} Min</p>
+                            </div>
+                            <input id="bearbeitungszeit" class="rangebar" #timeRange type="range" min="1" max="90"
+                                step="1" value="7" name="bearbeitungszeit" ngModel>
+                        </div>
+                    </div>
+                </div>
+                <div class="section_separator margin_top_bottom"></div>
+
+
+                <div class="d_flex_column section noBorderBottom">
+                    <h2 class="keyword_headline">Keywords für eine spätere Suche und genaue Filterung der Aufgaben!</h2>
+                    <p class="keywords_subline"><b class="important">Wichtig! </b>Keywords müssen durch Komma getrennt
+                        werden</p>
+                    <div class="subject_btn_wrapper d_flex_column" *ngIf="loaded">
+                        <textarea class="keyword_textarea" placeholder="z.B: Grammatik, Erstes Halbjahr, ..."
+                            name="keywords" ngModel></textarea>
+                    </div>
+                </div>
+
+
+                <div class="d_flex save_btn_wrapper">
+                    <button type="button" class="subject_btn cancel_btn" (click)="closeEditComponent()">Abbrechen</button>
+                    <button class="subject_btn addNew_btn" type="submit">
+                        {{editMode ? 'Änderungen Speichern' : 'Frage Speichern'}}</button>
+
+                    <button type="button" (click)="closeEditComponent()" class="question_add_btn d_flex close_overlay_window_btn"><img
+                            class="remove_icon" src="assets/plus_icon.png">
+                    </button>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+</div>
