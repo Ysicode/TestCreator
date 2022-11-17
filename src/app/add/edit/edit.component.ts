@@ -19,162 +19,91 @@ import { overlaysService } from 'src/app/services/overlays.service';
 })
 export class EditComponent implements OnInit, AfterViewInit {
   dataFromFirestore$: Observable<any>;
-  loading: Boolean = false;
-  loaded = false;
   loadedUserdata = [];
   loadedQuestions = [];
 
+  loading: Boolean = false;
+  loaded: Boolean = false;
   currentQuestion: any;
   currentAnswer: any;
   currentId: string;
-  @ViewChild("rangeSliderForm") rangebars: NgForm;
-
+  @ViewChild('questionForm') form: NgForm;
+  @Output() closeAddQuestionOverlay = new EventEmitter<boolean>();
   selectedSubjectButton: number;
   selectedClassButton: number;
   currentSubjectChoice: string;
   currentClassChoice: string;
   currentDifficulty: any;
-  newSubject = false;
-  newClass = false;
-
-  editMode = false;
-  @Output() closeAddQuestionOverlay = new EventEmitter<boolean>();
+  newSubject: Boolean = false;
+  newClass: Boolean = false;
+  editMode: Boolean = false;
+  multipleChoiceEditor: Boolean = false;
+  
 
   // EditorJS
-  @ViewChild('questionForm') form: NgForm;
   @ViewChild('questionEditor', { read: ElementRef, static: true })
   questionEditorElement: ElementRef;
-  private questionEditor: EditorJS;
+  questionEditor: EditorJS;
+
   @ViewChild('answerEditor', { read: ElementRef, static: true })
   answerEditorElement: ElementRef;
-  private answerEditor: EditorJS;
+  answerEditor: EditorJS;
+
+  @ViewChild('multiChoiceEditor', { read: ElementRef, static: true })
+  multiChoiceEditorElement: ElementRef;
+  multiChoiceEditor: EditorJS;
+
   Checklist = require('@editorjs/checklist');
 
   constructor(private firestore: Firestore, private storage: Storage, public service: overlaysService) { }
 
   ngOnInit(): void {
     this.loadSubjectsAndClasses();
-    this.setForm();
     this.service.windowScrollTop();
   }
 
   ngAfterViewInit(): void {
     this.initializeQuestionEditor();
     this.initializeAnswerEditor();
+    this.initializeMultipleChoiceEditor();
   }
 
   closeEditComponent() {
     this.closeAddQuestionOverlay.emit();
     this.service.windowScrollTop();
+    this.clearForm();
+    this.currentDifficulty = '';
+  }
+
+  toggleMultipleChoiceEditor() {
+    this.multipleChoiceEditor = !this.multipleChoiceEditor;
   }
 
   //Standard Questions Editor
-  private initializeQuestionEditor(): void {
-    this.questionEditor = new EditorJS({
+  initializeMultipleChoiceEditor(): void {
+    this.multiChoiceEditor = new EditorJS({
       minHeight: 100,
-      holder: this.questionEditorElement.nativeElement,
+      holder: this.multiChoiceEditorElement.nativeElement,
       tools: {
         underline: Underline,
-        table: {
-          class: Table,
-          inlineToolbar: true,
-          config: {
-            rows: 2,
-            cols: 2,
-          },
-        },
-        list: {
-          class: List,
-          inlineToolbar: true,
-          config: {
-            defaultStyle: 'unordered'
-          }
-        },
         checklist: {
           class: this.Checklist,
           inlineToolbar: true,
-        },
-        image: {
-          class: ImageTool,
-          config: {
-            uploader: {
-              async uploadByFile(file: any) {
-                const storage = getStorage();
-                const storageRef = ref(storage, file.name);
-                const metadata = {
-                  contentType: 'image/jpeg',
-                  size: file.size,
-                };
-                const snapshot = await uploadBytes(storageRef, file, metadata);
-                const downloadURL = await getDownloadURL(snapshot.ref);
-                return {
-                  success: 1,
-                  file: {
-                    url: downloadURL,
-                    size: file.size,
-                  }
-                };
-              }
-            }
-          }
-        },
+        }
       }
     });
   }
 
-  //Standard Answer Editor
-  initializeAnswerEditor(): void {
-    this.answerEditor = new EditorJS({
-      minHeight: 100,
-      holder: this.answerEditorElement.nativeElement,
-      tools: {
-        underline: Underline,
-        table: {
-          class: Table,
-          inlineToolbar: true,
-          config: {
-            rows: 2,
-            cols: 2,
-          },
-        },
-        list: {
-          class: List,
-          inlineToolbar: true,
-          config: {
-            defaultStyle: 'unordered'
-          }
-        },
-        checklist: {
-          class: this.Checklist,
-          inlineToolbar: true,
-        },
-        image: {
-          class: ImageTool,
-          config: {
-            uploader: {
-              async uploadByFile(file: any) {
-                const storage = getStorage();
-                const storageRef = ref(storage, file.name);
-                const metadata = {
-                  contentType: 'image/jpeg',
-                  size: file.size,
-                };
-                const snapshot = await uploadBytes(storageRef, file, metadata);
-                const downloadURL = await getDownloadURL(snapshot.ref);
-                return {
-                  success: 1,
-                  file: {
-                    url: downloadURL,
-                    size: file.size,
-                  }
-                };
-              }
-            }
-          }
-        },
-      }
-    });
+  //Standard Questions Editor
+  initializeQuestionEditor(): void {
+    this.questionEditor = this.initializeEditor(this.questionEditorElement.nativeElement);  
   }
+
+   //Standard Answer Editor
+   initializeAnswerEditor(): void {
+    this.answerEditor = this.initializeEditor(this.answerEditorElement.nativeElement);
+  }
+
 
   /**
    * This function is used to set the form of the rangebars in the add question overlay to given values
@@ -265,6 +194,7 @@ export class EditComponent implements OnInit, AfterViewInit {
       bearbeitungszeit: '7',
     })
     this.selectedSubjectButton = -1;
+    this.selectedClassButton = -1;
   }
 
   selectDifficulty(difficulty: string) {
@@ -289,7 +219,11 @@ export class EditComponent implements OnInit, AfterViewInit {
         }).then(() => {
           this.loading = false;
           this.closeEditComponent();
-          window.scrollTo(0, 0);
+          this.multiChoiceEditor.clear();
+        }).then(() => {
+          this.questionEditor.clear();
+        }).then(() => {
+          this.answerEditor.clear();
         })
       } else {
         const coll: any = doc(this.firestore, '/users/JonasWeiss/fragen/' + this.currentId);
@@ -306,7 +240,6 @@ export class EditComponent implements OnInit, AfterViewInit {
         })
         this.editMode = false;
       }
-      this.clearForm();
     }, 700);
   }
 
@@ -328,45 +261,60 @@ export class EditComponent implements OnInit, AfterViewInit {
    * this function is used to save a table as an object
    */
   async saveEditorData(): Promise<void> {
-    this.questionEditor.save().then(data => {
-      this.currentQuestion = data;
-      for (let i = 0; i < data.blocks.length; i++) { //If a table was in use of the editor nested array cannot saved in firestore
-        if (data.blocks[i].data.content) {
-          this.currentQuestion['blocks'][i]['data']['table'] = {};
-          for (let j = 0; j < data.blocks[i].data.content.length; j++) {
-            this.currentQuestion['blocks'][i]['data']['table'][`${j}`] = data.blocks[i].data.content[j];
-          }
-          this.currentQuestion['blocks'][i]['data']['table']['length'] = Object.keys(this.currentQuestion['blocks'][i]['data']['table']);
-        }
-        this.currentQuestion['blocks'][i]['data']['content'] = 'deleted';
-      }
-    });
-    setTimeout(() => {
-      console.log('Das ist die Aufgabe', this.currentQuestion);
-    }, 500);
+    if (this.multipleChoiceEditor) {
+      this.multiChoiceEditor.save().then(data => {
+        this.currentQuestion = data;
+        this.currentAnswer = data;
+      });
+      setTimeout(() => {
+        console.log('Das ist Multi Chopice', this.currentQuestion, this.currentAnswer);
+      }, 500);
+    }
 
-    this.answerEditor.save().then(data => {
-      this.currentAnswer = data;
-      for (let i = 0; i < data.blocks.length; i++) { //If a table was in use of the editor nested array cannot saved in firestore
-        if (data.blocks[i].data.content) {
-          this.currentAnswer['blocks'][i]['data']['table'] = {};
-          for (let j = 0; j < data.blocks[i].data.content.length; j++) {
-            this.currentAnswer['blocks'][i]['data']['table'][`${j}`] = data.blocks[i].data.content[j];
+    if (!this.multipleChoiceEditor) {
+      this.questionEditor.save().then(data => {
+        this.currentQuestion = data;
+        for (let i = 0; i < data.blocks.length; i++) { //If a table was in use of the editor nested array cannot saved in firestore
+          if (data.blocks[i].data.content) {
+            this.currentQuestion['blocks'][i]['data']['table'] = {};
+            for (let j = 0; j < data.blocks[i].data.content.length; j++) {
+              this.currentQuestion['blocks'][i]['data']['table'][`${j}`] = data.blocks[i].data.content[j];
+            }
+            this.currentQuestion['blocks'][i]['data']['table']['length'] = Object.keys(this.currentQuestion['blocks'][i]['data']['table']);
           }
-          this.currentAnswer['blocks'][i]['data']['table']['length'] = Object.keys(this.currentAnswer['blocks'][i]['data']['table']);
+          this.currentQuestion['blocks'][i]['data']['content'] = 'deleted';
         }
-        this.currentAnswer['blocks'][i]['data']['content'] = 'deleted';
-      }
-    });
-    setTimeout(() => {
-      console.log('Das ist die Antwort', this.currentAnswer);
-    }, 500);
+        this.questionEditor.clear();
+      });
+      setTimeout(() => {
+        console.log('Das ist die Aufgabe', this.currentQuestion);
+      }, 200);
+  
+      this.answerEditor.save().then(data => {
+        this.currentAnswer = data;
+        for (let i = 0; i < data.blocks.length; i++) { //If a table was in use of the editor nested array cannot saved in firestore
+          if (data.blocks[i].data.content) {
+            this.currentAnswer['blocks'][i]['data']['table'] = {};
+            for (let j = 0; j < data.blocks[i].data.content.length; j++) {
+              this.currentAnswer['blocks'][i]['data']['table'][`${j}`] = data.blocks[i].data.content[j];
+            }
+            this.currentAnswer['blocks'][i]['data']['table']['length'] = Object.keys(this.currentAnswer['blocks'][i]['data']['table']);
+          }
+          this.currentAnswer['blocks'][i]['data']['content'] = 'deleted';
+        }
+      });
+      setTimeout(() => {
+        console.log('Das ist die Antwort', this.currentAnswer);
+       
+      }, 500);
+    }  
   }
 
+
   /**
-* this function is used to load all subject and classes from firebase
-* and store it in a local object (loadedUserData)
-*/
+  * this function is used to load all subject and classes from firebase
+  * and store it in a local object (loadedUserData)
+  */
   async loadSubjectsAndClasses() {
     //gets UserData like classes and subjects and email adress and username
     const subject: any = collection(this.firestore, '/users/JonasWeiss/subjects');
@@ -374,9 +322,61 @@ export class EditComponent implements OnInit, AfterViewInit {
     this.dataFromFirestore$.subscribe((data) => {
       this.loadedUserdata = data;
       this.loaded = true;
-      console.log(this.loadedUserdata, 'Hallo Simon')
     });
   }
 
+  /**
+   * This function is used to initialize the editors for create a question and an answer
+   * @param htmlElement - This parameter is used to set the holder of the editor 
+   * @returns the Editor with all configs
+   */
+  initializeEditor(htmlElement: any) {
+    return  new EditorJS({
+        minHeight: 100,
+        holder: htmlElement,
+        tools: {
+          underline: Underline,
+          table: {
+            class: Table,
+            inlineToolbar: true,
+            config: {
+              rows: 2,
+              cols: 2,
+            },
+          },
+          list: {
+            class: List,
+            inlineToolbar: true,
+            config: {
+              defaultStyle: 'unordered'
+            }
+          },
+          image: {
+            class: ImageTool,
+            config: {
+              uploader: {
+                async uploadByFile(file: any) {
+                  const storage = getStorage();
+                  const storageRef = ref(storage, file.name);
+                  const metadata = {
+                    contentType: 'image/jpeg',
+                    size: file.size,
+                  };
+                  const snapshot = await uploadBytes(storageRef, file, metadata);
+                  const downloadURL = await getDownloadURL(snapshot.ref);
+                  return {
+                    success: 1,
+                    file: {
+                      url: downloadURL,
+                      size: file.size,
+                    }
+                  };
+                }
+              }
+            }
+          },
+        }
+      });
+    }
 
 }

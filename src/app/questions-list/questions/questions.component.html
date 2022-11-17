@@ -42,7 +42,7 @@
         <div [class.d_none]="preview" class="questions d_flex_column">
             <div class="question_wrapper d_flex_column" *ngFor="let data of loadedQuestions let i = index">
                 <div id="question_list{{ i }}" class="question">
-                    <div class="d_flex_space question_head_container">
+                    <div class="question_head_container">
                         <div class="question_info d_flex_start">
                             <div class="question_info__difficulty_btn d_flex"
                                 [class.dificulty_leicht_btn]="data.schwierigkeit == 'Leicht'"
@@ -68,10 +68,12 @@
                             <button id="{{ 'add_btn' + i }}"
                                 (click)="addToTest(data.id, 'add_styling', data.schwierigkeit)"
                                 class="question_add_btn d_flex"><img class="add_icon" src="assets/plus_icon.png"
-                                    alt=""></button>
+                                alt="">
+                            </button>
                             <button id="{{ 'remove_btn' + i }}" (click)="removeFromTest(data.id, data.schwierigkeit)"
                                 class="question_add_btn d_none d_flex"><img class="remove_icon"
-                                    src="assets/plus_icon.png" alt=""></button>
+                                src="assets/plus_icon.png" alt="">
+                            </button>
                         </div>
                     </div>
 
@@ -115,15 +117,14 @@
                                 <div [ngStyle]="{'width.%': 100 / question['data']['table'][position].length }"
                                     *ngFor="let tableItem of question['data']['table'][position]">
                                     <div class="tableItem d_flex_start" [innerHTML]="tableItem">
-
                                     </div>
-
                                 </div>
                             </div>
                         </div>
-
                     </div>
 
+
+                    <!-- Rendering Answers  -->
                     <div class="answer_btn_container ">
                         <div class="answer_btn_wrapper d_flex_end" (click)="toggleAnswer(data.id)">
                             <button [class.answer_btn_schwer]="data.schwierigkeit == 'Schwer'"
@@ -146,7 +147,8 @@
                                         class="margin_left ">
                                         <div class="element_margin_text d_flex_start"
                                             *ngFor="let item of question['data']['items'] let k = index">
-                                            <div class="checkfield">
+                                            <div class="checkfield d_flex" [class.checked]="item['checked'] == true">
+                                                <img class="checkbox_icon" *ngIf="item['checked'] == true" src="assets/plus_icon.png" alt="">
                                             </div>
                                             <p class="checkbox_item" [innerHTML]="item['text']"></p>
                                         </div>
@@ -204,17 +206,17 @@
             </div>
             <div class="add_question_container d_flex">
                 <div class="add_question_btn_wrapper">
-                    <button (click)="overlay = true; service.windowScrollTop();" class="add_question_btn" matTooltip="Neue Aufgabe anlegen"
-                        matTooltipPosition="above">
+                    <button (click)="overlay = true; service.windowScrollTop(); editComp.setForm();"
+                        class="add_question_btn">
                         Hinzufügen</button>
 
-                    <div class="menu_burger" matTooltip="Menü" matTooltipPosition="above">
+                    <div class="menu_burger">
                         <span class="burger_top">
                         </span>
                         <span class="burger_bottom">
                         </span>
                     </div>
-                    <button class="add_question_btn" matTooltip="Aufgaben filtern" matTooltipPosition="above">
+                    <button class="add_question_btn">
                         Filtern</button>
                 </div>
             </div>
@@ -269,7 +271,7 @@
                     <div [class.paddingBottom0]="test['pages'][j][0].length == i + 1" id="question{{ j }}{{ i }}"
                         class="question_wrapper d_flex_column" *ngFor="let data of pages[0] let i = index">
                         <div class="question_test">
-                            <div class="d_flex_space question_head_container">
+                            <div class="question_head_container">
                                 <div class="question_info d_flex_start">
                                     <div class="question_test_number d_flex">
                                         Aufgabe <p class="test_number" id="question_number{{ j }}{{ i }}"></p>

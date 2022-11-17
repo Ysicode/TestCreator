@@ -1,17 +1,19 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { collection, collectionData, doc, Firestore } from '@angular/fire/firestore';
 import { NgForm } from '@angular/forms';
 import { deleteDoc } from '@firebase/firestore';
 import { Observable } from 'rxjs';
+import { EditComponent } from 'src/app/add/edit/edit.component';
 import { overlaysService } from 'src/app/services/overlays.service';
 
 @Component({
   selector: 'app-questions',
   templateUrl: './questions.component.html',
   styleUrls: ['./questions.component.scss'],
-  providers: [overlaysService]
+  providers: [overlaysService],
 })
 export class QuestionsComponent implements OnInit {
+  @ViewChild(EditComponent, {static : true}) editComp : EditComponent;
 
   //variables for the Questions list view
   dataFromFirestore$: Observable<any>;

@@ -62,27 +62,41 @@
                     </div>
                 </div>
                 <div class="section_separator margin_top_bottom plus_margin_top"></div>
+                <button *ngIf="!newClass" class="subject_btn addNew_btn" (click)="toggleMultipleChoiceEditor()">
+                    {{ !multipleChoiceEditor ? 'Multiple Choice Aufgabe erstellen' : 'Standard Aufgabe erstellen'}}
+                </button>
             </div>
+
         </div>
 
-        <div #questionEditor class="editor_wrapper">
+        <div [class.d_none]="multipleChoiceEditor == false" #multiChoiceEditor class="editor_wrapper">
             <div class="d_flex">
-                <h2 id="edit_question" class="editor_headline">Aufgabe erstellen</h2>
+                <h2 id="edit_question" class="editor_headline">Multiple Choice Aufgabe erstellen</h2>
                 <button class="tooltip_btn d_flex"
-                    matTooltip="Hier können sie eine Aufgabe erstellen und sie später ihrem Test hinzufügen. - Die Größe eines Bildes kann später im Test noch bearbeitet werden"
+                    matTooltip="Hier können sie eine Multiple Choice Aufgabe erstellen. Die richtige Antwort muss angeklickt werden um später eine Musterlösung zu erstellen."
                     matTooltipPosition="above"><img class="info_icon" src="assets/info.png" alt=""></button>
             </div>
         </div>
 
-        <div #answerEditor class="editor_wrapper">
+        <div [class.d_none]="multipleChoiceEditor" #questionEditor class="editor_wrapper">
+            <div class="d_flex">
+                <h2 id="edit_question" class="editor_headline">Standard Aufgabe erstellen</h2>
+                <button class="tooltip_btn d_flex"
+                    matTooltip="Hier können sie eine Aufgabe erstellen und sie später ihrem Test hinzufügen. - Die Größe eines Bildes, Tabellen usw. können später im Test bearbeitet werden"
+                    matTooltipPosition="above"><img class="info_icon" src="assets/info.png" alt=""></button>
+            </div>
+        </div>
+
+        <div [class.d_none]="multipleChoiceEditor" #answerEditor class="editor_wrapper">
             <div class="d_flex">
                 <h2 id="edit_solution" class="editor_headline">Lösung für diese Aufgabe erstellen</h2>
                 <button class="tooltip_btn d_flex"
-                    matTooltip="Für die Musterlösung können sie hier die Antwort für diese Aufgabe erstellen und später ihre Aufgaben mit Lösung anzeigen lassen"
+                    matTooltip="Für die Musterlösung können sie hier die Lösung für diese Aufgabe erstellen und später ihre Aufgaben mit Lösung anzeigen lassen"
                     matTooltipPosition="above"><img class="info_icon" src="assets/info.png" alt=""></button>
             </div>
-
         </div>
+
+
 
         <div class="section_separator margin_top_bottom"></div>
 
@@ -109,6 +123,7 @@
                 </div>
             </div>
         </div>
+        <button (click)="saveEditorData()">Save Editor Data</button>
 
         <form class="questionForm" #questionForm="ngForm" (ngSubmit)="addData(questionForm.value)">
             <div class="d_flex_column">
@@ -149,12 +164,14 @@
 
 
                 <div class="d_flex save_btn_wrapper">
-                    <button type="button" class="subject_btn cancel_btn" (click)="closeEditComponent()">Abbrechen</button>
+                    <button type="button" class="subject_btn cancel_btn"
+                        (click)="closeEditComponent()">Abbrechen</button>
                     <button class="subject_btn addNew_btn" type="submit">
                         {{editMode ? 'Änderungen Speichern' : 'Frage Speichern'}}</button>
 
-                    <button type="button" (click)="closeEditComponent()" class="question_add_btn d_flex close_overlay_window_btn"><img
-                            class="remove_icon" src="assets/plus_icon.png">
+                    <button type="button" (click)="closeEditComponent()"
+                        class="question_add_btn d_flex close_overlay_window_btn"><img class="remove_icon"
+                            src="assets/plus_icon.png">
                     </button>
                 </div>
             </div>

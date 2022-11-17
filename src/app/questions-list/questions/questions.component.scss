@@ -7,7 +7,7 @@ body {
 .add_question_overlay {
     position: absolute;
     top: 0;
-    z-index: 99999;
+    z-index: 101;
 }
 
 .login {
@@ -23,7 +23,6 @@ body {
 .page_break {
     page-break-after: always;
 }
-
 
 .section {
     margin-top: 75px;
@@ -84,7 +83,7 @@ body {
 }
 
 .dificulty_leicht_btn {
-   background: linear-gradient(to right, #bdbdbd, #dbd5d5);
+    background: linear-gradient(to right, #bdbdbd, #dbd5d5);
 }
 
 .dificulty_mittel_btn {
@@ -321,15 +320,18 @@ style for rendered subjects
 }
 
 .question_added_leicht {
-    border-right: 3px solid #9f9f9e;
+    border-right: 5px solid #9f9f9e;
+    border-left: 5px solid #9f9f9e;
 }
 
 .question_added_mittel {
-    border-right: 3px solid #5fc1d8;
+    border-right: 5px solid #5fc1d8;
+    border-left: 5px solid #5fc1d8;
 }
 
 .question_added_schwer {
-    border-right: 3px solid #f5af19;
+    border-right: 5px solid #f5af19;
+    border-left: 5px solid #f5af19;
 }
 
 .question_container {
@@ -340,6 +342,8 @@ style for rendered subjects
 
 .question_head_container {
     display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
     margin-bottom: 1.5%;
 }
 
@@ -385,13 +389,12 @@ style for rendered subjects
     }
 }
 
-
 .added_difficulty_leicht {
     border: 3px solid #9f9f9e;
 }
 
 .added_difficulty_mittel {
-    border:  3px solid #5fc1d8;
+    border: 3px solid #5fc1d8;
 }
 
 .added_difficulty_schwer {
@@ -472,7 +475,7 @@ Answer styles
 
 .answer_btn_wrapper {
     width: 100%;
-    margin-top: 20px;
+    margin-top: 2%;
     &:hover {
         cursor: pointer;
         .answer_btn {
@@ -492,7 +495,7 @@ Answer styles
 }
 
 .answer_btn_leicht {
-    color: #9f9f9e;  
+    color: #9f9f9e;
 }
 
 .answer_btn_mittel {
@@ -505,7 +508,7 @@ Answer styles
 
 .answer_wrapper {
     border-top: 1px dotted black;
-    padding-top: 25px;
+    padding-top: 2%;
     width: 100%;
 }
 
@@ -519,21 +522,30 @@ Answer styles
     transform: rotate(180deg);
 }
 
+.checked {
+    background: #c4c5c5;
+    .checkbox_icon {
+        width: 2.5vw;
+        height: 2.5vw;
+        transform: rotate(45deg);
+    }
+}
+
 .question_edit_btn {
     border: none;
     margin-right: 10px;
     padding: 3px 20px 3px 20px;
     font-size: calc(100vw * 0.018);
-    border-radius: 40px;
-    background: #e3e5e5;
+    border-top: 1px solid #aaaaaa;
+    background: #f3f3f3;
     &:hover {
         cursor: pointer;
-        opacity: 0.8;
+        background: #e3e5e5;
     }
 }
 
 .question_edit_btn_wrapper {
-    margin-top: 1.5%;
+    margin-top: 4.5%;
 }
 
 .d_none {
@@ -1045,6 +1057,21 @@ Styles für die Vorschau sektion
             height: 10px;
         }
     }
+
+    .question_added_leicht {
+        border-right: 3px solid #9f9f9e;
+        border-left: 3px solid #9f9f9e;
+    }
+
+    .question_added_mittel {
+        border-right: 3px solid #5fc1d8;
+        border-left: 3px solid #5fc1d8;
+    }
+
+    .question_added_schwer {
+        border-right: 3px solid #f5af19;
+        border-left: 3px solid #f5af19;
+    }
 }
 
 @media (max-width: 450px) {
@@ -1115,6 +1142,12 @@ Styles für die Vorschau sektion
         height: 20px;
     }
 
+    .checkbox_icon {
+        width: 25px;
+        height: 25px;
+        transform: rotate(45deg);
+    }
+
     .margin_left {
         margin-left: 42px;
     }
@@ -1127,13 +1160,15 @@ Styles für die Vorschau sektion
 }
 
 @media (min-width: 750px) {
-    .question_container,.answer_btn {
+    .question_container,
+    .answer_btn {
         font-size: 15px;
     }
 }
 
 @media (min-width: 725px) {
-    .question_info, .question_edit_btn {
+    .question_info,
+    .question_edit_btn {
         font-size: 13px;
     }
 }
