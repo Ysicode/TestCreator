@@ -808,6 +808,7 @@ Styles für die Vorschau sektion
 
     .remove_from_test_btn {
         position: absolute;
+        z-index: 10;
         background: none;
         top: 0;
         right: 0;
@@ -834,6 +835,8 @@ Styles für die Vorschau sektion
 
 .test_number {
     margin-left: 0.5vw;
+    margin-bottom: 0px;
+    margin-top: 0px;
 }
 
 .preview_question_img {
@@ -1141,11 +1144,12 @@ Styles für die Vorschau sektion
         margin-right: 15px;
         height: 20px;
     }
-
-    .checkbox_icon {
-        width: 25px;
-        height: 25px;
-        transform: rotate(45deg);
+    .checked {
+        .checkbox_icon {
+            width: 25px;
+            height: 25px;
+            transform: rotate(45deg);
+        }
     }
 
     .margin_left {

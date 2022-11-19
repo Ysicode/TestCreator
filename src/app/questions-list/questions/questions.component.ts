@@ -13,7 +13,7 @@ import { overlaysService } from 'src/app/services/overlays.service';
   providers: [overlaysService],
 })
 export class QuestionsComponent implements OnInit {
-  @ViewChild(EditComponent, {static : true}) editComp : EditComponent;
+  @ViewChild(EditComponent, { static: true }) editComp: EditComponent;
 
   //variables for the Questions list view
   dataFromFirestore$: Observable<any>;
@@ -132,7 +132,7 @@ export class QuestionsComponent implements OnInit {
     deleteDoc(coll);
   }
 
-  
+
 
 
 
@@ -203,39 +203,39 @@ export class QuestionsComponent implements OnInit {
   styleAddButton(i: number, status: string, difficulty: string) {
     if (difficulty == 'Leicht') {
       status == 'add_styling'
-      ?
-      (this.addClasslist('add_btn' + i, 'd_none'),
-        this.addClasslist('question_list' + i, 'question_added_leicht'),
-        this.removeClasslist('remove_btn' + i, 'd_none'))
-      :
-      (this.addClasslist('remove_btn' + i, 'd_none'),
-        this.removeClasslist('question_list' + i, 'question_added_leicht'),
-        this.removeClasslist('add_btn' + i, 'd_none'))
-    } 
+        ?
+        (this.addClasslist('add_btn' + i, 'd_none'),
+          this.addClasslist('question_list' + i, 'question_added_leicht'),
+          this.removeClasslist('remove_btn' + i, 'd_none'))
+        :
+        (this.addClasslist('remove_btn' + i, 'd_none'),
+          this.removeClasslist('question_list' + i, 'question_added_leicht'),
+          this.removeClasslist('add_btn' + i, 'd_none'))
+    }
 
     if (difficulty == 'Mittel') {
       status == 'add_styling'
-      ?
-      (this.addClasslist('add_btn' + i, 'd_none'),
-        this.addClasslist('question_list' + i, 'question_added_mittel'),
-        this.removeClasslist('remove_btn' + i, 'd_none'))
-      :
-      (this.addClasslist('remove_btn' + i, 'd_none'),
-        this.removeClasslist('question_list' + i, 'question_added_mittel'),
-        this.removeClasslist('add_btn' + i, 'd_none'))
-    } 
+        ?
+        (this.addClasslist('add_btn' + i, 'd_none'),
+          this.addClasslist('question_list' + i, 'question_added_mittel'),
+          this.removeClasslist('remove_btn' + i, 'd_none'))
+        :
+        (this.addClasslist('remove_btn' + i, 'd_none'),
+          this.removeClasslist('question_list' + i, 'question_added_mittel'),
+          this.removeClasslist('add_btn' + i, 'd_none'))
+    }
 
     if (difficulty == 'Schwer') {
       status == 'add_styling'
-      ?
-      (this.addClasslist('add_btn' + i, 'd_none'),
-        this.addClasslist('question_list' + i, 'question_added_schwer'),
-        this.removeClasslist('remove_btn' + i, 'd_none'))
-      :
-      (this.addClasslist('remove_btn' + i, 'd_none'),
-        this.removeClasslist('question_list' + i, 'question_added_schwer'),
-        this.removeClasslist('add_btn' + i, 'd_none'))
-    } 
+        ?
+        (this.addClasslist('add_btn' + i, 'd_none'),
+          this.addClasslist('question_list' + i, 'question_added_schwer'),
+          this.removeClasslist('remove_btn' + i, 'd_none'))
+        :
+        (this.addClasslist('remove_btn' + i, 'd_none'),
+          this.removeClasslist('question_list' + i, 'question_added_schwer'),
+          this.removeClasslist('add_btn' + i, 'd_none'))
+    }
   }
 
 
@@ -282,9 +282,15 @@ export class QuestionsComponent implements OnInit {
    */
   async checkHeightOfAllPreviewQuestions() {
     for (let i = 0; i < this.test.pages.length; i++) {
+      if (this.test.pages[i][0].length == 0) {
+        this.test.pages.pop();
+        
+      }
       await this.stopLoop(10);
       let pageContent = document.getElementById(`test_content${i}`).clientHeight;
       let paperHeight = document.getElementById(`test_dinA4${i}`).clientHeight;
+      console.log(this.test.pages);
+     
       if (pageContent > paperHeight) {
         const question = this.test.pages[i][0].pop();
         if (i == this.test.pages.length - 1) {
@@ -294,6 +300,22 @@ export class QuestionsComponent implements OnInit {
         this.test.pages[i + 1][0].push(question)
         this.test.pages[i + 1][0].reverse();
       }
+      if (this.test.pages[i][0].length == 0) {
+        this.test.pages.pop();
+        
+      } else if (i > 0) {
+        let question = document.getElementById(`question${i}${0}`).clientHeight;
+        console.log(question);
+
+        if (document.getElementById(`test_content${i - 1}`).clientHeight + question < document.getElementById(`test_dinA4${i - 1}`).clientHeight) {
+          const question = this.test.pages[i][0].shift();
+          this.test.pages[0][0].push(question)
+        }
+
+      }
+      
+
+
     }
     this.setQuestionNumber();
   }
@@ -327,6 +349,7 @@ export class QuestionsComponent implements OnInit {
       let questionHeight = document.getElementById(`question${i}${this.test.pages[i][0].length - 1}`);
       questionHeight.style.paddingBottom = `${0}%`;
     }
+    this.checkHeightOfAllPreviewQuestions();
     let questionHeight = document.getElementById(`question${this.currentEditContainer}`).style.paddingBottom;
     let padding = questionHeight.replace('%', '');
     this.rangebars.setValue({
