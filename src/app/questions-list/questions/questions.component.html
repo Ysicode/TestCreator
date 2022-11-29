@@ -224,7 +224,7 @@
 
 
 
-        <div *ngIf="loaded" id="test_print" class="test_print" [class.opacity0]="!preview">
+        <div *ngIf="loaded" id="test_print" class="test_print" [class.opacity0]="!preview" (mousemove)="checkHeightOfAllPreviewQuestions()">
                 <div id="test_dinA4{{j}}" *ngFor="let pages of test['pages'] let j = index"
                     class="test_dinA4 page_break">
                     <div (mousemove)="setQuestionNumber()" id="test_content{{j}}" class="test_content d_flex_column">
@@ -350,9 +350,9 @@
                                     </div>
                                 </div>
                                 <!-- *ngIf="test['pages'][j][0].length != i + 1" -->
-                                <div  (mouseover)="resizeQuestion(j, i)" (mousemove)="checkHeightOfAllPreviewQuestions()"  id="resize{{j}}{{i}}"
+                                <div (mouseover)="resizeQuestion(j, i)" id="resize{{j}}{{i}}"
                                     class="height_info_wrapper d_flex show_onHover">
-                                    <img  class="double_arrows" src="assets/down_up_arrows.png" alt="">
+                                    <span class="resize_line"></span>
                                 </div>
                             </div>
                         </div>

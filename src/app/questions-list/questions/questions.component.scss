@@ -306,7 +306,6 @@ style for rendered subjects
 }
 
 .question_wrapper {
-    cursor: row-resize;
     width: 84%;
     height: fit-content;
     min-height: auto;
@@ -836,6 +835,8 @@ Styles für die Vorschau sektion
         background: #f9d1c9;
         &:hover {   
             cursor: pointer;
+            border-right: 2px solid #da5838;
+            border-top: 2px solid #da5838;
         }
     }
 
@@ -936,6 +937,7 @@ Styles für die Vorschau sektion
     background: #5fc1d8;
     &:hover {
         cursor: row-resize;
+        height: 10px;
     }
 
     .double_arrows {
@@ -943,7 +945,15 @@ Styles für die Vorschau sektion
         max-width: 20px;
         cursor: row-resize;
     }
+
+    .resize_line {
+    width: 10%;
+    height: 1.5px;
+    background: black;
+    }
 }
+
+
 
 .img_wrapper {
     position: relative;
