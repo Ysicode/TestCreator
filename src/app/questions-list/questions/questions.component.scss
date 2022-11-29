@@ -4,6 +4,8 @@ body {
     font-family: "Montserrat", sans-serif;
 }
 
+
+
 .add_question_overlay {
     position: absolute;
     top: 0;
@@ -55,7 +57,7 @@ body {
 }
 
 .subject_btn {
-    background: linear-gradient(to right, #26d3bf, #0ebfa2);
+    background: linear-gradient(to right, #4babc3, #5fc1d8);
     color: #424949;
     border-radius: 30px;
     font-size: 17px;
@@ -149,7 +151,7 @@ body {
     width: 100%;
     border-radius: 10px;
     height: 15px;
-    background: linear-gradient(to right, #26d3bf, #0ebfa2);
+    background: linear-gradient(to right, #4babc3, #5fc1d8);
     outline: none;
     opacity: 1;
     -webkit-transition: 0.2s;
@@ -248,6 +250,7 @@ style for rendered subjects
 
 .questions_container {
     width: 100%;
+    padding-bottom: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -289,7 +292,7 @@ style for rendered subjects
 }
 
 .preview_btn {
-    background: linear-gradient(to right, #26d3bf, #0ebfa2);
+    background: linear-gradient(to right, #4babc3, #5fc1d8);
     color: #424949;
     border-radius: 50px;
     font-size: 14px;
@@ -303,9 +306,25 @@ style for rendered subjects
 }
 
 .question_wrapper {
-    width: calc(100% - 40px);
+    cursor: row-resize;
+    width: 84%;
+    height: fit-content;
+    min-height: auto;
+    
+    position: relative;
+    justify-content: flex-start;
+    margin-bottom: 2.5%;
+    &:hover {
+        background: #f2f3f4;
+        .show_onHover {
+            display: flex;
+        }
+    }
+}
+
+.question_wrapper_listview {
+    width: 98%;
     margin-bottom: 2%;
-    padding-bottom: 0;
 }
 
 .question {
@@ -613,7 +632,7 @@ Answer styles
     margin-bottom: 2px;
     height: 3px;
     background: black;
-    background: linear-gradient(to right, #26d3bf, #0ebfa2);
+    background: linear-gradient(to right, #4babc3, #5fc1d8);
 }
 
 .burger_bottom {
@@ -621,7 +640,7 @@ Answer styles
     margin-top: 2px;
     height: 3px;
     background: black;
-    background: linear-gradient(to right, #26d3bf, #0ebfa2);
+    background: linear-gradient(to right, #4babc3, #5fc1d8);
 }
 
 /*
@@ -638,6 +657,13 @@ Styles für die Vorschau sektion
     opacity: 1;
 }
 
+.test_print_wrapper {
+    width: 80%;
+    background: white;
+    padding: 10%;
+    margin-bottom: 2%;
+}
+
 .test_content {
     width: 100%;
     padding-top: 9%;
@@ -649,11 +675,11 @@ Styles für die Vorschau sektion
 }
 
 .test_head_wrapper {
-    width: 82%;
+    width: 100%;
 }
 
 .testHead {
-    width: 100%;
+    width: 82%;
     position: relative;
     &:hover {
         .edit_testhead_btn {
@@ -681,16 +707,16 @@ Styles für die Vorschau sektion
 
 .edit_testhead_btn {
     visibility: hidden;
-    width: 84%;
+    width: 100%;
     height: 2.5vw;
     max-height: 25px;
-    color: #13bfa4;
+    color: #4babc3;
     font-size: calc(100vw * 0.016);
     border: none;
-    border-bottom: 1px solid #13bfa4;
+    border-bottom: 1px solid #5fc1d8;
     background: white;
     &:hover {
-        background: rgb(19 191 164 / 34%);
+        background: rgb(94 191 215 / 60%);
         cursor: pointer;
     }
 }
@@ -718,7 +744,7 @@ Styles für die Vorschau sektion
 }
 
 .test_head_infos {
-    width: 82%;
+    width: 100%;
     margin-top: 2%;
     display: flex;
     align-items: flex-start;
@@ -730,7 +756,7 @@ Styles für die Vorschau sektion
 }
 
 .test_head_data {
-    width: 82%;
+    width: 100%;
     border-bottom: 2px solid black;
     margin-bottom: 5%;
 }
@@ -795,17 +821,8 @@ Styles für die Vorschau sektion
 }
 
 .question_test {
-    position: relative;
-    width: 85.5%;
-    padding: 1%;
-    &:hover {
-        background: #f2f3f4;
-
-        .show_onHover {
-            display: flex;
-        }
-    }
-
+    width: 100%;
+    padding-bottom: 2.5%;
     .remove_from_test_btn {
         position: absolute;
         z-index: 10;
@@ -816,8 +833,8 @@ Styles für die Vorschau sektion
         object-fit: cover;
         border-right: 1px solid #da5838;
         border-top: 1px solid #da5838;
-        &:hover {
-            background: #f9d1c9;
+        background: #f9d1c9;
+        &:hover {   
             cursor: pointer;
         }
     }
@@ -880,7 +897,7 @@ Styles für die Vorschau sektion
         border-radius: 10px;
         height: 15px;
         box-shadow: 0px 0px 59px 0px #bcbbbb;
-        background: linear-gradient(to right, #26d3bf, #0ebfa2);
+        background: linear-gradient(to right, #4babc3, #5fc1d8);
         outline: none;
         opacity: 1;
         transition: opacity 0.2s;
@@ -910,20 +927,21 @@ Styles für die Vorschau sektion
 }
 
 .height_info_wrapper {
-    cursor: pointer;
-    height: 2.5vw;
-    max-height: 20px;
+    cursor: row-resize;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 5px;
     width: 100%;
-    border-bottom: 1px solid #13bfa4;
-
+    background: #5fc1d8;
     &:hover {
-        background: rgb(19 191 164 / 34%);
+        cursor: row-resize;
     }
 
     .double_arrows {
-        transform: rotate(90deg);
         width: calc(100vw * 0.016);
         max-width: 20px;
+        cursor: row-resize;
     }
 }
 
@@ -932,26 +950,29 @@ Styles für die Vorschau sektion
 }
 
 .img_edit_btn {
+    cursor: col-resize;
     position: absolute;
     left: 0;
-    background: #f2f3f4;
-    border-left: 1px solid #13bfa4;
-    width: 2.5vw;
+    background: #5fc1d8;
+    width: 2px;
     max-width: 25px;
     top: 0;
     bottom: 0px;
 
     &:hover {
-        background: rgb(19 191 164 / 34%);
+        cursor: col-resize;
+        width: 4px;
     }
 
     .right_double_arrow {
         width: calc(100vw * 0.016);
+        cursor: col-resize;
     }
 
     .left_double_arrow {
         width: calc(100vw * 0.016);
         transform: rotate(180deg);
+        cursor: col-resize;
     }
 }
 
@@ -1013,10 +1034,6 @@ Styles für die Vorschau sektion
         margin-right: 7px;
     }
 
-    .added {
-        border: 2px solid #13bfa4;
-    }
-
     .question_arrow {
         height: 13px;
         width: 13px;
@@ -1034,7 +1051,7 @@ Styles für die Vorschau sektion
         padding: 5px;
     }
 
-    .question_wrapper {
+    .question_wrapper_listview {
         width: 100%;
         margin-bottom: 3%;
     }

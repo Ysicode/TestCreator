@@ -54,7 +54,7 @@ export class EditComponent implements OnInit, AfterViewInit {
   multiChoiceEditor: EditorJS;
 
   Checklist = require('@editorjs/checklist');
-
+  Marker = require('@editorjs/marker');
   constructor(private firestore: Firestore, private storage: Storage, public service: overlaysService) { }
 
   ngOnInit(): void {
@@ -336,6 +336,10 @@ export class EditComponent implements OnInit, AfterViewInit {
         holder: htmlElement,
         tools: {
           underline: Underline,
+          Marker: {
+            class: this.Marker,
+            shortcut: 'CMD+SHIFT+M',
+          },
           table: {
             class: Table,
             inlineToolbar: true,
