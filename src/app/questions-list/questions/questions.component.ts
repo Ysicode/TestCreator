@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Directive, HostListener, OnInit, ViewChild } from '@angular/core';
 import { collection, collectionData, doc, Firestore } from '@angular/fire/firestore';
 import { NgForm } from '@angular/forms';
 import { deleteDoc } from '@firebase/firestore';
@@ -11,7 +11,9 @@ import { overlaysService } from 'src/app/services/overlays.service';
   templateUrl: './questions.component.html',
   styleUrls: ['./questions.component.scss'],
   providers: [overlaysService],
+  
 })
+
 export class QuestionsComponent implements OnInit {
   @ViewChild(EditComponent, { static: true }) editComp: EditComponent;
 
@@ -44,6 +46,7 @@ export class QuestionsComponent implements OnInit {
   editImageAtPreview = false;
   public editTesthead = false;
   currentEditContainer: string;
+  currentEditImage: string;
   heightOfAllPreviewQuestions = 0;
   test = {
     pages: <any>[{
@@ -61,6 +64,7 @@ export class QuestionsComponent implements OnInit {
   resizeActive = false!
 
   constructor(private firestore: Firestore, public service: overlaysService) { }
+@HostListener("click", ["$event"])
 
   login(password: string) {
     if (password == 'superPin1984!') {
@@ -163,7 +167,6 @@ export class QuestionsComponent implements OnInit {
           this.addedToTest.push(this.loadedQuestions[i]);
           setTimeout(() => {
             this.getDefaultHeightsOfEachAddedQuestions();
-
           }, 200)
         }
         this.styleAddButton(i, status, difficulty);
@@ -297,9 +300,9 @@ export class QuestionsComponent implements OnInit {
    * if its too high for a dina4 page it pushs the question to the next page array
    * executes setQuestionNumber
    */
-  async checkHeightOfAllPreviewQuestions() { 
+  async checkHeightOfAllPreviewQuestions() {
     for (let i = 0; i < this.test.pages.length; i++) {
-     
+
       await this.stopLoop(10);
       let pageContent = document.getElementById(`test_content${i}`).clientHeight;
       let paperHeight = document.getElementById(`test_dinA4${i}`).clientHeight;
@@ -321,12 +324,12 @@ export class QuestionsComponent implements OnInit {
           this.test.pages[i - 1][0].push(question)
           if (i > 0 && this.test.pages[i][0].length == 0) {
             this.test.pages.pop();
-            
+
           }
-         
+
         }
       }
-      
+
     }
 
 
@@ -338,7 +341,7 @@ export class QuestionsComponent implements OnInit {
    */
   async setQuestionNumber() {
     await this.stopLoop(10);
-      console.log('change');
+    console.log('change');
     this.question_number = 0;
     for (let i = 0; i < this.test.pages.length; i++) {
       for (let j = 0; j < this.test.pages[i][0].length; j++) {
@@ -349,31 +352,7 @@ export class QuestionsComponent implements OnInit {
       }
     }
 
-    
-  }
 
-  /**
-   * This function is used to open the rangbar to set the height / padding bottom of a question 
-   * When this function is called the current padding bottom of a question is set to default styleHeight
-   * @param pageIndex is the index of the dina4 page, first page is index 0
-   * @param pagePosition is the index of the question in a dinA4 page, starts at 0
-   */
-  async showRangeToStyleQuestion(pageIndex: number, pagePosition: number) {
-    await this.checkHeightOfAllPreviewQuestions();
-    this.editQuestionAtPreview = true;
-    this.currentEditContainer = `${pageIndex}${pagePosition}`
-
-    let questionHeight = document.getElementById(`question${this.currentEditContainer}`).style.paddingBottom;
-    let padding = questionHeight.replace('%', '');
-
-    this.rangebars.setValue({
-      styleHeight: Number(padding) * 2,
-      styleWidth: 10
-    });
-  }
-
-  closeEditQuestionPreview() {
-    this.editQuestionAtPreview = false;
   }
 
   /**
@@ -407,6 +386,68 @@ export class QuestionsComponent implements OnInit {
       document.documentElement.removeEventListener('mouseup', stopDrag, false);
       this.resizeActive = false;
     }
+  }
+
+  see() {
+    console.log('helo');
+    
+  }
+
+  onEvent(event: Event) {
+    event.stopPropagation();  
+  }
+
+  resizeImage(pageIndex: number, pagePosition: number, questionPosition: number) {
+    this.currentEditImage = `${pageIndex}${pagePosition}${questionPosition}`
+    let startX: number, startWidth: number;
+    let resizer = document.getElementById(`resizeImage${this.currentEditImage}`);
+    let image = document.getElementById(`img_edit_wrapper${this.currentEditImage}`);
+    let question = document.getElementById(`question${pageIndex}${pagePosition}`);
+    // question.style.minHeight = this.test.pages[pageIndex][0][pagePosition]['defaultheight'] + 'px';
+
+    resizer.addEventListener('mousedown', initDrag, false);
+
+    function initDrag(e: { clientX: number; }) {
+      startX = e.clientX;
+      startWidth = parseInt(document.defaultView.getComputedStyle(image).width, 10);
+      document.documentElement.addEventListener('mousemove', doDrag, false);
+      document.documentElement.addEventListener('mouseup', stopDrag, false);
+    }
+
+    function doDrag(e: { clientX: number; }) {
+      image.style.width = (startWidth + e.clientX - startX) + 'px';
+      question.style.height = 'fit-content';  
+    }
+
+    function stopDrag() {
+      document.documentElement.removeEventListener('mousemove', doDrag, false);
+      document.documentElement.removeEventListener('mouseup', stopDrag, false);
+      this.resizeActive = false;
+    }   
+  }
+
+  /**
+ * This function is used to open the rangbar to set the height / padding bottom of a question 
+ * When this function is called the current padding bottom of a question is set to default styleHeight
+ * @param pageIndex is the index of the dina4 page, first page is index 0
+ * @param pagePosition is the index of the question in a dinA4 page, starts at 0
+ */
+  async showRangeToStyleQuestion(pageIndex: number, pagePosition: number) {
+    await this.checkHeightOfAllPreviewQuestions();
+    this.editQuestionAtPreview = true;
+    this.currentEditContainer = `${pageIndex}${pagePosition}`
+
+    let questionHeight = document.getElementById(`question${this.currentEditContainer}`).style.paddingBottom;
+    let padding = questionHeight.replace('%', '');
+
+    this.rangebars.setValue({
+      styleHeight: Number(padding) * 2,
+      styleWidth: 10
+    });
+  }
+
+  closeEditQuestionPreview() {
+    this.editQuestionAtPreview = false;
   }
 
 

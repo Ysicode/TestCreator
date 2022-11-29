@@ -4,8 +4,6 @@ body {
     font-family: "Montserrat", sans-serif;
 }
 
-
-
 .add_question_overlay {
     position: absolute;
     top: 0;
@@ -306,15 +304,15 @@ style for rendered subjects
 }
 
 .question_wrapper {
+    cursor: pointer;
     width: 84%;
     height: fit-content;
     min-height: auto;
-    
+
     position: relative;
     justify-content: flex-start;
     margin-bottom: 2.5%;
     &:hover {
-        background: #f2f3f4;
         .show_onHover {
             display: flex;
         }
@@ -833,10 +831,10 @@ Styles für die Vorschau sektion
         border-right: 1px solid #da5838;
         border-top: 1px solid #da5838;
         background: #f9d1c9;
-        &:hover {   
+        &:hover {
             cursor: pointer;
-            border-right: 2px solid #da5838;
-            border-top: 2px solid #da5838;
+            border-right: 1.5px solid #da5838;
+            border-top: 1.5px solid #da5838;
         }
     }
 
@@ -858,7 +856,7 @@ Styles für die Vorschau sektion
 }
 
 .preview_question_img {
-    width: 20%;
+    width: 100%;
 }
 
 .preview_lists {
@@ -947,16 +945,41 @@ Styles für die Vorschau sektion
     }
 
     .resize_line {
-    width: 10%;
-    height: 1.5px;
-    background: black;
+        width: 10%;
+        height: 1.5px;
+        background: black;
     }
 }
 
-
-
 .img_wrapper {
     position: relative;
+}
+
+.img_edit_wrapper {
+    position: relative;
+    width: 30%;
+    height: fit-content;
+    min-width: 30%;
+    max-width: 100%;
+
+    .resize_image {
+        cursor: col-resize;
+        position: absolute;
+        right: 0;
+        width: 5px;
+        background: #5fc1d8;
+        height: 100%;
+
+        &:hover {
+                width: 10px;
+        }
+    }
+
+    .resize_image_line {
+        background: black;
+        width: 2px;
+        height: 30%;
+    }
 }
 
 .img_edit_btn {
@@ -1211,6 +1234,10 @@ Styles für die Vorschau sektion
     }
 
     #test_print {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
         visibility: visible !important;
     }
 }
