@@ -61,7 +61,6 @@ export class QuestionsComponent implements OnInit {
   file: any;
 
   question_number = 0;
-  resizeActive = false!
 
   constructor(private firestore: Firestore, public service: overlaysService) { }
 @HostListener("click", ["$event"])
@@ -183,8 +182,6 @@ export class QuestionsComponent implements OnInit {
         this.test.pages[i][0][j]['defaultheight'] = document.getElementById(`question${i}${j}`).clientHeight;
       }
     }
-    console.log(this.test.pages);
-
   }
 
   /**
@@ -324,15 +321,10 @@ export class QuestionsComponent implements OnInit {
           this.test.pages[i - 1][0].push(question)
           if (i > 0 && this.test.pages[i][0].length == 0) {
             this.test.pages.pop();
-
           }
-
         }
       }
-
     }
-
-
   }
 
   /**
@@ -341,7 +333,6 @@ export class QuestionsComponent implements OnInit {
    */
   async setQuestionNumber() {
     await this.stopLoop(10);
-    console.log('change');
     this.question_number = 0;
     for (let i = 0; i < this.test.pages.length; i++) {
       for (let j = 0; j < this.test.pages[i][0].length; j++) {
@@ -351,8 +342,6 @@ export class QuestionsComponent implements OnInit {
         number.innerHTML = `${this.question_number}`;
       }
     }
-
-
   }
 
   /**
@@ -361,13 +350,13 @@ export class QuestionsComponent implements OnInit {
    * @param pagePosition - is the index of the question on the page
    */
   resizeQuestion(pageIndex: number, pagePosition: number) {
-    this.resizeActive = true;
     this.currentEditContainer = `${pageIndex}${pagePosition}`
     let startY: number, startHeight: number;
     let resizer = document.getElementById(`resize${this.currentEditContainer}`);
     let question = document.getElementById(`question${this.currentEditContainer}`);
     question.style.minHeight = this.test.pages[pageIndex][0][pagePosition]['defaultheight'] + 'px';
-
+    let questionContentHeight = Number(question.style.minHeight.replace('px', ''));
+  
     resizer.addEventListener('mousedown', initDrag, false);
 
     function initDrag(e: { clientY: number; }) {
@@ -379,12 +368,22 @@ export class QuestionsComponent implements OnInit {
 
     function doDrag(e: { clientY: number; }) {
       question.style.height = (startHeight + e.clientY - startY) + 'px';
+      let questionHeight = Number(question.style.height.replace('px', ''));
+      if (questionHeight > questionContentHeight + 50) {
+        
+        let whitespace = document.getElementById(`edit_whitespace${pageIndex}${pagePosition}`);
+        whitespace.classList.add('visibile')
+      }
+      if (questionHeight < questionContentHeight + 50) {
+        
+        let whitespace = document.getElementById(`edit_whitespace${pageIndex}${pagePosition}`);
+        whitespace.classList.remove('visibile')
+      }
     }
 
     function stopDrag() {
       document.documentElement.removeEventListener('mousemove', doDrag, false);
       document.documentElement.removeEventListener('mouseup', stopDrag, false);
-      this.resizeActive = false;
     }
   }
 
@@ -393,9 +392,7 @@ export class QuestionsComponent implements OnInit {
     
   }
 
-  onEvent(event: Event) {
-    event.stopPropagation();  
-  }
+  
 
   resizeImage(pageIndex: number, pagePosition: number, questionPosition: number) {
     this.currentEditImage = `${pageIndex}${pagePosition}${questionPosition}`

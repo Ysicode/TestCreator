@@ -3,6 +3,9 @@ body {
     background: #f2f3f4;
     font-family: "Montserrat", sans-serif;
 }
+.visibile {
+    visibility: visible !important;
+}
 
 .add_question_overlay {
     position: absolute;
@@ -923,6 +926,14 @@ Styles für die Vorschau sektion
         background: #c7c7c7;
         cursor: pointer;
     }
+}
+
+.edit_question_whitespace_wrapper {
+    position: absolute;
+    visibility: hidden;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
 }
 
 .height_info_wrapper {

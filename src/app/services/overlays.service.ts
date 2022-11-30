@@ -7,6 +7,8 @@ export class overlaysService {
     window.scrollTo(0, 0);
    }
 
-  
+   onEvent(event: Event) {
+      event.stopPropagation();
+    }
 
 }
