@@ -272,7 +272,7 @@
 
                     <!-- [class.paddingBottom0]="test['pages'][j][0].length == i + 1" -->
                     <div id="question{{ j }}{{ i }}" class="question_wrapper d_flex_column"
-                        *ngFor="let data of pages[0] let i = index">
+                        *ngFor="let data of pages[0] let i = index" (mouseover)="getCurrentQuestion(j, i)" (click)="getCurrentQuestion(j, i)">
                         <div id="questionContent{{j}}{{i}}" class="question_test">
                             <div class="question_head_container">
                                 <div class="question_info d_flex_start">
@@ -361,12 +361,14 @@
                                 </div>
                             </div>
                             <div id="edit_whitespace{{j}}{{i}}" class="edit_question_whitespace_wrapper d_flex show_onHover notVisible">
-                                <button (click)="showWhite(j, i)">White</button>
-                                <button (click)="showLines(j, i)">Linie</button>
-                                <button (click)="showSquare(j, i)">Quadrat</button>
+                                <div class="edit_question_whitespace_btn_wrapper d_flex">
+                                    <button class="whitespace_btn d_flex" (click)="showWhite()"></button>
+                                    <button class="whitespace_btn d_flex" (click)="showLines()"><img class="whitespace_btn_icon"  src="assets/lines.png" alt=""></button>
+                                    <button class="whitespace_btn d_flex" (click)="showSquare()"><img class="whitespace_btn_icon" src="assets/square.png" alt=""></button>
+                                </div>                       
                             </div>
                             <!-- *ngIf="test['pages'][j][0].length != i + 1" -->
-                            <div (click)="service.onEvent($event)" (mouseover)="resizeQuestion(j, i)" (mousemove)="getSquaresAndLines(j, i)"
+                            <div (click)="service.onEvent($event)" (mouseover)="resizeQuestion(j, i)" (mousemove)="getSquaresAndLines()"
                                 id="resize{{j}}{{i}}" class="height_info_wrapper d_flex show_onHover">
                                 <span class="resize_line"></span>
                             </div>

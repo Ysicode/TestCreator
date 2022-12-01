@@ -322,8 +322,6 @@ style for rendered subjects
     }
 }
 
-
-
 .question_wrapper_listview {
     width: 98%;
     margin-bottom: 2%;
@@ -860,9 +858,28 @@ Styles für die Vorschau sektion
     margin-top: 0px;
 }
 
+.whitespace_btn {
+    background: white;
+    border: 1px solid grey;
+    height: 30px;
+    width: 30px;
+    margin-left: 5px;
+    margin-right: 5px;
+
+    &:hover {
+        border: 2px solid #5fc1d8;
+    }
+
+    .whitespace_btn_icon {
+        width: 25px;
+        height: 25px;
+    }
+}
+
 .squareWhitespace_wrapper {
     border-left: 1px solid grey;
     border-bottom: 1px solid grey;
+    margin-bottom: 3%;
 }
 
 .linesWhitespace_wrapper {
@@ -955,9 +972,13 @@ Styles für die Vorschau sektion
 .edit_question_whitespace_wrapper {
     position: absolute;
     visibility: hidden;
-    bottom: 20px;
+    bottom: 10px;
     left: 0;
     width: 100%;
+    .edit_question_whitespace_btn_wrapper {
+        padding: 5px;
+        background: white;
+    }
 }
 
 .height_info_wrapper {
@@ -1006,7 +1027,7 @@ Styles für die Vorschau sektion
         height: 100%;
 
         &:hover {
-                width: 10px;
+            width: 10px;
         }
     }
 

@@ -40,9 +40,9 @@ export class overlaysService {
        `;
     }
 
-    squareRows(pageIndex: number, pagePosition: number, index: number) {
+    squareRows(id: string, index: number) {
        return `
-       <div id="row${pageIndex}${pagePosition}${index}" class="d_flex">   
+       <div id="row${id}${index}" class="d_flex">   
        </div>
     `;
     }

@@ -46,7 +46,7 @@ export class QuestionsComponent implements OnInit {
   editQuestionAtPreview = false;
   editImageAtPreview = false;
   public editTesthead = false;
-  currentEditContainer: string;
+  currentEditQuestion: string;
   currentEditImage: string;
   heightOfAllPreviewQuestions = 0;
   test = {
@@ -345,28 +345,28 @@ export class QuestionsComponent implements OnInit {
     }
   }
 
+  getCurrentQuestion(pageIndex: number, pagePosition: number) {
+    this.currentEditQuestion = `${pageIndex}${pagePosition}`;
+  }
+
   /**
    * This function is used to resize the height of a question
    * @param pageIndex - is the index of the dina4 page
    * @param pagePosition - is the index of the question on the page
    */
   resizeQuestion(pageIndex: number, pagePosition: number) {
-    this.currentEditContainer = `${pageIndex}${pagePosition}`
     let startY: number, startHeight: number;
-    let resizer = document.getElementById(`resize${this.currentEditContainer}`);
-    let question = document.getElementById(`question${this.currentEditContainer}`);
+    let resizer = this.service.getElement(`resize${this.currentEditQuestion}`);
+    let question = this.service.getElement(`question${this.currentEditQuestion}`);
     question.style.minHeight = this.test.pages[pageIndex][0][pagePosition]['defaultheight'] + 'px';
     let questionContentHeight = Number(question.style.minHeight.replace('px', ''));
-
     resizer.addEventListener('mousedown', initDrag, false);
-
     function initDrag(e: { clientY: number; }) {
       startY = e.clientY;
       startHeight = parseInt(document.defaultView.getComputedStyle(question).height, 10);
       document.documentElement.addEventListener('mousemove', doDrag, false);
       document.documentElement.addEventListener('mouseup', stopDrag, false);
     }
-
     function doDrag(e: { clientY: number; }) {
       question.style.height = (startHeight + e.clientY - startY) + 'px';
       let questionHeight = Number(question.style.height.replace('px', ''));
@@ -379,38 +379,36 @@ export class QuestionsComponent implements OnInit {
         whitespace.classList.remove('visibile')
       }
     }
-
     function stopDrag() {
       document.documentElement.removeEventListener('mousemove', doDrag, false);
       document.documentElement.removeEventListener('mouseup', stopDrag, false);
     }
-    this.test.pages[pageIndex][0][pagePosition]['questionHeight'] = this.service.getClientHeight(`question${this.currentEditContainer}`);
-    console.log(this.test.pages);
+    this.test.pages[pageIndex][0][pagePosition]['questionHeight'] = this.service.getClientHeight(`question${this.currentEditQuestion}`);
   }
 
-
+/**
+ * 
+ * @param pageIndex This function is used to resize an image of a question
+ * @param pagePosition - is the index of the dina4 page
+ * @param questionPosition - is the index of the question on the page
+ */
   resizeImage(pageIndex: number, pagePosition: number, questionPosition: number) {
     this.currentEditImage = `${pageIndex}${pagePosition}${questionPosition}`
     let startX: number, startWidth: number;
     let resizer = this.service.getElement(`resizeImage${this.currentEditImage}`);
     let image = this.service.getElement(`img_edit_wrapper${this.currentEditImage}`);
     let question = this.service.getElement(`question${pageIndex}${pagePosition}`);
-    // question.style.minHeight = this.test.pages[pageIndex][0][pagePosition]['defaultheight'] + 'px';
-
     resizer.addEventListener('mousedown', initDrag, false);
-
     function initDrag(e: { clientX: number; }) {
       startX = e.clientX;
       startWidth = parseInt(document.defaultView.getComputedStyle(image).width, 10);
       document.documentElement.addEventListener('mousemove', doDrag, false);
       document.documentElement.addEventListener('mouseup', stopDrag, false);
     }
-
     function doDrag(e: { clientX: number; }) {
       image.style.width = (startWidth + e.clientX - startX) + 'px';
       question.style.height = 'fit-content';
     }
-
     function stopDrag() {
       document.documentElement.removeEventListener('mousemove', doDrag, false);
       document.documentElement.removeEventListener('mouseup', stopDrag, false);
@@ -419,54 +417,51 @@ export class QuestionsComponent implements OnInit {
 
 
 
-  getSquaresAndLines(pageIndex: number, pagePosition: number) {
-    let contentHeight = this.service.getClientHeight(`questionContent${pageIndex}${pagePosition}`);
-    let questionHeight = this.service.getClientHeight(`question${pageIndex}${pagePosition}`);
-    let questionWidth = this.service.getClientWidth(`question${pageIndex}${pagePosition}`);
-    this.getSquares(pageIndex, pagePosition, contentHeight, questionHeight, questionWidth);
-    this.getLines(pageIndex, pagePosition, contentHeight, questionHeight);
+  getSquaresAndLines() {
+    let contentHeight = this.service.getClientHeight(`questionContent${this.currentEditQuestion}`);
+    let questionHeight = this.service.getClientHeight(`question${this.currentEditQuestion}`);
+    let questionWidth = this.service.getClientWidth(`question${this.currentEditQuestion}`);
+    this.getSquares(contentHeight, questionHeight, questionWidth);
+    this.getLines(contentHeight, questionHeight);
   }
 
-  getSquares(pageIndex: number, pagePosition: number, contentHeight: any, questionHeight: any, questionWidth: any) {
+  getSquares(contentHeight: any, questionHeight: any, questionWidth: any) {
     let totalColumns = Math.floor(questionWidth / 19.9);
     let totalRows = Math.floor((questionHeight - contentHeight) / 21.9);
-    let whitspaceSquareRows = new Array(totalRows);
-    let whitspaceSquareColumns = new Array(totalColumns);
-    let squares = this.service.getElement(`whitespace_squares${pageIndex}${pagePosition}`);
+    let squares = this.service.getElement(`whitespace_squares${this.currentEditQuestion}`);
     squares.innerHTML = '';
-    for (let i = 0; i < whitspaceSquareRows.length; i++) {
-      squares.innerHTML += this.service.squareRows(pageIndex, pagePosition, i);
-      let row = this.service.getElement(`row${pageIndex}${pagePosition}${i}`);
+    for (let i = 0; i < totalRows; i++) {
+      squares.innerHTML += this.service.squareRows(this.currentEditQuestion, i);
+      let row = this.service.getElement(`row${this.currentEditQuestion}${i}`);
       row.innerHTML = '';
-      for (let j = 0; j < whitspaceSquareColumns.length; j++) {
+      for (let j = 0; j < totalColumns; j++) {
         row.innerHTML += this.service.squareColumns();
       }
     }
   }
 
-  getLines(pageIndex: number, pagePosition: number, contentHeight: any, questionHeight: any) {
+  getLines(contentHeight: any, questionHeight: any) {
     let totalLines = Math.floor((questionHeight - contentHeight) / 41);
-    let whitspaceLines = new Array(totalLines);
-    let lines = this.service.getElement(`whitespace_lines${pageIndex}${pagePosition}`);
+    let lines = this.service.getElement(`whitespace_lines${this.currentEditQuestion}`);
     lines.innerHTML = '';
-    for (let i = 0; i < whitspaceLines.length; i++) {
+    for (let i = 0; i < totalLines; i++) {
       lines.innerHTML += this.service.lines();
     }
   }
 
-  showSquare(pageIndex: number, pagePosition: number) {
-    this.service.removeClasslist(`whitespace_squares${pageIndex}${pagePosition}`, 'd_none');
-    this.service.addClasslist(`whitespace_lines${pageIndex}${pagePosition}`, 'd_none');
+  showSquare() {
+    this.service.removeClasslist(`whitespace_squares${this.currentEditQuestion}`, 'd_none');
+    this.service.addClasslist(`whitespace_lines${this.currentEditQuestion}`, 'd_none');
   }
 
-  showWhite(pageIndex: number, pagePosition: number) {
-    this.service.addClasslist(`whitespace_squares${pageIndex}${pagePosition}`, 'd_none');
-    this.service.addClasslist(`whitespace_lines${pageIndex}${pagePosition}`, 'd_none');
+  showWhite() {
+    this.service.addClasslist(`whitespace_squares${this.currentEditQuestion}`, 'd_none');
+    this.service.addClasslist(`whitespace_lines${this.currentEditQuestion}`, 'd_none');
   }
 
-  showLines(pageIndex: number, pagePosition: number) {
-    this.service.addClasslist(`whitespace_squares${pageIndex}${pagePosition}`, 'd_none');
-    this.service.removeClasslist(`whitespace_lines${pageIndex}${pagePosition}`, 'd_none');
+  showLines() {
+    this.service.addClasslist(`whitespace_squares${this.currentEditQuestion}`, 'd_none');
+    this.service.removeClasslist(`whitespace_lines${this.currentEditQuestion}`, 'd_none');
   }
 
   /**
@@ -478,9 +473,9 @@ export class QuestionsComponent implements OnInit {
   async showRangeToStyleQuestion(pageIndex: number, pagePosition: number) {
     await this.checkHeightOfAllPreviewQuestions();
     this.editQuestionAtPreview = true;
-    this.currentEditContainer = `${pageIndex}${pagePosition}`
+    this.currentEditQuestion = `${pageIndex}${pagePosition}`
 
-    let questionHeight = document.getElementById(`question${this.currentEditContainer}`).style.paddingBottom;
+    let questionHeight = document.getElementById(`question${this.currentEditQuestion}`).style.paddingBottom;
     let padding = questionHeight.replace('%', '');
 
     this.rangebars.setValue({
@@ -495,7 +490,7 @@ export class QuestionsComponent implements OnInit {
 
 
   setHeightQuestion(height: string) {
-    let questionHeight = document.getElementById(`question${this.currentEditContainer}`);
+    let questionHeight = document.getElementById(`question${this.currentEditQuestion}`);
     questionHeight.style.paddingBottom = `${Number(height) / 2}%`;
     setTimeout(() => {
       this.checkHeightOfAllPreviewQuestions();
@@ -511,8 +506,8 @@ export class QuestionsComponent implements OnInit {
   showRangeToStyleImage(pageIndex: number, pagePosition: number) {
     this.editImageAtPreview = true;
     if (pageIndex >= 0) {
-      this.currentEditContainer = `${pageIndex}${pagePosition}`;
-      let image = document.getElementById(`questionImage${this.currentEditContainer}`).style.width;
+      this.currentEditQuestion = `${pageIndex}${pagePosition}`;
+      let image = document.getElementById(`questionImage${this.currentEditQuestion}`).style.width;
       let imageSize = image.replace('%', '');
       this.rangebars.setValue({
         styleHeight: 10,
@@ -527,7 +522,7 @@ export class QuestionsComponent implements OnInit {
 
 
   setImageSize(width: string) {
-    let image = document.getElementById(`questionImage${this.currentEditContainer}`);
+    let image = document.getElementById(`questionImage${this.currentEditQuestion}`);
     image.style.width = `${width}%`;
 
     setTimeout(() => {
