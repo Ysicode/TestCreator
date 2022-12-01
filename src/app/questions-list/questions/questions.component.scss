@@ -322,6 +322,8 @@ style for rendered subjects
     }
 }
 
+
+
 .question_wrapper_listview {
     width: 98%;
     margin-bottom: 2%;
@@ -856,6 +858,28 @@ Styles für die Vorschau sektion
     margin-left: 0.5vw;
     margin-bottom: 0px;
     margin-top: 0px;
+}
+
+.squareWhitespace_wrapper {
+    border-left: 1px solid grey;
+    border-bottom: 1px solid grey;
+}
+
+.linesWhitespace_wrapper {
+    width: 100%;
+}
+
+.squareWhitespace {
+    border-top: 1px solid grey;
+    border-right: 1px solid grey;
+    width: 5mm;
+    height: 5mm;
+}
+
+.whitespace_line {
+    height: 10mm;
+    width: 100%;
+    border-bottom: 1px solid grey;
 }
 
 .preview_question_img {

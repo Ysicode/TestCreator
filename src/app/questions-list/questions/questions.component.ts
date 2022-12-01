@@ -1,6 +1,7 @@
 import { Component, Directive, HostListener, OnInit, ViewChild } from '@angular/core';
 import { collection, collectionData, doc, Firestore } from '@angular/fire/firestore';
 import { NgForm } from '@angular/forms';
+import { RouterLinkWithHref } from '@angular/router';
 import { deleteDoc } from '@firebase/firestore';
 import { Observable } from 'rxjs';
 import { EditComponent } from 'src/app/add/edit/edit.component';
@@ -11,7 +12,7 @@ import { overlaysService } from 'src/app/services/overlays.service';
   templateUrl: './questions.component.html',
   styleUrls: ['./questions.component.scss'],
   providers: [overlaysService],
-  
+
 })
 
 export class QuestionsComponent implements OnInit {
@@ -54,6 +55,7 @@ export class QuestionsComponent implements OnInit {
     },
     ]
   };
+  squareWhitspace = false;
 
   //help variables
   wrongPassword: boolean = false;
@@ -63,7 +65,7 @@ export class QuestionsComponent implements OnInit {
   question_number = 0;
 
   constructor(private firestore: Firestore, public service: overlaysService) { }
-@HostListener("click", ["$event"])
+  @HostListener("click", ["$event"])
 
   login(password: string) {
     if (password == 'superPin1984!') {
@@ -219,37 +221,37 @@ export class QuestionsComponent implements OnInit {
     if (difficulty == 'Leicht') {
       status == 'add_styling'
         ?
-        (this.addClasslist('add_btn' + i, 'd_none'),
-          this.addClasslist('question_list' + i, 'question_added_leicht'),
-          this.removeClasslist('remove_btn' + i, 'd_none'))
+        (this.service.addClasslist('add_btn' + i, 'd_none'),
+          this.service.addClasslist('question_list' + i, 'question_added_leicht'),
+          this.service.removeClasslist('remove_btn' + i, 'd_none'))
         :
-        (this.addClasslist('remove_btn' + i, 'd_none'),
-          this.removeClasslist('question_list' + i, 'question_added_leicht'),
-          this.removeClasslist('add_btn' + i, 'd_none'))
+        (this.service.addClasslist('remove_btn' + i, 'd_none'),
+          this.service.removeClasslist('question_list' + i, 'question_added_leicht'),
+          this.service.removeClasslist('add_btn' + i, 'd_none'))
     }
 
     if (difficulty == 'Mittel') {
       status == 'add_styling'
         ?
-        (this.addClasslist('add_btn' + i, 'd_none'),
-          this.addClasslist('question_list' + i, 'question_added_mittel'),
-          this.removeClasslist('remove_btn' + i, 'd_none'))
+        (this.service.addClasslist('add_btn' + i, 'd_none'),
+          this.service.addClasslist('question_list' + i, 'question_added_mittel'),
+          this.service.removeClasslist('remove_btn' + i, 'd_none'))
         :
-        (this.addClasslist('remove_btn' + i, 'd_none'),
-          this.removeClasslist('question_list' + i, 'question_added_mittel'),
-          this.removeClasslist('add_btn' + i, 'd_none'))
+        (this.service.addClasslist('remove_btn' + i, 'd_none'),
+          this.service.removeClasslist('question_list' + i, 'question_added_mittel'),
+          this.service.removeClasslist('add_btn' + i, 'd_none'))
     }
 
     if (difficulty == 'Schwer') {
       status == 'add_styling'
         ?
-        (this.addClasslist('add_btn' + i, 'd_none'),
-          this.addClasslist('question_list' + i, 'question_added_schwer'),
-          this.removeClasslist('remove_btn' + i, 'd_none'))
+        (this.service.addClasslist('add_btn' + i, 'd_none'),
+          this.service.addClasslist('question_list' + i, 'question_added_schwer'),
+          this.service.removeClasslist('remove_btn' + i, 'd_none'))
         :
-        (this.addClasslist('remove_btn' + i, 'd_none'),
-          this.removeClasslist('question_list' + i, 'question_added_schwer'),
-          this.removeClasslist('add_btn' + i, 'd_none'))
+        (this.service.addClasslist('remove_btn' + i, 'd_none'),
+          this.service.removeClasslist('question_list' + i, 'question_added_schwer'),
+          this.service.removeClasslist('add_btn' + i, 'd_none'))
     }
   }
 
@@ -299,7 +301,6 @@ export class QuestionsComponent implements OnInit {
    */
   async checkHeightOfAllPreviewQuestions() {
     for (let i = 0; i < this.test.pages.length; i++) {
-
       await this.stopLoop(10);
       let pageContent = document.getElementById(`test_content${i}`).clientHeight;
       let paperHeight = document.getElementById(`test_dinA4${i}`).clientHeight;
@@ -356,7 +357,7 @@ export class QuestionsComponent implements OnInit {
     let question = document.getElementById(`question${this.currentEditContainer}`);
     question.style.minHeight = this.test.pages[pageIndex][0][pagePosition]['defaultheight'] + 'px';
     let questionContentHeight = Number(question.style.minHeight.replace('px', ''));
-  
+
     resizer.addEventListener('mousedown', initDrag, false);
 
     function initDrag(e: { clientY: number; }) {
@@ -370,12 +371,10 @@ export class QuestionsComponent implements OnInit {
       question.style.height = (startHeight + e.clientY - startY) + 'px';
       let questionHeight = Number(question.style.height.replace('px', ''));
       if (questionHeight > questionContentHeight + 50) {
-        
         let whitespace = document.getElementById(`edit_whitespace${pageIndex}${pagePosition}`);
         whitespace.classList.add('visibile')
       }
       if (questionHeight < questionContentHeight + 50) {
-        
         let whitespace = document.getElementById(`edit_whitespace${pageIndex}${pagePosition}`);
         whitespace.classList.remove('visibile')
       }
@@ -385,21 +384,17 @@ export class QuestionsComponent implements OnInit {
       document.documentElement.removeEventListener('mousemove', doDrag, false);
       document.documentElement.removeEventListener('mouseup', stopDrag, false);
     }
+    this.test.pages[pageIndex][0][pagePosition]['questionHeight'] = this.service.getClientHeight(`question${this.currentEditContainer}`);
+    console.log(this.test.pages);
   }
 
-  see() {
-    console.log('helo');
-    
-  }
-
-  
 
   resizeImage(pageIndex: number, pagePosition: number, questionPosition: number) {
     this.currentEditImage = `${pageIndex}${pagePosition}${questionPosition}`
     let startX: number, startWidth: number;
-    let resizer = document.getElementById(`resizeImage${this.currentEditImage}`);
-    let image = document.getElementById(`img_edit_wrapper${this.currentEditImage}`);
-    let question = document.getElementById(`question${pageIndex}${pagePosition}`);
+    let resizer = this.service.getElement(`resizeImage${this.currentEditImage}`);
+    let image = this.service.getElement(`img_edit_wrapper${this.currentEditImage}`);
+    let question = this.service.getElement(`question${pageIndex}${pagePosition}`);
     // question.style.minHeight = this.test.pages[pageIndex][0][pagePosition]['defaultheight'] + 'px';
 
     resizer.addEventListener('mousedown', initDrag, false);
@@ -413,14 +408,65 @@ export class QuestionsComponent implements OnInit {
 
     function doDrag(e: { clientX: number; }) {
       image.style.width = (startWidth + e.clientX - startX) + 'px';
-      question.style.height = 'fit-content';  
+      question.style.height = 'fit-content';
     }
 
     function stopDrag() {
       document.documentElement.removeEventListener('mousemove', doDrag, false);
       document.documentElement.removeEventListener('mouseup', stopDrag, false);
-      this.resizeActive = false;
-    }   
+    }
+  }
+
+
+
+  getSquaresAndLines(pageIndex: number, pagePosition: number) {
+    let contentHeight = this.service.getClientHeight(`questionContent${pageIndex}${pagePosition}`);
+    let questionHeight = this.service.getClientHeight(`question${pageIndex}${pagePosition}`);
+    let questionWidth = this.service.getClientWidth(`question${pageIndex}${pagePosition}`);
+    this.getSquares(pageIndex, pagePosition, contentHeight, questionHeight, questionWidth);
+    this.getLines(pageIndex, pagePosition, contentHeight, questionHeight);
+  }
+
+  getSquares(pageIndex: number, pagePosition: number, contentHeight: any, questionHeight: any, questionWidth: any) {
+    let totalColumns = Math.floor(questionWidth / 19.9);
+    let totalRows = Math.floor((questionHeight - contentHeight) / 21.9);
+    let whitspaceSquareRows = new Array(totalRows);
+    let whitspaceSquareColumns = new Array(totalColumns);
+    let squares = this.service.getElement(`whitespace_squares${pageIndex}${pagePosition}`);
+    squares.innerHTML = '';
+    for (let i = 0; i < whitspaceSquareRows.length; i++) {
+      squares.innerHTML += this.service.squareRows(pageIndex, pagePosition, i);
+      let row = this.service.getElement(`row${pageIndex}${pagePosition}${i}`);
+      row.innerHTML = '';
+      for (let j = 0; j < whitspaceSquareColumns.length; j++) {
+        row.innerHTML += this.service.squareColumns();
+      }
+    }
+  }
+
+  getLines(pageIndex: number, pagePosition: number, contentHeight: any, questionHeight: any) {
+    let totalLines = Math.floor((questionHeight - contentHeight) / 41);
+    let whitspaceLines = new Array(totalLines);
+    let lines = this.service.getElement(`whitespace_lines${pageIndex}${pagePosition}`);
+    lines.innerHTML = '';
+    for (let i = 0; i < whitspaceLines.length; i++) {
+      lines.innerHTML += this.service.lines();
+    }
+  }
+
+  showSquare(pageIndex: number, pagePosition: number) {
+    this.service.removeClasslist(`whitespace_squares${pageIndex}${pagePosition}`, 'd_none');
+    this.service.addClasslist(`whitespace_lines${pageIndex}${pagePosition}`, 'd_none');
+  }
+
+  showWhite(pageIndex: number, pagePosition: number) {
+    this.service.addClasslist(`whitespace_squares${pageIndex}${pagePosition}`, 'd_none');
+    this.service.addClasslist(`whitespace_lines${pageIndex}${pagePosition}`, 'd_none');
+  }
+
+  showLines(pageIndex: number, pagePosition: number) {
+    this.service.addClasslist(`whitespace_squares${pageIndex}${pagePosition}`, 'd_none');
+    this.service.removeClasslist(`whitespace_lines${pageIndex}${pagePosition}`, 'd_none');
   }
 
   /**
@@ -487,14 +533,6 @@ export class QuestionsComponent implements OnInit {
     setTimeout(() => {
       this.checkHeightOfAllPreviewQuestions();
     }, 5);
-  }
-
-  addClasslist(id: string, classList: string) {
-    document.getElementById(id).classList.add(classList);
-  }
-
-  removeClasslist(id: string, classList: string) {
-    document.getElementById(id).classList.remove(classList);
   }
 
   toggleEditTestHead() {
