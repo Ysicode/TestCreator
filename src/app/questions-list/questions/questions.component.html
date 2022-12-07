@@ -227,7 +227,7 @@
         <div *ngIf="loaded" id="test_print" class="test_print" [class.opacity0]="!preview"
             (mousemove)="checkHeightOfAllPreviewQuestions()">
             <div id="test_dinA4{{j}}" *ngFor="let pages of test['pages'] let j = index" class="test_dinA4 page_break">
-                <div (mousemove)="setQuestionNumber()" id="test_content{{j}}" class="test_content d_flex_column">
+                <div (mousemove)="setQuestionNumber()" id="test_content{{j}}" class="test_content d_flex_column_start">
                     <div id="testhead" class="testHead d_flex_column" *ngIf="j == 0">
                         <div class="test_head_wrapper d_flex_space">
                             <div class="test_head">
@@ -373,13 +373,14 @@
                                 <span class="resize_line"></span>
                             </div>
                         </div>
+                        <div id="whitespace_lines{{j}}{{i}}" class="d_flex_column linesWhitespace_wrapper d_none">
+
+                        </div>
                         <!-- whitspace SQUARES -->
                         <div id="whitespace_squares{{j}}{{i}}" class="d_flex_column squareWhitespace_wrapper d_none"> 
                         </div>
                         <!-- whitespace LINES -->
-                        <div id="whitespace_lines{{j}}{{i}}" class="d_flex_column linesWhitespace_wrapper d_none">
-
-                        </div>
+                        
                     </div>
                 </div>
 

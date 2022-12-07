@@ -311,7 +311,6 @@ style for rendered subjects
     width: 84%;
     height: fit-content;
     min-height: auto;
-
     position: relative;
     justify-content: flex-start;
     margin-bottom: 2.5%;
@@ -666,8 +665,9 @@ Styles für die Vorschau sektion
 
 .test_content {
     width: 100%;
-    padding-top: 9%;
-    padding-bottom: 9%;
+    height: 100%;
+    // padding-top: 9%;
+    // padding-bottom: 9%;
 }
 
 .preview_question_container {
@@ -680,6 +680,7 @@ Styles für die Vorschau sektion
 
 .testHead {
     width: 82%;
+    margin-top: 9%;
     position: relative;
     &:hover {
         .edit_testhead_btn {
@@ -793,6 +794,7 @@ Styles für die Vorschau sektion
     height: calc((100vw) * 1.538);
     background: white;
     max-height: 1615px;
+    // max-height: 1310px;
     width: 100%;
     margin-bottom: 2vw;
     font-size: calc(100vw * 0.016);
@@ -877,12 +879,15 @@ Styles für die Vorschau sektion
 }
 
 .squareWhitespace_wrapper {
+    height: fit-content;
     border-left: 1px solid grey;
     border-bottom: 1px solid grey;
     margin-bottom: 3%;
+    width: 100%;
 }
 
 .linesWhitespace_wrapper {
+    height: fit-content;
     width: 100%;
 }
 
@@ -1289,11 +1294,11 @@ Styles für die Vorschau sektion
         display: none;
     }
 
-    #test_print {
+    .test_print {
         position: absolute;
         top: 0;
         left: 0;
-        right: 0;
+      
         visibility: visible !important;
     }
 }

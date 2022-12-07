@@ -28,28 +28,27 @@ export class overlaysService {
   
     removeClasslist(id: string, classList: string) {
       document.getElementById(id).classList.remove(classList);
-    }
-
-    squareColumns() {
-       return `
-       <div style="border-top: 1px solid grey;
-       border-right: 1px solid grey;
-       width: 5mm;
-       height: 5mm;">       
-       </div>
-       `;
-    }
+    }   
 
     squareRows(id: string, index: number) {
        return `
-       <div id="row${id}${index}" class="d_flex">   
+       <div id="row${id}${index}" class="d_flex" style="width: 100%">   
        </div>
     `;
     }
 
+    squareColumns(totalColumns: number, i: number, j: number) {
+      return `
+      <div id="square${i}${j}" style="border-top: 1px solid grey;
+      border-right: 1px solid grey;
+      width: ${100 / totalColumns}%; aspect-ratio: 1 / 1">       
+      </div>
+      `;
+   }
+
     lines() {
       return `
-      <div style="width: 100%; height: 1px; background: grey; margin-bottom: 5mm; margin-top: 5mm;">
+      <div style="width: 100%; height: 1px; background: grey; margin-bottom: 2.5%; margin-top: 2.5%;">
       </div>
       `;
     }

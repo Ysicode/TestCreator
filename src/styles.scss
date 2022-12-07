@@ -121,7 +121,7 @@ h3 {
 
 @media print {
 
-    body {
+    body *:not(.test_print) :not(.test_print *) {
         visibility: hidden;
     }
    
