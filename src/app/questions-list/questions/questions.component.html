@@ -228,6 +228,9 @@
             (mousemove)="checkHeightOfAllPreviewQuestions()">
             <div id="test_dinA4{{j}}" *ngFor="let pages of test['pages'] let j = index" class="test_dinA4 page_break">
                 <div (mousemove)="setQuestionNumber()" id="test_content{{j}}" class="test_content d_flex_column_start">
+                    <div style="width: 100%; padding-bottom: 9%;">
+
+                    </div>
                     <div id="testhead" class="testHead d_flex_column" *ngIf="j == 0">
                         <div class="test_head_wrapper d_flex_space">
                             <div class="test_head">
@@ -271,8 +274,10 @@
                     </div>
 
                     <!-- [class.paddingBottom0]="test['pages'][j][0].length == i + 1" -->
+                
                     <div id="question{{ j }}{{ i }}" class="question_wrapper d_flex_column"
-                        *ngFor="let data of pages[0] let i = index" (mouseover)="getCurrentQuestion(j, i)" (click)="getCurrentQuestion(j, i)">
+                        *ngFor="let data of pages[0] let i = index" (mouseover)="getCurrentQuestion(j, i)"
+                        (click)="getCurrentQuestion(j, i)">
                         <div id="questionContent{{j}}{{i}}" class="question_test">
                             <div class="question_head_container">
                                 <div class="question_info d_flex_start">
@@ -328,7 +333,8 @@
                                     </div>
 
                                 </div>
-                                <div class="preview_question_container" *ngFor="let items of question['data']['items'] let i = index">
+                                <div class="preview_question_container"
+                                    *ngFor="let items of question['data']['items'] let i = index">
                                     <!-- Lists -->
                                     <div class="margin_left element_margin_text"
                                         *ngIf="question['data']['style'] == 'ordered'">
@@ -347,7 +353,8 @@
 
 
                                 </div>
-                                <div class="preview_question_container element_margin_text" *ngIf="question['data']['table']">
+                                <div class="preview_question_container element_margin_text"
+                                    *ngIf="question['data']['table']">
                                     <!-- tables -->
                                     <div [class.bold]="i == 0 && question['data']['withHeadings'] == true "
                                         class="d_flex_start tableRow"
@@ -360,28 +367,30 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="edit_whitespace{{j}}{{i}}" class="edit_question_whitespace_wrapper d_flex show_onHover notVisible">
+                            <div id="edit_whitespace{{j}}{{i}}"
+                                class="edit_question_whitespace_wrapper d_flex show_onHover notVisible">
                                 <div class="edit_question_whitespace_btn_wrapper d_flex">
                                     <button class="whitespace_btn d_flex" (click)="showWhite()"></button>
-                                    <button class="whitespace_btn d_flex" (click)="showLines()"><img class="whitespace_btn_icon"  src="assets/lines.png" alt=""></button>
-                                    <button class="whitespace_btn d_flex" (click)="showSquare()"><img class="whitespace_btn_icon" src="assets/square.png" alt=""></button>
-                                </div>                       
+                                    <button class="whitespace_btn d_flex" (click)="showLines()"><img
+                                            class="whitespace_btn_icon" src="assets/lines.png" alt=""></button>
+                                    <button class="whitespace_btn d_flex" (click)="showSquare()"><img
+                                            class="whitespace_btn_icon" src="assets/square.png" alt=""></button>
+                                </div>
                             </div>
                             <!-- *ngIf="test['pages'][j][0].length != i + 1" -->
-                            <div (click)="service.onEvent($event)" (mouseover)="resizeQuestion(j, i)" (mousemove)="getSquaresAndLines()"
-                                id="resize{{j}}{{i}}" class="height_info_wrapper d_flex show_onHover">
+                            <div (click)="service.onEvent($event)" (mouseover)="resizeQuestion(j, i)"
+                                (mousemove)="getSquaresAndLines()" id="resize{{j}}{{i}}"
+                                class="height_info_wrapper d_flex show_onHover">
                                 <span class="resize_line"></span>
                             </div>
                         </div>
+                        <!-- whitspace SQUARES -->
+                        <div id="whitespace_squares{{j}}{{i}}" class="d_flex_column squareWhitespace_wrapper d_none">
+                        </div>
+                        <!-- whitespace LINES -->
                         <div id="whitespace_lines{{j}}{{i}}" class="d_flex_column linesWhitespace_wrapper d_none">
 
                         </div>
-                        <!-- whitspace SQUARES -->
-                        <div id="whitespace_squares{{j}}{{i}}" class="d_flex_column squareWhitespace_wrapper d_none"> 
-                        </div>
-                        <!-- whitespace LINES -->
-                        
-                    </div>
                 </div>
 
                 <div id="page_number" class="page_number_wrapper d_flex">
@@ -392,6 +401,7 @@
         </div>
 
         <div class="add_question_container d_flex" [class.d_none]="!preview">
+            <button>Musterlösung</button>
             <div class="add_question_btn_wrapper">
                 <button class="add_question_btn">Speichern</button>
                 <div class="menu_burger" matTooltip="Menü" matTooltipPosition="above">
@@ -404,7 +414,7 @@
             </div>
         </div>
 
-        <form #rangeSliderForm="ngForm">
+        <!-- <form #rangeSliderForm="ngForm">
             <div (click)="closeEditQuestionPreview()" [class.d_none]="!editQuestionAtPreview"
                 class="rangebar_wrapper d_flex_column_end">
                 <div (click)="$event.stopPropagation()" class="d_flex_column_start rangbar_container">
@@ -425,7 +435,7 @@
                         #styleWidth name="styleWidth" ngModel>
                 </div>
             </div>
-        </form>
+        </form> -->
     </div>
 </div>
 

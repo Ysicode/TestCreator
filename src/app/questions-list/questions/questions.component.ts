@@ -6,6 +6,7 @@ import { deleteDoc } from '@firebase/firestore';
 import { Observable } from 'rxjs';
 import { EditComponent } from 'src/app/add/edit/edit.component';
 import { overlaysService } from 'src/app/services/overlays.service';
+import { __await } from 'tslib';
 
 @Component({
   selector: 'app-questions',
@@ -63,6 +64,7 @@ export class QuestionsComponent implements OnInit {
   file: any;
 
   question_number = 0;
+  sampleSolution = false;
 
   constructor(private firestore: Firestore, public service: overlaysService) { }
   @HostListener("click", ["$event"])
@@ -181,7 +183,7 @@ export class QuestionsComponent implements OnInit {
   getDefaultHeightsOfEachAddedQuestions() {
     for (let i = 0; i < this.test.pages.length; i++) {
       for (let j = 0; j < this.test.pages[i][0].length; j++) {
-        let height = (this.service.getClientHeight(`question${i}${j}`) * 100) / this.service.getClientHeight(`test_dinA4${i}`);
+        let height = (this.getHeight(`question${i}${j}`) * 100) / this.getHeight(`test_dinA4${i}`);
         this.test.pages[i][0][j]['defaultheight'] = height;
       }
     }
@@ -288,8 +290,6 @@ export class QuestionsComponent implements OnInit {
     setTimeout(() => {
       this.checkHeightOfAllPreviewQuestions();
     }, 200)
-
-
     this.preview = !this.preview;
     window.scrollTo(0, 0);
     this.setQuestionNumber();
@@ -301,32 +301,56 @@ export class QuestionsComponent implements OnInit {
    * executes setQuestionNumber
    */
   async checkHeightOfAllPreviewQuestions() {
+    let contentHeight = 0;
     for (let i = 0; i < this.test.pages.length; i++) {
-      await this.stopLoop(10);
-      let pageContent = document.getElementById(`test_content${i}`).clientHeight;
-      let paperHeight = document.getElementById(`test_dinA4${i}`).clientHeight;
-
-      if (pageContent > paperHeight) {
-        const question = this.test.pages[i][0].pop();
-        if (i == this.test.pages.length - 1) {
-          this.test.pages.push({ [0]: [] });
-        }
-        this.test.pages[i + 1][0].push(question)
-        this.test.pages[i + 1][0].reverse();
+      if (i != 0) {
+        contentHeight = 0;
+      } else {
+        contentHeight = this.getHeight('testhead');
       }
-
-
+      await this.stopLoop(10);
+      for (let j = 0; j < this.test.pages[i][0].length; j++) {
+        let height = this.getHeight(`question${i}${j}`);
+        contentHeight += Number(height);
+      }
+      let outerHeight = this.getHeight(`test_dinA4${i}`);
+      let paperHeight = outerHeight - (outerHeight * 0.18);
+      if (contentHeight > paperHeight) {
+       this.addNewPageAndpushLastQuestion(i);
+      }
       if (i > 0) {
-        let question = document.getElementById(`question${i}${0}`).clientHeight;
-        if (i > 0 && document.getElementById(`test_content${i - 1}`).clientHeight + question < document.getElementById(`test_dinA4${i - 1}`).clientHeight - 10) {
-          const question = this.test.pages[i][0].shift();
-          this.test.pages[i - 1][0].push(question)
-          if (i > 0 && this.test.pages[i][0].length == 0) {
-            this.test.pages.pop();
-          }
-        }
+        this.moveUpQuestionAndDeleteEmptyPages(i, paperHeight);
       }
     }
+  }
+
+  addNewPageAndpushLastQuestion(i: number) {
+    const question = this.test.pages[i][0].pop();
+    if (i == this.test.pages.length - 1) {
+      this.test.pages.push({ [0]: [] });
+    }
+    this.test.pages[i + 1][0].push(question)
+    this.test.pages[i + 1][0].reverse();
+  }
+
+  async moveUpQuestionAndDeleteEmptyPages(i: number, paperHeight: number) {
+    if (await this.spaceForFirstQuestion(i, paperHeight)) {
+      const question = this.test.pages[i][0].shift();
+      this.test.pages[i - 1][0].push(question)
+      if (this.pageIsEmpty(i)) {
+        this.test.pages.pop();
+      }
+    }
+  }
+
+  async spaceForFirstQuestion(i: number, paperHeight: number) {
+    let firstQuestion = this.getHeight(`question${i}${0}`);
+    let contentHeight = i == 1 ? this.getHeight('testhead') : 0;
+    for (let j = 0; j < this.test.pages[i - 1][0].length; j++) {
+      let height = this.getHeight(`question${i - 1}${j}`);
+      contentHeight += Number(height);
+    }
+    return contentHeight + firstQuestion < paperHeight - 10
   }
 
   /**
@@ -340,8 +364,12 @@ export class QuestionsComponent implements OnInit {
       for (let j = 0; j < this.test.pages[i][0].length; j++) {
         this.question_number++;
         this.stopLoop(5);
-        let number = document.getElementById(`question_number${i}${j}`)
-        number.innerHTML = `${this.question_number}`;
+        let questionNumber = this.element(`question_number${i}${j}`)
+        questionNumber.innerHTML = `${this.question_number}`;
+        if (this.sampleSolution) {
+          let solutionNumber = this.element(`solution_number${i}${j}`)
+        solutionNumber.innerHTML = `${this.question_number}`; 
+        }
       }
     }
   }
@@ -357,47 +385,43 @@ export class QuestionsComponent implements OnInit {
    */
   resizeQuestion(pageIndex: number, pagePosition: number) {
     let startY: number, startHeight: number;
-    let resizer = this.service.getElement(`resize${this.currentEditQuestion}`);
-    let question = this.service.getElement(`question${this.currentEditQuestion}`);
-    let page = this.service.getClientHeight(`test_dinA4${pageIndex}`)
+    let resizer = this.element(`resize${this.currentEditQuestion}`);
+    let question = this.element(`question${this.currentEditQuestion}`);
+    let page = this.getHeight(`test_dinA4${pageIndex}`);
+    let editWhitespace = this.element(`edit_whitespace${pageIndex}${pagePosition}`);
     question.style.minHeight = this.test.pages[pageIndex][0][pagePosition]['defaultheight'] + '%';
     let questionContentHeight = Number(question.style.minHeight.replace('%', ''));
     resizer.addEventListener('mousedown', initDrag, false);
+
     function initDrag(e: { clientY: number; }) {
       startY = e.clientY;
       startHeight = parseInt(document.defaultView.getComputedStyle(question).height, 10);
       document.documentElement.addEventListener('mousemove', doDrag, false);
       document.documentElement.addEventListener('mouseup', stopDrag, false);
     }
+
     function doDrag(e: { clientY: number; }) {
       let height = ((startHeight + e.clientY - startY) * 100) / page;
-      console.log(height, page);
-
       question.style.height = height + '%';
 
       let questionHeight = Number(question.style.height.replace('%', ''));
-      if (questionHeight > questionContentHeight + 5) {
-        let whitespace = document.getElementById(`edit_whitespace${pageIndex}${pagePosition}`);
-        whitespace.classList.add('visibile')
+      if (questionHeight > questionContentHeight + 5) { 
+        editWhitespace.classList.add('visibile')
       }
       if (questionHeight < questionContentHeight + 5) {
-        let whitespace = document.getElementById(`edit_whitespace${pageIndex}${pagePosition}`);
-        whitespace.classList.remove('visibile')
+        editWhitespace.classList.remove('visibile')
       }
     }
+
     function stopDrag() {
       document.documentElement.removeEventListener('mousemove', doDrag, false);
       document.documentElement.removeEventListener('mouseup', stopDrag, false);
     }
-    this.test.pages[pageIndex][0][pagePosition]['questionHeight'] = this.service.getClientHeight(`question${this.currentEditQuestion}`);
+    this.test.pages[pageIndex][0][pagePosition]['questionHeight'] = this.getHeight(`question${this.currentEditQuestion}`);
   }
 
-  /**
-   * 
-   * @param pageIndex This function is used to resize an image of a question
-   * @param pagePosition - is the index of the dina4 page
-   * @param questionPosition - is the index of the question on the page
-   */
+
+
   resizeImage(pageIndex: number, pagePosition: number, questionPosition: number) {
     this.currentEditImage = `${pageIndex}${pagePosition}${questionPosition}`
     let startX: number, startWidth: number;
@@ -428,22 +452,24 @@ export class QuestionsComponent implements OnInit {
 
 
   getSquaresAndLines() {
-    let contentHeight = this.service.getClientHeight(`questionContent${this.currentEditQuestion}`);
-    let questionHeight = this.service.getClientHeight(`question${this.currentEditQuestion}`);
-    let questionWidth = this.service.getClientWidth(`question${this.currentEditQuestion}`);
+    let contentHeight = this.getHeight(`questionContent${this.currentEditQuestion}`);
+    let questionHeight = this.getHeight(`question${this.currentEditQuestion}`);
+    let questionWidth = this.getWidth(`question${this.currentEditQuestion}`);
     this.getSquares(contentHeight, questionHeight, questionWidth);
-    this.getLines(contentHeight, questionHeight);
+    this.getLines(contentHeight, questionHeight, questionWidth);
   }
 
   getSquares(contentHeight: any, questionHeight: any, questionWidth: any) {
     let squareHeight = questionWidth / 30;
     // let totalColumns = Math.floor(questionWidth / 17.9);
+    console.log('questionHeight', questionHeight, 'questionWidth', questionWidth);
+    
     let totalRows = Math.floor((questionHeight - contentHeight) / squareHeight);
-    let squares = this.service.getElement(`whitespace_squares${this.currentEditQuestion}`);
+    let squares = this.element(`whitespace_squares${this.currentEditQuestion}`);
     squares.innerHTML = '';
     for (let i = 0; i < totalRows; i++) {
       squares.innerHTML += this.service.squareRows(this.currentEditQuestion, i);
-      let row = this.service.getElement(`row${this.currentEditQuestion}${i}`);
+      let row = this.element(`row${this.currentEditQuestion}${i}`);
       row.innerHTML = '';
       for (let j = 0; j < 32; j++) {
         row.innerHTML += this.service.squareColumns(32, i, j);
@@ -451,9 +477,10 @@ export class QuestionsComponent implements OnInit {
     }
   }
 
-  getLines(contentHeight: any, questionHeight: any) {
-    let totalLines = Math.floor((questionHeight - contentHeight) / 41);
-    let lines = this.service.getElement(`whitespace_lines${this.currentEditQuestion}`);
+  getLines(contentHeight: any, questionHeight: any, questionWidth: any) {
+    let lineHeight = questionWidth / 19;
+    let totalLines = Math.floor((questionHeight - contentHeight) / lineHeight);
+    let lines = this.element(`whitespace_lines${this.currentEditQuestion}`);
     lines.innerHTML = '';
     for (let i = 0; i < totalLines; i++) {
       lines.innerHTML += this.service.lines();
@@ -461,86 +488,47 @@ export class QuestionsComponent implements OnInit {
   }
 
   showSquare() {
-    this.service.removeClasslist(`whitespace_squares${this.currentEditQuestion}`, 'd_none');
-    this.service.addClasslist(`whitespace_lines${this.currentEditQuestion}`, 'd_none');
+    this.hide(`whitespace_squares${this.currentEditQuestion}`, 'd_none');
+    this.show(`whitespace_lines${this.currentEditQuestion}`, 'd_none');
+    this.getSquaresAndLines();
   }
 
   showWhite() {
-    this.service.addClasslist(`whitespace_squares${this.currentEditQuestion}`, 'd_none');
-    this.service.addClasslist(`whitespace_lines${this.currentEditQuestion}`, 'd_none');
+    this.show(`whitespace_squares${this.currentEditQuestion}`, 'd_none');
+    this.show(`whitespace_lines${this.currentEditQuestion}`, 'd_none');
   }
 
   showLines() {
-    this.service.removeClasslist(`whitespace_lines${this.currentEditQuestion}`, 'd_none');
-    this.service.addClasslist(`whitespace_squares${this.currentEditQuestion}`, 'd_none');
-
+    this.hide(`whitespace_lines${this.currentEditQuestion}`, 'd_none');
+    this.show(`whitespace_squares${this.currentEditQuestion}`, 'd_none');
+    this.getSquaresAndLines();
   }
 
-  /**
- * This function is used to open the rangbar to set the height / padding bottom of a question 
- * When this function is called the current padding bottom of a question is set to default styleHeight
- * @param pageIndex is the index of the dina4 page, first page is index 0
- * @param pagePosition is the index of the question in a dinA4 page, starts at 0
- */
-  async showRangeToStyleQuestion(pageIndex: number, pagePosition: number) {
-    await this.checkHeightOfAllPreviewQuestions();
-    this.editQuestionAtPreview = true;
-    this.currentEditQuestion = `${pageIndex}${pagePosition}`
-
-    let questionHeight = document.getElementById(`question${this.currentEditQuestion}`).style.paddingBottom;
-    let padding = questionHeight.replace('%', '');
-
-    this.rangebars.setValue({
-      styleHeight: Number(padding) * 2,
-      styleWidth: 10
-    });
+  pageIsEmpty(i: number) {
+    return this.test.pages[i][0].length == 0;
   }
 
-  closeEditQuestionPreview() {
-    this.editQuestionAtPreview = false;
+  getHeight(id: string) {
+    return this.service.getClientHeight(id);
   }
 
-
-  setHeightQuestion(height: string) {
-    let questionHeight = document.getElementById(`question${this.currentEditQuestion}`);
-    questionHeight.style.paddingBottom = `${Number(height) / 2}%`;
-    setTimeout(() => {
-      this.checkHeightOfAllPreviewQuestions();
-    }, 5);
+  getWidth(id: string) {
+    return this.service.getClientWidth(id);
   }
 
-  /**
-   * This function is used to open the rangbar to set the width of a image in a question 
-   * When this function is called the current width of an image is set to the default width of the image
-   * @param pageIndex is the index of the dina4 page, first page is index 0
-   * @param pagePosition is the index of the question/Photo in a dinA4 page, starts at 0
-   */
-  showRangeToStyleImage(pageIndex: number, pagePosition: number) {
-    this.editImageAtPreview = true;
-    if (pageIndex >= 0) {
-      this.currentEditQuestion = `${pageIndex}${pagePosition}`;
-      let image = document.getElementById(`questionImage${this.currentEditQuestion}`).style.width;
-      let imageSize = image.replace('%', '');
-      this.rangebars.setValue({
-        styleHeight: 10,
-        styleWidth: Number(imageSize),
-      });
-    }
+  hide(id: string, classlist: string) {
+    return this.service.removeClasslist(id, classlist);
   }
 
-  closeRangeToStyleImage() {
-    this.editImageAtPreview = false
+  show(id: string, classlist: string) {
+    return this.service.addClasslist(id, classlist);
   }
 
-
-  setImageSize(width: string) {
-    let image = document.getElementById(`questionImage${this.currentEditQuestion}`);
-    image.style.width = `${width}%`;
-
-    setTimeout(() => {
-      this.checkHeightOfAllPreviewQuestions();
-    }, 5);
+  element(id: string) {
+  return this.service.getElement(id);
   }
+
+//  
 
   toggleEditTestHead() {
     this.editTesthead = true;
@@ -584,3 +572,70 @@ export class QuestionsComponent implements OnInit {
   //     }
   //   )
   // }
+
+
+   /**
+//  * This function is used to open the rangbar to set the height / padding bottom of a question 
+//  * When this function is called the current padding bottom of a question is set to default styleHeight
+//  * @param pageIndex is the index of the dina4 page, first page is index 0
+//  * @param pagePosition is the index of the question in a dinA4 page, starts at 0
+//  */
+//   async showRangeToStyleQuestion(pageIndex: number, pagePosition: number) {
+//     await this.checkHeightOfAllPreviewQuestions();
+//     this.editQuestionAtPreview = true;
+//     this.currentEditQuestion = `${pageIndex}${pagePosition}`
+
+//     let questionHeight = document.getElementById(`question${this.currentEditQuestion}`).style.paddingBottom;
+//     let padding = questionHeight.replace('%', '');
+
+//     this.rangebars.setValue({
+//       styleHeight: Number(padding) * 2,
+//       styleWidth: 10
+//     });
+//   }
+
+//   closeEditQuestionPreview() {
+//     this.editQuestionAtPreview = false;
+//   }
+
+
+//   setHeightQuestion(height: string) {
+//     let questionHeight = document.getElementById(`question${this.currentEditQuestion}`);
+//     questionHeight.style.paddingBottom = `${Number(height) / 2}%`;
+//     setTimeout(() => {
+//       this.checkHeightOfAllPreviewQuestions();
+//     }, 5);
+//   }
+
+//   /**
+//    * This function is used to open the rangbar to set the width of a image in a question 
+//    * When this function is called the current width of an image is set to the default width of the image
+//    * @param pageIndex is the index of the dina4 page, first page is index 0
+//    * @param pagePosition is the index of the question/Photo in a dinA4 page, starts at 0
+//    */
+//   showRangeToStyleImage(pageIndex: number, pagePosition: number) {
+//     this.editImageAtPreview = true;
+//     if (pageIndex >= 0) {
+//       this.currentEditQuestion = `${pageIndex}${pagePosition}`;
+//       let image = document.getElementById(`questionImage${this.currentEditQuestion}`).style.width;
+//       let imageSize = image.replace('%', '');
+//       this.rangebars.setValue({
+//         styleHeight: 10,
+//         styleWidth: Number(imageSize),
+//       });
+//     }
+//   }
+
+//   closeRangeToStyleImage() {
+//     this.editImageAtPreview = false
+//   }
+
+
+//   setImageSize(width: string) {
+//     let image = this.service.getElement(`questionImage${this.currentEditQuestion}`);
+//     image.style.width = `${width}%`;
+
+//     setTimeout(() => {
+//       this.checkHeightOfAllPreviewQuestions();
+//     }, 5);
+//   }

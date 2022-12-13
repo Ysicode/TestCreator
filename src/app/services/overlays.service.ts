@@ -37,10 +37,11 @@ export class overlaysService {
     `;
     }
 
+
     squareColumns(totalColumns: number, i: number, j: number) {
       return `
-      <div id="square${i}${j}" style="border-top: 1px solid grey;
-      border-right: 1px solid grey;
+      <div id="square${i}${j}" style="border-top: 1px solid #c6c3c3;
+      border-right: 1px solid #c6c3c3;
       width: ${100 / totalColumns}%; aspect-ratio: 1 / 1">       
       </div>
       `;
@@ -48,7 +49,7 @@ export class overlaysService {
 
     lines() {
       return `
-      <div style="width: 100%; height: 1px; background: grey; margin-bottom: 2.5%; margin-top: 2.5%;">
+      <div style="width: 100%; height: 1px; background: #c6c3c3; margin-bottom: 2.5%; margin-top: 2.5%;">
       </div>
       `;
     }
