@@ -3,7 +3,7 @@ import { collection, collectionData, doc, Firestore } from '@angular/fire/firest
 import { NgForm } from '@angular/forms';
 import { RouterLinkWithHref } from '@angular/router';
 import { deleteDoc } from '@firebase/firestore';
-import { Observable } from 'rxjs';
+import { Observable, sample } from 'rxjs';
 import { EditComponent } from 'src/app/add/edit/edit.component';
 import { overlaysService } from 'src/app/services/overlays.service';
 import { __await } from 'tslib';
@@ -43,7 +43,7 @@ export class QuestionsComponent implements OnInit {
   addedToTest = [];
   currentTestHead: any;
   dinA4Pages = [];
-  preview = false;
+  preview = true;
   editQuestionAtPreview = false;
   editImageAtPreview = false;
   public editTesthead = false;
@@ -366,10 +366,6 @@ export class QuestionsComponent implements OnInit {
         this.stopLoop(5);
         let questionNumber = this.element(`question_number${i}${j}`)
         questionNumber.innerHTML = `${this.question_number}`;
-        if (this.sampleSolution) {
-          let solutionNumber = this.element(`solution_number${i}${j}`)
-        solutionNumber.innerHTML = `${this.question_number}`; 
-        }
       }
     }
   }
@@ -425,10 +421,10 @@ export class QuestionsComponent implements OnInit {
   resizeImage(pageIndex: number, pagePosition: number, questionPosition: number) {
     this.currentEditImage = `${pageIndex}${pagePosition}${questionPosition}`
     let startX: number, startWidth: number;
-    let resizer = this.service.getElement(`resizeImage${this.currentEditImage}`);
-    let image = this.service.getElement(`img_edit_wrapper${this.currentEditImage}`);
-    let question = this.service.getElement(`question${pageIndex}${pagePosition}`);
-    let questionWidth = this.service.getClientWidth(`question${pageIndex}${pagePosition}`);
+    let resizer = this.element(`resizeImage${this.currentEditImage}`);
+    let image = this.element(`img_edit_wrapper${this.currentEditImage}`);
+    let question = this.element(`question${pageIndex}${pagePosition}`);
+    let questionWidth = this.getWidth(`question${pageIndex}${pagePosition}`);
     resizer.addEventListener('mousedown', initDrag, false);
     function initDrag(e: { clientX: number; }) {
       startX = e.clientX;
@@ -461,9 +457,6 @@ export class QuestionsComponent implements OnInit {
 
   getSquares(contentHeight: any, questionHeight: any, questionWidth: any) {
     let squareHeight = questionWidth / 30;
-    // let totalColumns = Math.floor(questionWidth / 17.9);
-    console.log('questionHeight', questionHeight, 'questionWidth', questionWidth);
-    
     let totalRows = Math.floor((questionHeight - contentHeight) / squareHeight);
     let squares = this.element(`whitespace_squares${this.currentEditQuestion}`);
     squares.innerHTML = '';
@@ -502,6 +495,11 @@ export class QuestionsComponent implements OnInit {
     this.hide(`whitespace_lines${this.currentEditQuestion}`, 'd_none');
     this.show(`whitespace_squares${this.currentEditQuestion}`, 'd_none');
     this.getSquaresAndLines();
+  }
+
+  toggleSolutions() {
+    this.sampleSolution = !this.sampleSolution;
+    this.checkHeightOfAllPreviewQuestions();
   }
 
   pageIsEmpty(i: number) {
