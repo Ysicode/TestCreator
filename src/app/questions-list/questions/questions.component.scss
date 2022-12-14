@@ -321,6 +321,21 @@ style for rendered subjects
     }
 }
 
+.solution_wrapper {
+    cursor: default;
+    width: 84%;
+    height: fit-content;
+    min-height: auto;
+    position: relative;
+    justify-content: flex-start;
+    margin-bottom: 2.5%;
+    &:hover {
+        .show_onHover {
+            display: none;
+        }
+    }
+}
+
 .question_wrapper_listview {
     width: 98%;
     margin-bottom: 2%;

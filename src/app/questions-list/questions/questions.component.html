@@ -210,8 +210,7 @@
             </div>
             <div class="add_question_container d_flex">
                 <div class="add_question_btn_wrapper">
-                    <button (click)="overlay = true; service.windowScrollTop(); "
-                        class="add_question_btn">
+                    <button (click)="overlay = true; service.windowScrollTop(); " class="add_question_btn">
                         Hinzufügen</button>
 
                     <div class="menu_burger">
@@ -227,7 +226,9 @@
         </div>
 
 
-
+        <!--  -->
+        <!-- TEST PREVIEW -->
+        <!--  -->
         <div *ngIf="loaded" id="test_print" class="test_print" [class.opacity0]="!preview"
             (mousemove)="checkHeightOfAllPreviewQuestions()">
             <div id="test_dinA4{{j}}" *ngFor="let pages of test['pages'] let j = index" class="test_dinA4 page_break">
@@ -235,6 +236,8 @@
                     <div style="width: 100%; padding-bottom: 9%;">
 
                     </div>
+
+                    <!-- Testhead -->
                     <div id="testhead" class="testHead d_flex_column" *ngIf="j == 0">
                         <div class="test_head_wrapper d_flex_space">
                             <div class="test_head">
@@ -268,7 +271,7 @@
                                 Bearbeiten</button>
                         </div>
                     </div>
-
+                    <!-- TESTHEAD END -->
 
                     <div class="added_questions_empty_container d_flex_column"
                         *ngIf="test['pages'][0][0].length == 0 && j == 0 && test['pages'].length < 2 ">
@@ -277,9 +280,9 @@
                         <p class="added_questions_empty_info">Noch keine Aufgaben hinzugefügt</p>
                     </div>
 
-                    <!-- [class.paddingBottom0]="test['pages'][j][0].length == i + 1" -->
 
-                    <div id="question{{ j }}{{ i }}" class="question_wrapper d_flex_column"
+                    <!-- QUESTION AND SOLUTION TEST PREVIEW -->
+                    <div id="question{{ j }}{{ i }}" class="question_wrapper d_flex_column" [class.solution_wrapper]="sampleSolution"
                         *ngFor="let data of pages[0] let i = index" (mouseover)="getCurrentQuestion(j, i)"
                         (click)="getCurrentQuestion(j, i)">
                         <div id="questionContent{{j}}{{i}}" class="question_test">
@@ -302,6 +305,7 @@
                                         src="assets/x_icon.png" alt=""></button>
                             </div>
 
+                            <!-- QUESTION -->
                             <ng-container *ngIf="!sampleSolution">
                                 <div *ngFor="let question of data['frage']['blocks'] let k = index">
 
@@ -369,6 +373,7 @@
                                 </div>
                             </ng-container>
 
+                            <!-- SOLUTION -->
                             <ng-container *ngIf="sampleSolution">
                                 <div *ngFor="let question of data['antwort']['blocks'] let k = index">
 
@@ -391,7 +396,7 @@
                                     <div class="element_margin_text" *ngIf="question['data']['file']">
                                         <!-- Images -->
                                         <div class="img_wrapper d_flex_start">
-                                            <div id="img_edit_wrapper{{j}}{{i}}{{k}}" (mouseover)="resizeImage(j, i, k)"
+                                            <div id="img_edit_wrapper{{j}}{{i}}{{k}}"
                                                 class="img_edit_wrapper d_flex">
                                                 <img id="questionImage{{ j }}{{ i }}{{k}}" class="preview_question_img"
                                                     src="{{ question['data']['file']['url'] }}" alt="">
@@ -439,7 +444,7 @@
                             </ng-container>
 
 
-
+                            <!-- Whitespace Edit -->
                             <div id="edit_whitespace{{j}}{{i}}"
                                 class="edit_question_whitespace_wrapper d_flex show_onHover notVisible">
                                 <div class="edit_question_whitespace_btn_wrapper d_flex">
@@ -450,7 +455,7 @@
                                             class="whitespace_btn_icon" src="assets/square.png" alt=""></button>
                                 </div>
                             </div>
-                            <!-- *ngIf="test['pages'][j][0].length != i + 1" -->
+
                             <div (click)="service.onEvent($event)" (mouseover)="resizeQuestion(j, i)"
                                 (mousemove)="getSquaresAndLines()" id="resize{{j}}{{i}}"
                                 class="height_info_wrapper d_flex show_onHover">
@@ -475,7 +480,8 @@
 
             <div class="add_question_container d_flex" [class.d_none]="!preview">
                 <div class="add_question_btn_wrapper">
-                    <button class="add_question_btn" (click)="toggleSolutions()">{{!sampleSolution ? 'Lösung' : 'Aufgaben'}}</button>
+                    <button class="add_question_btn" (click)="toggleSolutions()">{{!sampleSolution ? 'Lösung' :
+                        'Aufgaben'}}</button>
                     <div class="menu_burger" matTooltip="Menü" matTooltipPosition="above">
                         <span class="burger_top">
                         </span>

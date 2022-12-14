@@ -317,7 +317,11 @@ export class QuestionsComponent implements OnInit {
       }
       if (i > 0) {
         this.moveUpQuestionAndDeleteEmptyPages(i, paperHeight);
+        if (this.pageIsEmpty(i)) {
+          this.test.pages.pop();
+        }
       }
+      
     }
   }
 
@@ -331,7 +335,7 @@ export class QuestionsComponent implements OnInit {
   }
 
   async moveUpQuestionAndDeleteEmptyPages(i: number, paperHeight: number) {
-    if (await this.spaceForFirstQuestion(i, paperHeight)) {
+    if (!this.pageIsEmpty(i) && await this.spaceForFirstQuestion(i, paperHeight)) {
       const question = this.test.pages[i][0].shift();
       this.test.pages[i - 1][0].push(question)
       if (this.pageIsEmpty(i)) {
