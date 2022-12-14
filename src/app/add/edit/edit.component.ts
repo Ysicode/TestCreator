@@ -15,14 +15,12 @@ import { overlaysService } from 'src/app/services/overlays.service';
   selector: 'app-edit',
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss'],
-  providers: [overlaysService]
+  providers: [overlaysService],
 })
 export class EditComponent implements OnInit, AfterViewInit {
   dataFromFirestore$: Observable<any>;
   loadedUserdata = [];
   loadedQuestions = [];
-
-  loading: Boolean = false;
   loaded: Boolean = false;
   currentQuestion: any;
   currentAnswer: any;
@@ -66,6 +64,10 @@ export class EditComponent implements OnInit, AfterViewInit {
     this.initializeQuestionEditor();
     this.initializeAnswerEditor();
     this.initializeMultipleChoiceEditor();
+    setTimeout(() => {
+      this.setForm();
+    }, 700);
+   
   }
 
   closeEditComponent() {
@@ -202,7 +204,7 @@ export class EditComponent implements OnInit, AfterViewInit {
   }
 
   async addData(question: any) {
-    this.loading = true;
+    this.service.loading = true;
     await this.saveEditorData();
     setTimeout(() => {
       if (!this.editMode) {
@@ -217,7 +219,7 @@ export class EditComponent implements OnInit, AfterViewInit {
           bearbeitungszeit: Number(question.bearbeitungszeit),
           keywords: question.keywords.split(',')
         }).then(() => {
-          this.loading = false;
+          this.service.loading = false;
           this.closeEditComponent();
           this.multiChoiceEditor.clear();
         }).then(() => {
@@ -235,7 +237,7 @@ export class EditComponent implements OnInit, AfterViewInit {
           bearbeitungszeit: Number(question.bearbeitungszeit),
           keywords: question.keywords.split(',')
         }).then(() => {
-          this.loading = false;
+          this.service.loading = false;
           this.closeEditComponent();
         })
         this.editMode = false;

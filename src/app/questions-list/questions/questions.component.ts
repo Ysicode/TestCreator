@@ -1,12 +1,10 @@
 import { Component, Directive, HostListener, OnInit, ViewChild } from '@angular/core';
 import { collection, collectionData, doc, Firestore } from '@angular/fire/firestore';
 import { NgForm } from '@angular/forms';
-import { RouterLinkWithHref } from '@angular/router';
 import { deleteDoc } from '@firebase/firestore';
-import { Observable, sample } from 'rxjs';
+import { Observable } from 'rxjs';
 import { EditComponent } from 'src/app/add/edit/edit.component';
 import { overlaysService } from 'src/app/services/overlays.service';
-import { __await } from 'tslib';
 
 @Component({
   selector: 'app-questions',
@@ -50,7 +48,7 @@ export class QuestionsComponent implements OnInit {
   currentEditQuestion: string;
   currentEditImage: string;
   heightOfAllPreviewQuestions = 0;
-  test = {
+  public test = {
     pages: <any>[{
       0: [],
     },
@@ -107,7 +105,6 @@ export class QuestionsComponent implements OnInit {
     this.dataFromFirestore$ = collectionData(coll, { idField: 'id' })
     this.dataFromFirestore$.subscribe((data) => {
       this.loadedQuestions = data;
-      console.log(data);
       this.loadedQuestions.sort((x, y) => {
         return y.frage.time - x.frage.time
       })
@@ -380,6 +377,7 @@ export class QuestionsComponent implements OnInit {
    * @param pagePosition - is the index of the question on the page
    */
   resizeQuestion(pageIndex: number, pagePosition: number) {
+   
     let startY: number, startHeight: number;
     let resizer = this.element(`resize${this.currentEditQuestion}`);
     let question = this.element(`question${this.currentEditQuestion}`);
@@ -399,7 +397,6 @@ export class QuestionsComponent implements OnInit {
     function doDrag(e: { clientY: number; }) {
       let height = ((startHeight + e.clientY - startY) * 100) / page;
       question.style.height = height + '%';
-
       let questionHeight = Number(question.style.height.replace('%', ''));
       if (questionHeight > questionContentHeight + 5) { 
         editWhitespace.classList.add('visibile')
@@ -413,7 +410,9 @@ export class QuestionsComponent implements OnInit {
       document.documentElement.removeEventListener('mousemove', doDrag, false);
       document.documentElement.removeEventListener('mouseup', stopDrag, false);
     }
-    this.test.pages[pageIndex][0][pagePosition]['questionHeight'] = this.getHeight(`question${this.currentEditQuestion}`);
+    
+    console.log(this.test.pages);
+    
   }
 
 

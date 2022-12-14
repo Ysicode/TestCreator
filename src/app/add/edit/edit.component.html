@@ -1,7 +1,7 @@
 <div class="overlay_bg d_flex">
-    <div *ngIf="loading" class="spinner d_flex">
-        <mat-spinner class="mat-spinner" mode="indeterminate"></mat-spinner>
-    </div>
+    <app-spinner *ngIf="service.loading">
+
+    </app-spinner>
 
     <div class="main_wrapper d_flex_column ">
         <div class="subject_wrapper d_flex_column">

@@ -5,9 +5,13 @@
     <button class="subject_btn" (click)="login(pin.value)">Anmelden</button>
 </div>
 
-<app-edit class="add_question_overlay" [class.d_none]="!overlay" (closeAddQuestionOverlay)="overlay = false">
+<app-edit class="add_question_overlay" *ngIf="overlay" (closeAddQuestionOverlay)="overlay = false">
 
 </app-edit>
+
+<app-spinner *ngIf="service.loading">
+
+</app-spinner>
 
 <div [class.d_none]="overlay" class="questions_wrapper ">
     <div class="questions_container">
@@ -29,7 +33,7 @@
                     </div>
 
                     <div class="d_flex">
-                        <button (click)="openPreview()" class="preview_btn">{{ !preview ? 'Vorschau' : '+Aufgabe'
+                        <button (click)="openPreview()" class="preview_btn">{{ !preview ? 'Zum Test' : '+Aufgabe'
                             }}</button>
                     </div>
                 </div>
@@ -206,7 +210,7 @@
             </div>
             <div class="add_question_container d_flex">
                 <div class="add_question_btn_wrapper">
-                    <button (click)="overlay = true; service.windowScrollTop(); editComp.setForm();"
+                    <button (click)="overlay = true; service.windowScrollTop(); "
                         class="add_question_btn">
                         Hinzufügen</button>
 
@@ -470,16 +474,15 @@
             </div>
 
             <div class="add_question_container d_flex" [class.d_none]="!preview">
-                <button (click)="toggleSolutions()">Musterlösung</button>
                 <div class="add_question_btn_wrapper">
-                    <button class="add_question_btn">Speichern</button>
+                    <button class="add_question_btn" (click)="toggleSolutions()">{{!sampleSolution ? 'Lösung' : 'Aufgaben'}}</button>
                     <div class="menu_burger" matTooltip="Menü" matTooltipPosition="above">
                         <span class="burger_top">
                         </span>
                         <span class="burger_bottom">
                         </span>
                     </div>
-                    <button (click)="printTest()" class="add_question_btn">download</button>
+                    <button (click)="printTest()" class="add_question_btn">Speichern</button>
                 </div>
             </div>
 

@@ -9,21 +9,10 @@
     padding-bottom: 75px;
 }
 
-.spinner {
-    position: fixed;
-    height: 100vw;
-    width: 80vw;
-    top: 0;
-}
-
 .section_separator {
     width: 500px;
     height: 2px;
     background-color: #0000003b;
-}
-
-.mat-spinner::ng-deep circle {
-    stroke: #1d202b;
 }
 
 .tooltip_btn {

@@ -18,6 +18,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { HeaderComponent } from './header/header.component';
 import { EditTestheadComponent } from './edit-testhead/edit-testhead.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { SpinnerComponent } from './sharedComps/spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     EditComponent,
     EditorComponent,
     HeaderComponent,
-    EditTestheadComponent
+    EditTestheadComponent,
+    SpinnerComponent
   ],
   imports: [
     BrowserModule,
