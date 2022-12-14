@@ -414,8 +414,9 @@ export class QuestionsComponent implements OnInit {
       document.documentElement.removeEventListener('mousemove', doDrag, false);
       document.documentElement.removeEventListener('mouseup', stopDrag, false);
     }
-    
     console.log(this.test.pages);
+    this.test.pages[pageIndex][0][pagePosition]['questionHeight'] = question.style.height;
+    console.log(question.style.height);
     
   }
 

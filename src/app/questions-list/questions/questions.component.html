@@ -284,7 +284,7 @@
                     <!-- QUESTION AND SOLUTION TEST PREVIEW -->
                     <div id="question{{ j }}{{ i }}" class="question_wrapper d_flex_column" [class.solution_wrapper]="sampleSolution"
                         *ngFor="let data of pages[0] let i = index" (mouseover)="getCurrentQuestion(j, i)"
-                        (click)="getCurrentQuestion(j, i)">
+                        (click)="getCurrentQuestion(j, i)" [ngStyle]="{'height': data['questionHeight'] && !sampleSolution ? data['questionHeight'] : 'fit-content'}">
                         <div id="questionContent{{j}}{{i}}" class="question_test">
                             <div class="question_head_container">
                                 <div class="question_info d_flex_start">
