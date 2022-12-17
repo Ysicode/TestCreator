@@ -309,7 +309,7 @@ style for rendered subjects
 .question_wrapper {
     cursor: pointer;
     width: 84%;
-    
+
     min-height: auto;
     position: relative;
     justify-content: flex-start;
@@ -324,7 +324,7 @@ style for rendered subjects
 .solution_wrapper {
     cursor: default;
     width: 84%;
-  
+
     min-height: auto;
     position: relative;
     justify-content: flex-start;
@@ -598,7 +598,42 @@ Answer styles
     z-index: 999999;
 }
 
+.search {
+    padding-left: 10%;
+    outline: none;
+    border: none;
+    width: 90%;
+    height: 100%;
+    background: #c7d1cf;
+    border-top-left-radius: 40px;
+    border-bottom-left-radius: 40px;
+}
+
+.shot_search_btn {
+    position: absolute;
+    right: 0;
+    cursor: pointer;
+    border: none;
+    width: 20%;
+    height: 65%;
+    border-bottom-right-radius: 20px;
+    border-top-right-radius: 20px;
+    background: #c7d1cf;
+    border-left: 1px solid grey;
+
+    .search_close_icon {
+        border-radius: 40px;
+        height: 100%;
+        background: #e7eceb;
+        padding: 10%;
+        &:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    }
+}
+
 .add_question_btn_wrapper {
+    position: relative;
     background: linear-gradient(to right, #c2c2c2, #c8d4d1);
     width: 320px;
     height: 40px;
@@ -1032,7 +1067,6 @@ Styles für die Vorschau sektion
 
 .img_edit_wrapper {
     position: relative;
-    width: 30%;
     height: fit-content;
     min-width: 30%;
     max-width: 100%;
@@ -1313,7 +1347,7 @@ Styles für die Vorschau sektion
         top: 0;
         left: 0;
         right: 0;
-      
+
         visibility: visible !important;
     }
 }

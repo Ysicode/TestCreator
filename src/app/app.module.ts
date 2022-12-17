@@ -19,6 +19,7 @@ import { HeaderComponent } from './header/header.component';
 import { EditTestheadComponent } from './edit-testhead/edit-testhead.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SpinnerComponent } from './sharedComps/spinner/spinner.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { SpinnerComponent } from './sharedComps/spinner/spinner.component';
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
+    MatIconModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAnalytics(() => getAnalytics()),
     provideAuth(() => getAuth()),

@@ -1,10 +1,12 @@
-import { Component, Directive, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, Directive, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { defaultAuthInstanceFactory } from '@angular/fire/auth/auth.module';
 import { collection, collectionData, doc, Firestore } from '@angular/fire/firestore';
 import { NgForm } from '@angular/forms';
 import { deleteDoc } from '@firebase/firestore';
 import { Observable } from 'rxjs';
 import { EditComponent } from 'src/app/add/edit/edit.component';
 import { overlaysService } from 'src/app/services/overlays.service';
+
 
 @Component({
   selector: 'app-questions',
@@ -16,11 +18,14 @@ import { overlaysService } from 'src/app/services/overlays.service';
 
 export class QuestionsComponent implements OnInit {
   @ViewChild(EditComponent, { static: true }) editComp: EditComponent;
+  @ViewChild("search") searchInput: ElementRef;
+
 
   //variables for the Questions list view
   dataFromFirestore$: Observable<any>;
   testHeadFromFirestore$: Observable<any>;
   loadedQuestions = [];
+  filteredQuestions = [];
   loaded = false;
 
   currentQuestion: any;
@@ -63,6 +68,10 @@ export class QuestionsComponent implements OnInit {
 
   question_number = 0;
   sampleSolution = false;
+  search = false;
+  searchactive = false;
+  currentSearch = '';
+  filterActive = false;
 
   constructor(private firestore: Firestore, public service: overlaysService) { }
   @HostListener("click", ["$event"])
@@ -313,7 +322,7 @@ export class QuestionsComponent implements OnInit {
       let outerHeight = this.getHeight(`test_dinA4${i}`);
       let paperHeight = outerHeight - (outerHeight * 0.18);
       if (contentHeight > paperHeight) {
-       this.addNewPageAndpushLastQuestion(i);
+        this.addNewPageAndpushLastQuestion(i);
       }
       if (i > 0) {
         this.moveUpQuestionAndDeleteEmptyPages(i, paperHeight);
@@ -321,7 +330,7 @@ export class QuestionsComponent implements OnInit {
           this.test.pages.pop();
         }
       }
-      
+
     }
   }
 
@@ -381,7 +390,6 @@ export class QuestionsComponent implements OnInit {
    * @param pagePosition - is the index of the question on the page
    */
   resizeQuestion(pageIndex: number, pagePosition: number) {
-   
     let startY: number, startHeight: number;
     let resizer = this.element(`resize${this.currentEditQuestion}`);
     let question = this.element(`question${this.currentEditQuestion}`);
@@ -402,7 +410,7 @@ export class QuestionsComponent implements OnInit {
       let height = ((startHeight + e.clientY - startY) * 100) / page;
       question.style.height = height + '%';
       let questionHeight = Number(question.style.height.replace('%', ''));
-      if (questionHeight > questionContentHeight + 5) { 
+      if (questionHeight > questionContentHeight + 5) {
         editWhitespace.classList.add('visibile')
       }
       if (questionHeight < questionContentHeight + 5) {
@@ -415,9 +423,8 @@ export class QuestionsComponent implements OnInit {
       document.documentElement.removeEventListener('mouseup', stopDrag, false);
     }
     console.log(this.test.pages);
+
     this.test.pages[pageIndex][0][pagePosition]['questionHeight'] = question.style.height;
-    console.log(question.style.height);
-    
   }
 
 
@@ -447,19 +454,24 @@ export class QuestionsComponent implements OnInit {
       document.documentElement.removeEventListener('mousemove', doDrag, false);
       document.documentElement.removeEventListener('mouseup', stopDrag, false);
     }
+
+    this.test.pages[pageIndex][0][pagePosition]['frage']['blocks'][questionPosition]['width'] = image.style.width;
+
+    console.log(this.test.pages);
   }
 
 
 
-  getSquaresAndLines() {
-    let contentHeight = this.getHeight(`questionContent${this.currentEditQuestion}`);
-    let questionHeight = this.getHeight(`question${this.currentEditQuestion}`);
-    let questionWidth = this.getWidth(`question${this.currentEditQuestion}`);
-    this.getSquares(contentHeight, questionHeight, questionWidth);
-    this.getLines(contentHeight, questionHeight, questionWidth);
+  async getSquaresAndLines(pageIndex: number, pagePosition: number) {
+    this.currentEditQuestion = `${pageIndex}${pagePosition}`
+    let contentHeight = this.getHeight(`questionContent${pageIndex}${pagePosition}`);
+    let questionHeight = this.getHeight(`question${pageIndex}${pagePosition}`);
+    let questionWidth = this.getWidth(`question${pageIndex}${pagePosition}`);
+    await this.getSquares(contentHeight, questionHeight, questionWidth);
+    await this.getLines(contentHeight, questionHeight, questionWidth);
   }
 
-  getSquares(contentHeight: any, questionHeight: any, questionWidth: any) {
+  async getSquares(contentHeight: any, questionHeight: any, questionWidth: any) {
     let squareHeight = questionWidth / 30;
     let totalRows = Math.floor((questionHeight - contentHeight) / squareHeight);
     let squares = this.element(`whitespace_squares${this.currentEditQuestion}`);
@@ -474,7 +486,7 @@ export class QuestionsComponent implements OnInit {
     }
   }
 
-  getLines(contentHeight: any, questionHeight: any, questionWidth: any) {
+  async getLines(contentHeight: any, questionHeight: any, questionWidth: any) {
     let lineHeight = questionWidth / 19;
     let totalLines = Math.floor((questionHeight - contentHeight) / lineHeight);
     let lines = this.element(`whitespace_lines${this.currentEditQuestion}`);
@@ -484,26 +496,43 @@ export class QuestionsComponent implements OnInit {
     }
   }
 
-  showSquare() {
+  showSquare(pageIndex: number, pagePosition: number) {
+    this.test.pages[pageIndex][0][pagePosition]['whitespace'] = 'squares';
     this.hide(`whitespace_squares${this.currentEditQuestion}`, 'd_none');
     this.show(`whitespace_lines${this.currentEditQuestion}`, 'd_none');
-    this.getSquaresAndLines();
+    this.getSquaresAndLines(pageIndex, pagePosition);
   }
 
-  showWhite() {
+  showWhite(pageIndex: number, pagePosition: number) {
+    this.test.pages[pageIndex][0][pagePosition]['whitespace'] = 'white';
     this.show(`whitespace_squares${this.currentEditQuestion}`, 'd_none');
     this.show(`whitespace_lines${this.currentEditQuestion}`, 'd_none');
   }
 
-  showLines() {
+  showLines(pageIndex: number, pagePosition: number) {
+    this.test.pages[pageIndex][0][pagePosition]['whitespace'] = 'lines';
     this.hide(`whitespace_lines${this.currentEditQuestion}`, 'd_none');
     this.show(`whitespace_squares${this.currentEditQuestion}`, 'd_none');
-    this.getSquaresAndLines();
+    this.getSquaresAndLines(pageIndex, pagePosition);
   }
 
   toggleSolutions() {
     this.sampleSolution = !this.sampleSolution;
     this.checkHeightOfAllPreviewQuestions();
+    setTimeout(() => {
+      this.renderSquaresAndLinesOfQuestionsInTest();
+    }, 50);
+  }
+
+  async renderSquaresAndLinesOfQuestionsInTest() {
+    for (let i = 0; i < this.test.pages.length; i++) {
+      for (let j = 0; j < this.test.pages[i][0].length; j++) {
+        await this.stopLoop(100)
+        if (this.test.pages[i][0][j]['whitespace']) {
+          await this.getSquaresAndLines(i, j);
+        }
+      }
+    }
   }
 
   pageIsEmpty(i: number) {
@@ -518,19 +547,106 @@ export class QuestionsComponent implements OnInit {
     return this.service.getClientWidth(id);
   }
 
-  hide(id: string, classlist: string) {
+  show(id: string, classlist: string) {
     return this.service.removeClasslist(id, classlist);
   }
 
-  show(id: string, classlist: string) {
+  hide(id: string, classlist: string) {
     return this.service.addClasslist(id, classlist);
   }
 
   element(id: string) {
-  return this.service.getElement(id);
+    return this.service.getElement(id);
   }
 
-//  
+  //  
+
+  openSearch() {
+    this.search = true;
+    setTimeout(() => {
+      let input = document.getElementById('search');
+      input.focus();
+    }, 300);
+  }
+
+  closeSearch(value: string) {
+    this.search = false;
+    this.searchForNameTypeId(value);
+    this.currentSearch = value;
+  }
+
+  onKeyUpSearchInput(event: any) { //Currently when press Enter
+    let currentSearch = event.target.value;
+    this.searchForNameTypeId(currentSearch)
+  }
+
+  searchForNameTypeId(search: string) {
+    search = search.toLowerCase();
+    for (let i = 0; i < this.loadedQuestions.length; i++) {
+      this.hide(`questionListView${i}`, 'd_none')
+      this.stopLoop(10)
+      for (let j = 0; j < this.loadedQuestions[i].keywords.length; j++) {
+        this.stopLoop(10)
+        if (this.loadedQuestions[i]['keywords'][j].toLowerCase().includes(search)) {
+          this.show(`questionListView${i}`, 'd_none')
+        }
+      }
+      for (let j = 0; j < this.loadedQuestions[i]['frage']['blocks'].length; j++) {
+        if (this.loadedQuestions[i]['frage']['blocks'][j]['type'] == 'paragraph') {
+          if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['text'].toLowerCase().indexOf(search) >= 0) {
+            this.show(`questionListView${i}`, 'd_none')
+          }
+        }
+        if (this.loadedQuestions[i]['frage']['blocks'][j]['type'] == 'table') {
+          for (let k = 0; k < Object.keys(this.loadedQuestions[i]['frage']['blocks'][j]['data']['table']).length - 1; k++) {
+            this.stopLoop(10)
+            console.log(Object.keys(this.loadedQuestions[i]['frage']['blocks'][j]['data']['table']).length);
+            for (let l = 0; l < this.loadedQuestions[i]['frage']['blocks'][j]['data']['table'][k].length; l++) {
+              this.stopLoop(10)
+              if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['table'][k][l].toLowerCase().indexOf(search) >= 0) {
+                this.show(`questionListView${i}`, 'd_none')
+              }
+            }
+          }
+        }
+        if (this.loadedQuestions[i]['frage']['blocks'][j]['type'] == 'list') {
+          for (let k = 0; k < this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'].length; k++) {
+            console.log(this.loadedQuestions);
+            console.log(this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'][k].length);
+            if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'][k].toLowerCase().indexOf(search) >= 0) {
+              this.show(`questionListView${i}`, 'd_none')
+            }
+          }
+        }
+      }
+
+
+    }
+    // if (notFound) {
+    //     content.innerHTML = showSearchNotFound();
+    // }
+  }
+
+  setFilter(diffculty: string) {
+    this.filterActive = true;
+    for (let i = 0; i < this.loadedQuestions.length; i++) {
+      this.hide(`questionListView${i}`, 'd_none');
+      if (this.loadedQuestions[i]['schwierigkeit'] == diffculty) {
+        this.show(`questionListView${i}`, 'd_none');
+      }
+
+    }
+  }
+
+
+  // allPokemons[i]['id'].toString() == (search) ||
+  //             allPokemons[i].types[0].type['name'].toLowerCase() == (search)
+
+
+  showSearch(filteredQuestions: any, i: number) {
+    let content = document.getElementById('allQuestionsListView');
+    content.innerHTML += filteredQuestions;
+  }
 
   toggleEditTestHead() {
     this.editTesthead = true;
@@ -576,8 +692,8 @@ export class QuestionsComponent implements OnInit {
   // }
 
 
-   /**
-//  * This function is used to open the rangbar to set the height / padding bottom of a question 
+/**
+//  * This function is used to open the rangbar to set the height / padding bottom of a question
 //  * When this function is called the current padding bottom of a question is set to default styleHeight
 //  * @param pageIndex is the index of the dina4 page, first page is index 0
 //  * @param pagePosition is the index of the question in a dinA4 page, starts at 0

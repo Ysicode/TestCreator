@@ -43,8 +43,8 @@
 
 
         <!-- All Questions View  with solution-->
-        <div [class.d_none]="preview" class="questions d_flex_column">
-            <div class="question_wrapper_listview d_flex_column" *ngFor="let data of loadedQuestions let i = index">
+        <div [class.d_none]="preview" class="questions d_flex_column" id="allQuestionsListView">
+            <div id="questionListView{{i}}" class="question_wrapper_listview d_flex_column" *ngFor="let data of loadedQuestions let i = index">
                 <div id="question_list{{ i }}" class="question">
                     <div class="question_head_container">
                         <div class="question_info d_flex_start">
@@ -66,7 +66,14 @@
                             <div class="question_info_btn">
                                 {{ data.bearbeitungszeit }} Min
                             </div>
+                            <div *ngFor="let keyword of data.keywords">
+                                <div class="question_container" [innerHTML]="keyword">
+    
+                                </div>
+                            </div>
                         </div>
+                        
+                      
 
                         <div class="question_add">
                             <button id="{{ 'add_btn' + i }}"
@@ -145,6 +152,7 @@
                                 <div *ngFor="let question of data['antwort']['blocks']">
                                     <div class="question_container" [innerHTML]="question['data']['text'] ">
                                     </div>
+                                   
 
                                     <div ngClass="question_container" *ngIf="question['type'] == 'checklist'"
                                         class="margin_left ">
@@ -209,17 +217,20 @@
                 </div>
             </div>
             <div class="add_question_container d_flex">
-                <div class="add_question_btn_wrapper">
+                <div *ngIf="search" class="add_question_btn_wrapper">
+                    <input class="search" #search id="search" type="search" placeholder="Suche" value="{{currentSearch}}" (keyup)="onKeyUpSearchInput($event)" (keyup.enter)="closeSearch(search.value)">
+                    <button class="shot_search_btn d_flex" (click)="closeSearch(search.value)"><img class="search_close_icon" src="assets/search.png" alt=""></button>
+                </div>
+               
+                <div *ngIf="!search" class="add_question_btn_wrapper">
                     <button (click)="overlay = true; service.windowScrollTop(); " class="add_question_btn">
                         Hinzufügen</button>
 
                     <div class="menu_burger">
-                        <span class="burger_top">
-                        </span>
-                        <span class="burger_bottom">
-                        </span>
+                        <!-- <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="manage_search"></mat-icon> -->
+                        <img (click)="openSearch()" style="width: 60%;" src="assets/search.png" alt="">
                     </div>
-                    <button class="add_question_btn">
+                    <button class="add_question_btn" (click)="setFilter('Mittel')">
                         Filtern</button>
                 </div>
             </div>
@@ -326,11 +337,11 @@
                                     <div class="element_margin_text" *ngIf="question['data']['file']">
                                         <!-- Images -->
                                         <div class="img_wrapper d_flex_start">
-                                            <div id="img_edit_wrapper{{j}}{{i}}{{k}}" (mouseover)="resizeImage(j, i, k)"
-                                                class="img_edit_wrapper d_flex">
-                                                <img id="questionImage{{ j }}{{ i }}{{k}}" class="preview_question_img"
+                                            <div id="img_edit_wrapper{{ j }}{{ i }}{{ k }}" (mouseover)="resizeImage(j, i, k)"
+                                                class="img_edit_wrapper d_flex" [ngStyle]="{'width': question['width'] ? question['width'] : '30%'}">
+                                                <img id="questionImage{{ j }}{{ i }}{{ k }}" class="preview_question_img"
                                                     src="{{ question['data']['file']['url'] }}" alt="">
-                                                <div (click)="service.onEvent($event)" id="resizeImage{{j}}{{i}}{{k}}"
+                                                <div (click)="service.onEvent($event)" id="resizeImage{{ j }}{{ i }}{{ k }}"
                                                     class="resize_image d_flex show_onHover">
                                                     <span class="resize_image_line"></span>
                                                 </div>
@@ -397,7 +408,7 @@
                                         <!-- Images -->
                                         <div class="img_wrapper d_flex_start">
                                             <div id="img_edit_wrapper{{j}}{{i}}{{k}}"
-                                                class="img_edit_wrapper d_flex">
+                                                class="img_edit_wrapper d_flex" [ngStyle]="{'width': question['width'] ? question['width'] : '30%'}">
                                                 <img id="questionImage{{ j }}{{ i }}{{k}}" class="preview_question_img"
                                                     src="{{ question['data']['file']['url'] }}" alt="">
                                                 <div (click)="service.onEvent($event)" id="resizeImage{{j}}{{i}}{{k}}"
@@ -448,25 +459,25 @@
                             <div id="edit_whitespace{{j}}{{i}}"
                                 class="edit_question_whitespace_wrapper d_flex show_onHover notVisible">
                                 <div class="edit_question_whitespace_btn_wrapper d_flex">
-                                    <button class="whitespace_btn d_flex" (click)="showWhite()"></button>
-                                    <button class="whitespace_btn d_flex" (click)="showLines()"><img
+                                    <button class="whitespace_btn d_flex" (click)="showWhite(j, i)"></button>
+                                    <button class="whitespace_btn d_flex" (click)="showLines(j, i)"><img
                                             class="whitespace_btn_icon" src="assets/lines.png" alt=""></button>
-                                    <button class="whitespace_btn d_flex" (click)="showSquare()"><img
+                                    <button class="whitespace_btn d_flex" (click)="showSquare(j, i)"><img
                                             class="whitespace_btn_icon" src="assets/square.png" alt=""></button>
                                 </div>
                             </div>
 
                             <div (click)="service.onEvent($event)" (mouseover)="resizeQuestion(j, i)"
-                                (mousemove)="getSquaresAndLines()" id="resize{{j}}{{i}}"
+                                (mousemove)="getSquaresAndLines(j, i)" id="resize{{j}}{{i}}"
                                 class="height_info_wrapper d_flex show_onHover">
                                 <span class="resize_line"></span>
                             </div>
                         </div>
                         <!-- whitspace SQUARES -->
-                        <div id="whitespace_squares{{j}}{{i}}" class="d_flex_column squareWhitespace_wrapper d_none">
+                        <div on id="whitespace_squares{{j}}{{i}}" class="d_flex_column squareWhitespace_wrapper" [ngStyle]="{'display' : data['whitespace'] == 'squares' && !sampleSolution ? 'block' : 'none'}">
                         </div>
                         <!-- whitespace LINES -->
-                        <div id="whitespace_lines{{j}}{{i}}" class="d_flex_column linesWhitespace_wrapper d_none">
+                        <div id="whitespace_lines{{j}}{{i}}" class="d_flex_column linesWhitespace_wrapper"  [ngStyle]="{'display' : data['whitespace'] == 'lines' && !sampleSolution  ? 'block' : 'none'}">
 
                         </div>
                     </div>
