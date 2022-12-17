@@ -68,11 +68,15 @@ export class QuestionsComponent implements OnInit {
 
   question_number = 0;
   sampleSolution = false;
+
+  // Filter And Search variables
+  openFilter = false;
   search = false;
   searchactive = false;
   currentSearch = '';
   filterActive = false;
-  filteredDifficulty: any;
+  filteredDifficulty: any = 'notSelected';
+
 
   constructor(private firestore: Firestore, public service: overlaysService) { }
   @HostListener("click", ["$event"])
@@ -588,7 +592,8 @@ export class QuestionsComponent implements OnInit {
         this.stopLoop(10)
         for (let j = 0; j < this.loadedQuestions[i].keywords.length; j++) {
           this.stopLoop(10)
-          if (this.filteredDifficulty != 'notSelected' && this.loadedQuestions[i].schwierigkeit == this.filteredDifficulty) {
+
+          if ( this.loadedQuestions[i].schwierigkeit == this.filteredDifficulty) {
             if (this.loadedQuestions[i]['keywords'][j].toLowerCase().includes(search)) {
                 this.show(`questionListView${i}`, 'd_none')
             }
@@ -597,7 +602,8 @@ export class QuestionsComponent implements OnInit {
         // text - paragraph
         for (let j = 0; j < this.loadedQuestions[i]['frage']['blocks'].length; j++) {
           if (this.loadedQuestions[i]['frage']['blocks'][j]['type'] == 'paragraph') {
-            if (this.filteredDifficulty != 'notSelected' && this.loadedQuestions[i].schwierigkeit == this.filteredDifficulty) {
+
+            if (this.loadedQuestions[i].schwierigkeit == this.filteredDifficulty) {
               if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['text'].toLowerCase().indexOf(search) >= 0) {
                 this.show(`questionListView${i}`, 'd_none')
               }          
@@ -610,7 +616,8 @@ export class QuestionsComponent implements OnInit {
               console.log(Object.keys(this.loadedQuestions[i]['frage']['blocks'][j]['data']['table']).length);
               for (let l = 0; l < this.loadedQuestions[i]['frage']['blocks'][j]['data']['table'][k].length; l++) {
                 this.stopLoop(10)
-                if (this.filteredDifficulty != 'notSelected' && this.loadedQuestions[i].schwierigkeit == this.filteredDifficulty) {
+
+                if ( this.loadedQuestions[i].schwierigkeit == this.filteredDifficulty) {
                   if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['table'][k][l].toLowerCase().indexOf(search) >= 0) {
                     this.show(`questionListView${i}`, 'd_none')
                   }
@@ -623,7 +630,8 @@ export class QuestionsComponent implements OnInit {
             for (let k = 0; k < this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'].length; k++) {
               console.log(this.loadedQuestions);
               console.log(this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'][k].length);
-              if (this.filteredDifficulty != 'notSelected' && this.loadedQuestions[i].schwierigkeit == this.filteredDifficulty) {
+
+              if (this.loadedQuestions[i].schwierigkeit == this.filteredDifficulty) {
                 if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'][k].toLowerCase().indexOf(search) >= 0) {
                   this.show(`questionListView${i}`, 'd_none')
                 }
