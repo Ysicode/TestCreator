@@ -3,7 +3,7 @@ import { defaultAuthInstanceFactory } from '@angular/fire/auth/auth.module';
 import { collection, collectionData, doc, Firestore } from '@angular/fire/firestore';
 import { NgForm } from '@angular/forms';
 import { deleteDoc } from '@firebase/firestore';
-import { Observable } from 'rxjs';
+import { Observable, ReplaySubject } from 'rxjs';
 import { EditComponent } from 'src/app/add/edit/edit.component';
 import { overlaysService } from 'src/app/services/overlays.service';
 
@@ -30,7 +30,7 @@ export class QuestionsComponent implements OnInit {
 
   currentQuestion: any;
   currentAnswer: any;
-  
+
   currentId: string;
 
   // variables for the new question window
@@ -585,62 +585,180 @@ export class QuestionsComponent implements OnInit {
     this.searchForNameTypeId(currentSearch)
   }
 
-  searchForNameTypeId(search: string) {
-    search = search.toLowerCase();
+  searchForNameTypeId(searchvalue: string) {
+    if (this.filterActive) {
+      let search = searchvalue.toLowerCase().replace(/\s+/g, '');
       for (let i = 0; i < this.loadedQuestions.length; i++) {
         this.hide(`questionListView${i}`, 'd_none')
         this.stopLoop(10)
-        for (let j = 0; j < this.loadedQuestions[i].keywords.length; j++) {
-          this.stopLoop(10)
 
-          if ( this.loadedQuestions[i].schwierigkeit == this.filteredDifficulty) {
+        if (this.loadedQuestions[i].schwierigkeit == this.filteredDifficulty) {
+        console.log(this.loadedQuestions);
+        
+          for (let j = 0; j < this.loadedQuestions[i].keywords.length; j++) {
+            this.stopLoop(10)
             if (this.loadedQuestions[i]['keywords'][j].toLowerCase().includes(search)) {
-                this.show(`questionListView${i}`, 'd_none')
+              this.show(`questionListView${i}`, 'd_none')
             }
-          }         
+          }
+
+          // Fach
+          if (this.loadedQuestions[i]['fach'].toLowerCase().includes(search)) {
+            this.show(`questionListView${i}`, 'd_none')
+          }
+
+          // Klasse
+          if (this.loadedQuestions[i]['klasse'].replace(/\s+/g, '').split('.').join('').toLowerCase().includes(search.toLowerCase().split('.').join(''))) {         
+            this.show(`questionListView${i}`, 'd_none')
+          }
+          // Punktzahl
+          if (this.loadedQuestions[i]['punktzahl'].toString().toLowerCase().includes(search.toLowerCase().replace('p', '').replace('u', '').replace('n', '').replace('k', '').replace('t', '').replace('e', ''))) {
+            this.show(`questionListView${i}`, 'd_none')
+          }
+           // Minutes
+           if (this.loadedQuestions[i]['bearbeitungszeit'].toString().toLowerCase().includes(search.toLowerCase().replace('m', '').replace('i', '').replace('n', '').replace('u', '').replace('t', '').replace('e', '').replace('n', ''))) {
+            this.show(`questionListView${i}`, 'd_none')
+          }
+
+           // CONTENTSEARCH OF QUESTION
+          // text - paragraph
+          for (let j = 0; j < this.loadedQuestions[i]['frage']['blocks'].length; j++) {
+            if (this.loadedQuestions[i]['frage']['blocks'][j]['type'] == 'paragraph') {
+
+
+              if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['text'].toLowerCase().indexOf(search) >= 0) {
+                this.show(`questionListView${i}`, 'd_none')
+              }
+
+            }
+            // table
+            if (this.loadedQuestions[i]['frage']['blocks'][j]['type'] == 'table') {
+              for (let k = 0; k < Object.keys(this.loadedQuestions[i]['frage']['blocks'][j]['data']['table']).length - 1; k++) {
+                this.stopLoop(10)
+                for (let l = 0; l < this.loadedQuestions[i]['frage']['blocks'][j]['data']['table'][k].length; l++) {
+                  this.stopLoop(10)
+
+
+                  if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['table'][k][l].toLowerCase().indexOf(search) >= 0) {
+                    this.show(`questionListView${i}`, 'd_none')
+                  }
+
+                }
+              }
+            }
+            // List
+            if (this.loadedQuestions[i]['frage']['blocks'][j]['type'] == 'list') {
+              for (let k = 0; k < this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'].length; k++) {
+
+                if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'][k].toLowerCase().indexOf(search) >= 0) {
+                  this.show(`questionListView${i}`, 'd_none')
+                }
+
+              }
+            }
+            // checklist
+            if (this.loadedQuestions[i]['frage']['blocks'][j]['type'] == 'checklist') {
+              for (let k = 0; k < this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'].length; k++) {
+                if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'][k]['text'].toLowerCase().indexOf(search) >= 0) {
+                  this.show(`questionListView${i}`, 'd_none')
+                }
+              }
+            }
+          }
         }
+
+      }
+    }
+
+
+    if (!this.filterActive) {
+      console.log(this.loadedQuestions);
+      // search = search.toLowerCase().replace(/\s+/g, '');
+      let search = searchvalue.toLowerCase().trim().split(/\s+/);
+      for (let i = 0; i < this.loadedQuestions.length; i++) {
+       
+          this.hide(`questionListView${i}`, 'd_none')
+        this.stopLoop(10)
+        // Keywords
+        for (let j = 0; j < this.loadedQuestions[i].keywords.length; j++) {
+          if (this.loadedQuestions[i]['keywords'][j].toLowerCase().includes(search[0] && search.length == 1 ? search[1] : false && search.length == 2 ? search[2] : false && search.length == 3 ? search[3] : false)) {
+            this.show(`questionListView${i}`, 'd_none')
+          }
+        }
+        // Fach
+        if (this.loadedQuestions[i]['fach'].toLowerCase().includes(search[0])) {
+          this.show(`questionListView${i}`, 'd_none')
+        }
+
+        // Schwierigkeit
+        if (this.loadedQuestions[i]['schwierigkeit'].toLowerCase().includes(search[0])) {
+          this.show(`questionListView${i}`, 'd_none')
+        }
+
+         // Klasse
+         if (this.loadedQuestions[i]['klasse'].replace(/\s+/g, '').split('.').join('').toLowerCase().includes(search[0].toLowerCase().split('.').join('') )) {         
+          this.show(`questionListView${i}`, 'd_none')
+        }
+        // Punktzahl
+        if (this.loadedQuestions[i]['punktzahl'].toString().toLowerCase().includes(search[0].toLowerCase().replace('p', '').replace('u', '').replace('n', '').replace('k', '').replace('t', '').replace('e', ''))) {
+          this.show(`questionListView${i}`, 'd_none')
+        }
+         // Minutes
+         if (this.loadedQuestions[i]['bearbeitungszeit'].toString().toLowerCase().includes(search[0].toLowerCase().replace('m', '').replace('i', '').replace('n', '').replace('u', '').replace('t', '').replace('e', '').replace('n', ''))) {
+          this.show(`questionListView${i}`, 'd_none')
+        }
+
+        // CONTENTSEARCH OF QUESTION
         // text - paragraph
         for (let j = 0; j < this.loadedQuestions[i]['frage']['blocks'].length; j++) {
           if (this.loadedQuestions[i]['frage']['blocks'][j]['type'] == 'paragraph') {
 
-            if (this.loadedQuestions[i].schwierigkeit == this.filteredDifficulty) {
-              if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['text'].toLowerCase().indexOf(search) >= 0) {
-                this.show(`questionListView${i}`, 'd_none')
-              }          
-            }         
+            if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['text'].toLowerCase().indexOf(search[0]) >= 0) {
+              this.show(`questionListView${i}`, 'd_none')
+            }
+
           }
           // table
           if (this.loadedQuestions[i]['frage']['blocks'][j]['type'] == 'table') {
             for (let k = 0; k < Object.keys(this.loadedQuestions[i]['frage']['blocks'][j]['data']['table']).length - 1; k++) {
               this.stopLoop(10)
-              console.log(Object.keys(this.loadedQuestions[i]['frage']['blocks'][j]['data']['table']).length);
               for (let l = 0; l < this.loadedQuestions[i]['frage']['blocks'][j]['data']['table'][k].length; l++) {
                 this.stopLoop(10)
 
-                if ( this.loadedQuestions[i].schwierigkeit == this.filteredDifficulty) {
-                  if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['table'][k][l].toLowerCase().indexOf(search) >= 0) {
-                    this.show(`questionListView${i}`, 'd_none')
-                  }
-                }          
+                if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['table'][k][l].toLowerCase().indexOf(search[0]) >= 0) {
+                  this.show(`questionListView${i}`, 'd_none')
+                }
+
               }
             }
           }
           // List
           if (this.loadedQuestions[i]['frage']['blocks'][j]['type'] == 'list') {
             for (let k = 0; k < this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'].length; k++) {
-              console.log(this.loadedQuestions);
-              console.log(this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'][k].length);
+              if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'][k].toLowerCase().indexOf(search[0]) >= 0) {
+                this.show(`questionListView${i}`, 'd_none')
+              }
 
-              if (this.loadedQuestions[i].schwierigkeit == this.filteredDifficulty) {
-                if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'][k].toLowerCase().indexOf(search) >= 0) {
-                  this.show(`questionListView${i}`, 'd_none')
-                }
-              }        
+            }
+          }
+          // checklist
+          if (this.loadedQuestions[i]['frage']['blocks'][j]['type'] == 'checklist') {
+            for (let k = 0; k < this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'].length; k++) {
+              if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'][k]['text'].toLowerCase().indexOf(search[0]) >= 0) {
+                this.show(`questionListView${i}`, 'd_none')
+
+              }
             }
           }
         }
+
+
+        
+        
       }
-    
+    }
+
+
 
     // if (notFound) {
     //     content.innerHTML = showSearchNotFound();
@@ -653,16 +771,6 @@ export class QuestionsComponent implements OnInit {
     this.searchForNameTypeId('');
   }
 
-  // showfilteredQuestions(i: number) {
-  //   this.hide(`questionListView${i}`, 'd_none');
-  //   for (let j = 0; j < this.filteredQuestions.length; j++) {
-  //     if (this.filteredQuestions[j].id == this.loadedQuestions[i].id) {
-  //       this.show(`questionListView${i}`, 'd_none');
-   
-  //     }
-
-  //   }
-  // }
 
   toggleEditTestHead() {
     this.editTesthead = true;

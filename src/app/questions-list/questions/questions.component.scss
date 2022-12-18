@@ -607,6 +607,8 @@ Answer styles
     background: #c7d1cf;
     border-top-left-radius: 40px;
     border-bottom-left-radius: 40px;
+
+ 
 }
 
 .shot_search_btn {
@@ -623,7 +625,7 @@ Answer styles
 
     .search_close_icon {
         border-radius: 40px;
-        height: 100%;
+        height: 80%;
         background: #e7eceb;
         padding: 10%;
         &:hover {
@@ -641,6 +643,12 @@ Answer styles
     display: flex;
     align-items: center;
     justify-content: space-between;
+    input:-webkit-autofill,
+input:-webkit-autofill,
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #c7d1cf inset !important;
+  -webkit-text-fill-color: black !important;
+}
 }
 
 .add_question_btn {
