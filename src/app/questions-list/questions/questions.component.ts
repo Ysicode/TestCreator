@@ -586,15 +586,13 @@ export class QuestionsComponent implements OnInit {
   }
 
   searchForNameTypeId(searchvalue: string) {
+    let search = searchvalue.toLowerCase().replace(/\s+/g, '');
     if (this.filterActive) {
-      let search = searchvalue.toLowerCase().replace(/\s+/g, '');
       for (let i = 0; i < this.loadedQuestions.length; i++) {
-        this.hide(`questionListView${i}`, 'd_none')
+        this.hide(`questionListView${i}`, 'd_none');
         this.stopLoop(10)
 
         if (this.loadedQuestions[i].schwierigkeit == this.filteredDifficulty) {
-        console.log(this.loadedQuestions);
-        
           for (let j = 0; j < this.loadedQuestions[i].keywords.length; j++) {
             this.stopLoop(10)
             if (this.loadedQuestions[i]['keywords'][j].toLowerCase().includes(search)) {
@@ -608,52 +606,42 @@ export class QuestionsComponent implements OnInit {
           }
 
           // Klasse
-          if (this.loadedQuestions[i]['klasse'].replace(/\s+/g, '').split('.').join('').toLowerCase().includes(search.toLowerCase().split('.').join(''))) {         
+          if (this.loadedQuestions[i]['klasse'].replace(/\s+/g, '').split('.').join('').toLowerCase().includes(search.toLowerCase().split('.').join(''))) {
             this.show(`questionListView${i}`, 'd_none')
           }
           // Punktzahl
           if (this.loadedQuestions[i]['punktzahl'].toString().toLowerCase().includes(search.toLowerCase().replace('p', '').replace('u', '').replace('n', '').replace('k', '').replace('t', '').replace('e', ''))) {
             this.show(`questionListView${i}`, 'd_none')
           }
-           // Minutes
-           if (this.loadedQuestions[i]['bearbeitungszeit'].toString().toLowerCase().includes(search.toLowerCase().replace('m', '').replace('i', '').replace('n', '').replace('u', '').replace('t', '').replace('e', '').replace('n', ''))) {
+          // Minutes
+          if (this.loadedQuestions[i]['bearbeitungszeit'].toString().toLowerCase().includes(search.toLowerCase().replace('m', '').replace('i', '').replace('n', '').replace('u', '').replace('t', '').replace('e', '').replace('n', ''))) {
             this.show(`questionListView${i}`, 'd_none')
           }
 
-           // CONTENTSEARCH OF QUESTION
+          // CONTENTSEARCH OF QUESTION
           // text - paragraph
           for (let j = 0; j < this.loadedQuestions[i]['frage']['blocks'].length; j++) {
             if (this.loadedQuestions[i]['frage']['blocks'][j]['type'] == 'paragraph') {
-
-
               if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['text'].toLowerCase().indexOf(search) >= 0) {
                 this.show(`questionListView${i}`, 'd_none')
               }
-
             }
             // table
             if (this.loadedQuestions[i]['frage']['blocks'][j]['type'] == 'table') {
               for (let k = 0; k < Object.keys(this.loadedQuestions[i]['frage']['blocks'][j]['data']['table']).length - 1; k++) {
-                this.stopLoop(10)
                 for (let l = 0; l < this.loadedQuestions[i]['frage']['blocks'][j]['data']['table'][k].length; l++) {
-                  this.stopLoop(10)
-
-
                   if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['table'][k][l].toLowerCase().indexOf(search) >= 0) {
                     this.show(`questionListView${i}`, 'd_none')
                   }
-
                 }
               }
             }
             // List
             if (this.loadedQuestions[i]['frage']['blocks'][j]['type'] == 'list') {
               for (let k = 0; k < this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'].length; k++) {
-
                 if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'][k].toLowerCase().indexOf(search) >= 0) {
                   this.show(`questionListView${i}`, 'd_none')
                 }
-
               }
             }
             // checklist
@@ -666,45 +654,37 @@ export class QuestionsComponent implements OnInit {
             }
           }
         }
-
       }
     }
 
 
     if (!this.filterActive) {
       console.log(this.loadedQuestions);
-      // search = search.toLowerCase().replace(/\s+/g, '');
-      let search = searchvalue.toLowerCase().trim().split(/\s+/);
       for (let i = 0; i < this.loadedQuestions.length; i++) {
-       
-          this.hide(`questionListView${i}`, 'd_none')
+        this.hide(`questionListView${i}`, 'd_none');
         this.stopLoop(10)
-        // Keywords
         for (let j = 0; j < this.loadedQuestions[i].keywords.length; j++) {
-          if (this.loadedQuestions[i]['keywords'][j].toLowerCase().includes(search[0] && search.length == 1 ? search[1] : false && search.length == 2 ? search[2] : false && search.length == 3 ? search[3] : false)) {
+          this.stopLoop(10)
+          if (this.loadedQuestions[i]['keywords'][j].toLowerCase().includes(search)) {
             this.show(`questionListView${i}`, 'd_none')
           }
         }
+
         // Fach
-        if (this.loadedQuestions[i]['fach'].toLowerCase().includes(search[0])) {
+        if (this.loadedQuestions[i]['fach'].toLowerCase().includes(search)) {
           this.show(`questionListView${i}`, 'd_none')
         }
 
-        // Schwierigkeit
-        if (this.loadedQuestions[i]['schwierigkeit'].toLowerCase().includes(search[0])) {
-          this.show(`questionListView${i}`, 'd_none')
-        }
-
-         // Klasse
-         if (this.loadedQuestions[i]['klasse'].replace(/\s+/g, '').split('.').join('').toLowerCase().includes(search[0].toLowerCase().split('.').join('') )) {         
+        // Klasse
+        if (this.loadedQuestions[i]['klasse'].replace(/\s+/g, '').split('.').join('').toLowerCase().includes(search.toLowerCase().split('.').join(''))) {
           this.show(`questionListView${i}`, 'd_none')
         }
         // Punktzahl
-        if (this.loadedQuestions[i]['punktzahl'].toString().toLowerCase().includes(search[0].toLowerCase().replace('p', '').replace('u', '').replace('n', '').replace('k', '').replace('t', '').replace('e', ''))) {
+        if (this.loadedQuestions[i]['punktzahl'].toString().toLowerCase().includes(search.toLowerCase().replace('p', '').replace('u', '').replace('n', '').replace('k', '').replace('t', '').replace('e', ''))) {
           this.show(`questionListView${i}`, 'd_none')
         }
-         // Minutes
-         if (this.loadedQuestions[i]['bearbeitungszeit'].toString().toLowerCase().includes(search[0].toLowerCase().replace('m', '').replace('i', '').replace('n', '').replace('u', '').replace('t', '').replace('e', '').replace('n', ''))) {
+        // Minutes
+        if (this.loadedQuestions[i]['bearbeitungszeit'].toString().toLowerCase().includes(search.toLowerCase().replace('m', '').replace('i', '').replace('n', '').replace('u', '').replace('t', '').replace('e', '').replace('n', ''))) {
           this.show(`questionListView${i}`, 'd_none')
         }
 
@@ -712,49 +692,37 @@ export class QuestionsComponent implements OnInit {
         // text - paragraph
         for (let j = 0; j < this.loadedQuestions[i]['frage']['blocks'].length; j++) {
           if (this.loadedQuestions[i]['frage']['blocks'][j]['type'] == 'paragraph') {
-
-            if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['text'].toLowerCase().indexOf(search[0]) >= 0) {
+            if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['text'].toLowerCase().indexOf(search) >= 0) {
               this.show(`questionListView${i}`, 'd_none')
             }
-
           }
           // table
           if (this.loadedQuestions[i]['frage']['blocks'][j]['type'] == 'table') {
             for (let k = 0; k < Object.keys(this.loadedQuestions[i]['frage']['blocks'][j]['data']['table']).length - 1; k++) {
-              this.stopLoop(10)
               for (let l = 0; l < this.loadedQuestions[i]['frage']['blocks'][j]['data']['table'][k].length; l++) {
-                this.stopLoop(10)
-
-                if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['table'][k][l].toLowerCase().indexOf(search[0]) >= 0) {
+                if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['table'][k][l].toLowerCase().indexOf(search) >= 0) {
                   this.show(`questionListView${i}`, 'd_none')
                 }
-
               }
             }
           }
           // List
           if (this.loadedQuestions[i]['frage']['blocks'][j]['type'] == 'list') {
             for (let k = 0; k < this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'].length; k++) {
-              if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'][k].toLowerCase().indexOf(search[0]) >= 0) {
+              if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'][k].toLowerCase().indexOf(search) >= 0) {
                 this.show(`questionListView${i}`, 'd_none')
               }
-
             }
           }
           // checklist
           if (this.loadedQuestions[i]['frage']['blocks'][j]['type'] == 'checklist') {
             for (let k = 0; k < this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'].length; k++) {
-              if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'][k]['text'].toLowerCase().indexOf(search[0]) >= 0) {
+              if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'][k]['text'].toLowerCase().indexOf(search) >= 0) {
                 this.show(`questionListView${i}`, 'd_none')
-
               }
             }
           }
         }
-
-
-        
-        
       }
     }
 
