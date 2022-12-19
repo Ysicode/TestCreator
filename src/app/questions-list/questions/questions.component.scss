@@ -264,6 +264,12 @@ style for rendered subjects
     max-width: 1000px;
 }
 
+.totalQuestionsNumber_wrapper {
+    width: 100%;
+    color: grey;
+    font-size: calc(100vw * 0.013);
+}
+
 .margin_zero {
     margin-top: 0px;
     margin-bottom: 0px;

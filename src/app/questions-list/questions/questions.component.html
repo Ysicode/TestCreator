@@ -44,6 +44,15 @@
 
         <!-- All Questions View  with solution-->
         <div [class.d_none]="preview" class="questions d_flex_column" id="allQuestionsListView">
+            <div class="totalQuestionsNumber_wrapper d_flex_start">
+                {{ totalQuestionsNumber == 1 ? totalQuestionsNumber + ' Aufgabe' : totalQuestionsNumber + ' Aufgaben'  }}
+            </div>
+            <div *ngIf="totalQuestionsNumber == 0" class="question_wrapper_listview d_flex_column" style="margin-top: 20px;">
+                <div class="question">
+                    Keine passende Aufgabe gefunden
+                </div>
+        
+            </div>
             <div id="questionListView{{i}}" class="question_wrapper_listview d_flex_column"
                 *ngFor="let data of loadedQuestions let i = index">
                 <div id="question_list{{ i }}" class="question">
