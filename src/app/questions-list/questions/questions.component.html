@@ -47,7 +47,7 @@
             <div class="totalQuestionsNumber_wrapper d_flex_start">
                 {{ totalQuestionsNumber == 1 ? totalQuestionsNumber + ' Aufgabe' : totalQuestionsNumber + ' Aufgaben'  }}
             </div>
-            <div *ngIf="totalQuestionsNumber == 0" class="question_wrapper_listview d_flex_column" style="margin-top: 20px;">
+            <div *ngIf="totalQuestionsNumber == 0" class="question_wrapper_listview d_flex_column">
                 <div class="question">
                     Keine passende Aufgabe gefunden
                 </div>
@@ -75,11 +75,6 @@
                             </div>
                             <div class="question_info_btn">
                                 {{ data.bearbeitungszeit }} Min
-                            </div>
-                            <div *ngFor="let keyword of data.keywords">
-                                <div class="question_container" [innerHTML]="keyword">
-
-                                </div>
                             </div>
                         </div>
 
@@ -261,9 +256,9 @@
         <!-- TEST PREVIEW -->
         <!--  -->
         <div *ngIf="loaded" id="test_print" class="test_print" [class.opacity0]="!preview"
-            (mousemove)="checkHeightOfAllPreviewQuestions()">
+            >
             <div id="test_dinA4{{j}}" *ngFor="let pages of test['pages'] let j = index" class="test_dinA4 page_break">
-                <div (mousemove)="setQuestionNumber()" id="test_content{{j}}" class="test_content d_flex_column_start">
+                <div id="test_content{{j}}" class="test_content d_flex_column_start">
                     <div style="width: 100%; padding-bottom: 9%;">
 
                     </div>
@@ -498,7 +493,8 @@
                             </div>
                         </div>
                         <!-- whitspace SQUARES -->
-                        <div on id="whitespace_squares{{j}}{{i}}" class="d_flex_column squareWhitespace_wrapper"
+                        
+                        <div id="whitespace_squares{{j}}{{i}}" class="d_flex_column squareWhitespace_wrapper"
                             [ngStyle]="{'display' : data['whitespace'] == 'squares' && !sampleSolution ? 'block' : 'none'}">
                         </div>
                         <!-- whitespace LINES -->

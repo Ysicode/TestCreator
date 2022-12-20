@@ -267,7 +267,8 @@ style for rendered subjects
 .totalQuestionsNumber_wrapper {
     width: 100%;
     color: grey;
-    font-size: calc(100vw * 0.013);
+    font-size: calc(100vw * 0.030);
+    margin-bottom: 7px;
 }
 
 .margin_zero {
@@ -686,7 +687,7 @@ input:-webkit-autofill {
 
     &:hover {
         cursor: pointer;
-        background: #ffffff33;
+        background: #e7e7e7;
     }
 }
 
@@ -1347,6 +1348,10 @@ Styles für die Vorschau sektion
     .question_info,
     .question_edit_btn {
         font-size: 13px;
+    }
+
+    .totalQuestionsNumber_wrapper {
+        font-size: 20px;
     }
 }
 

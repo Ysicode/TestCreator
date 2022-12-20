@@ -51,7 +51,7 @@ export class overlaysService {
 
     lines() {
       return `
-      <div style="width: 100%; height: 1px; background: #c6c3c3; margin-bottom: 2.5%; margin-top: 2.5%;">
+      <div style="width: 100%; height: 1px; background: #c6c3c3; margin-bottom: 4.7%; margin-top: 4.7%;">
       </div>
       `;
     }

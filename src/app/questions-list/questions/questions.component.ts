@@ -1,4 +1,5 @@
 import { Component, Directive, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { async } from '@angular/core/testing';
 import { defaultAuthInstanceFactory } from '@angular/fire/auth/auth.module';
 import { collection, collectionData, doc, Firestore } from '@angular/fire/firestore';
 import { NgForm } from '@angular/forms';
@@ -104,16 +105,16 @@ export class QuestionsComponent implements OnInit {
 
   getTotalQuestionNumber() {
     this.totalQuestionsNumber = 0;
-   for (let i = 0; i < this.loadedQuestions.length; i++) {
-    if (!document.getElementById(`questionListView${i}`).classList.contains('d_none')) {
-      this.totalQuestionsNumber++
+    for (let i = 0; i < this.loadedQuestions.length; i++) {
+      if (!document.getElementById(`questionListView${i}`).classList.contains('d_none')) {
+        this.totalQuestionsNumber++
+      }
+
     }
-     
-   }
     // setTimeout(() => {
     //   this.totalQuestionsNumber = number;
     // }, 500);
-   
+
   }
   /**
    * This function is triggered OnInit and loads all Questions, all Subjects/Classes and the testHead
@@ -314,7 +315,7 @@ export class QuestionsComponent implements OnInit {
   openPreview() {
     setTimeout(() => {
       this.checkHeightOfAllPreviewQuestions();
-    
+
     }, 200)
     this.preview = !this.preview;
     window.scrollTo(0, 0);
@@ -329,30 +330,35 @@ export class QuestionsComponent implements OnInit {
    */
   async checkHeightOfAllPreviewQuestions() {
     let contentHeight = 0;
-    for (let i = 0; i < this.test.pages.length; i++) {
-      if (i != 0) {
-        contentHeight = 0;
-      } else {
-        contentHeight = this.getHeight('testhead');
-      }
-      await this.stopLoop(10);
-      for (let j = 0; j < this.test.pages[i][0].length; j++) {
-        let height = this.getHeight(`question${i}${j}`);
-        contentHeight += Number(height);
-      }
-      let outerHeight = this.getHeight(`test_dinA4${i}`);
-      let paperHeight = outerHeight - (outerHeight * 0.18);
-      if (contentHeight > paperHeight) {
-        this.addNewPageAndpushLastQuestion(i);
-      }
-      if (i > 0) {
-        this.moveUpQuestionAndDeleteEmptyPages(i, paperHeight);
-        if (this.pageIsEmpty(i)) {
-          this.test.pages.pop();
+    setTimeout(async () => {
+      for (let i = 0; i < this.test.pages.length; i++) {
+        if (i != 0) {
+          contentHeight = 0;
+        } else {
+          contentHeight = this.getHeight('testhead');
+        }
+        await this.stopLoop(10);
+        let outerHeight = this.getHeight(`test_dinA4${i}`);
+        let paperHeight = outerHeight - (outerHeight * 0.18);
+        if (i > 0) {
+          this.moveUpQuestionAndDeleteEmptyPages(i, paperHeight);
+          // if (this.pageIsEmpty(i)) {
+          //   setTimeout(() => {
+          //     this.test.pages.pop();  
+          //   }, 100);
+          // }
+        }
+        for (let j = 0; j < this.test.pages[i][0].length; j++) {
+          let height = this.getHeight(`question${i}${j}`);
+          contentHeight += Number(height);
+        }
+
+        if (contentHeight > paperHeight) {
+          this.addNewPageAndpushLastQuestion(i);
         }
       }
+    }, 30);
 
-    }
   }
 
   addNewPageAndpushLastQuestion(i: number) {
@@ -368,9 +374,13 @@ export class QuestionsComponent implements OnInit {
     if (!this.pageIsEmpty(i) && await this.spaceForFirstQuestion(i, paperHeight)) {
       const question = this.test.pages[i][0].shift();
       this.test.pages[i - 1][0].push(question)
-      if (this.pageIsEmpty(i)) {
-        this.test.pages.pop();
-      }
+      setTimeout(() => {
+        if (this.pageIsEmpty(i)) {
+
+          this.test.pages.pop();
+        }
+      }, 5);
+
     }
   }
 
@@ -411,12 +421,19 @@ export class QuestionsComponent implements OnInit {
    * @param pagePosition - is the index of the question on the page
    */
   resizeQuestion(pageIndex: number, pagePosition: number) {
+    let call = 1;
     let startY: number, startHeight: number;
     let resizer = this.element(`resize${this.currentEditQuestion}`);
     let question = this.element(`question${this.currentEditQuestion}`);
     let page = this.getHeight(`test_dinA4${pageIndex}`);
     let editWhitespace = this.element(`edit_whitespace${pageIndex}${pagePosition}`);
     question.style.minHeight = this.test.pages[pageIndex][0][pagePosition]['defaultheight'] + '%';
+
+   
+      this.checkMaxHeightOfLastQuestionOfPageIndex(pageIndex, pagePosition, question);
+    
+   
+
     let questionContentHeight = Number(question.style.minHeight.replace('%', ''));
     resizer.addEventListener('mousedown', initDrag, false);
 
@@ -443,12 +460,9 @@ export class QuestionsComponent implements OnInit {
       document.documentElement.removeEventListener('mousemove', doDrag, false);
       document.documentElement.removeEventListener('mouseup', stopDrag, false);
     }
-    console.log(this.test.pages);
-
-    this.test.pages[pageIndex][0][pagePosition]['questionHeight'] = question.style.height;
+    this.checkHeightOfAllPreviewQuestions();
+    this.setQuestionNumber();
   }
-
-
 
   resizeImage(pageIndex: number, pagePosition: number, questionPosition: number) {
     this.currentEditImage = `${pageIndex}${pagePosition}${questionPosition}`
@@ -481,6 +495,24 @@ export class QuestionsComponent implements OnInit {
     console.log(this.test.pages);
   }
 
+  checkMaxHeightOfLastQuestionOfPageIndex(pageIndex: number, pagePosition: number, question: any) {
+    if (this.test.pages[pageIndex][0].length - 1 == pagePosition) {
+      let contentHeight = 0;
+      if (pageIndex != 0) {
+        contentHeight = 0;
+      } else {
+        contentHeight = this.getHeight('testhead');
+      }
+      for (let j = 0; j < this.test.pages[pageIndex][0].length - 1; j++) {
+        let height = this.getHeight(`question${pageIndex}${j}`);
+        contentHeight += Number(height);
+      }
+      let outerHeight = this.getHeight(`test_dinA4${pageIndex}`);
+      let paperHeight = outerHeight - (outerHeight * 0.18);
+      question.style.maxHeight = ` ${paperHeight - contentHeight}px `
+      console.log(question.style.maxHeight);
+    }
+  }
 
 
   async getSquaresAndLines(pageIndex: number, pagePosition: number) {
