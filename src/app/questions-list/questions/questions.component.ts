@@ -209,7 +209,7 @@ export class QuestionsComponent implements OnInit {
   getDefaultHeightsOfEachAddedQuestions() {
     let height = (this.getHeight(`question${this.test.pages.length - 1}${this.test.pages[this.test.pages.length - 1]['0'].length - 1}`) * 100) / this.getHeight(`test_dinA4${this.test.pages.length - 1}`);
     this.test.pages[this.test.pages.length - 1][0][this.test.pages[this.test.pages.length - 1]['0'].length - 1]['defaultheight'] = height;
-}
+  }
 
   /**
    * This function is used to remove a question from the current test and add a styling to the button
@@ -325,6 +325,8 @@ export class QuestionsComponent implements OnInit {
    * executes setQuestionNumber
    */
   async checkHeightOfAllPreviewQuestions() {
+    console.log('checkHeightofallpreviequestions');
+    
     let contentHeight = 0;
     setTimeout(async () => {
       for (let i = 0; i < this.test.pages.length; i++) {
@@ -335,7 +337,7 @@ export class QuestionsComponent implements OnInit {
         }
         await this.stopLoop(10);
         let outerHeight = this.getHeight(`test_dinA4${i}`);
-        let paperHeight = outerHeight - (outerHeight * 0.18);
+        let paperHeight = outerHeight - (outerHeight * 0.22);
         if (i > 0) {
           this.moveUpQuestionAndDeleteEmptyPages(i, paperHeight);
           // if (this.pageIsEmpty(i)) {
@@ -348,8 +350,10 @@ export class QuestionsComponent implements OnInit {
           let height = this.getHeight(`question${i}${j}`);
           contentHeight += Number(height);
         }
-
+        console.log('contentHeight', contentHeight, 'paperHeight', paperHeight);
         if (contentHeight > paperHeight) {
+          console.log('contentHeight', contentHeight, 'paperHeight', paperHeight);
+          
           this.addNewPageAndpushLastQuestion(i);
         }
       }
@@ -372,7 +376,6 @@ export class QuestionsComponent implements OnInit {
       this.test.pages[i - 1][0].push(question)
       setTimeout(() => {
         if (this.pageIsEmpty(i)) {
-
           this.test.pages.pop();
         }
       }, 5);
@@ -410,8 +413,7 @@ export class QuestionsComponent implements OnInit {
   getCurrentQuestion(pageIndex: number, pagePosition: number) {
     if (this.currentEditQuestion != `${pageIndex}${pagePosition}`) {
       this.currentEditQuestion = `${pageIndex}${pagePosition}`;
-      console.log(this.currentEditQuestion);
-      
+   
     }
   }
 
@@ -421,19 +423,15 @@ export class QuestionsComponent implements OnInit {
    * @param pagePosition - is the index of the question on the page
    */
   resizeQuestion(pageIndex: number, pagePosition: number) {
-    let call = 1;
     let startY: number, startHeight: number;
     let resizer = this.element(`resize${this.currentEditQuestion}`);
     let question = this.element(`question${this.currentEditQuestion}`);
     let page = this.getHeight(`test_dinA4${pageIndex}`);
     let editWhitespace = this.element(`edit_whitespace${pageIndex}${pagePosition}`);
     question.style.minHeight = this.test.pages[pageIndex][0][pagePosition]['defaultheight'] + '%';
-
-   
-  this.checkMaxHeightOfLastQuestionOfPageIndex(pageIndex, pagePosition, question);
-
-
     let questionContentHeight = Number(question.style.minHeight.replace('%', ''));
+
+    this.checkMaxHeightOfLastQuestionOfPageIndex(pageIndex, pagePosition, question);
     resizer.addEventListener('mousedown', initDrag, false);
 
     function initDrag(e: { clientY: number; }) {
@@ -488,10 +486,7 @@ export class QuestionsComponent implements OnInit {
       document.documentElement.removeEventListener('mousemove', doDrag, false);
       document.documentElement.removeEventListener('mouseup', stopDrag, false);
     }
-
     this.test.pages[pageIndex][0][pagePosition]['frage']['blocks'][questionPosition]['width'] = image.style.width;
-
-    console.log(this.test.pages);
   }
 
   checkMaxHeightOfLastQuestionOfPageIndex(pageIndex: number, pagePosition: number, question: any) {
@@ -507,7 +502,7 @@ export class QuestionsComponent implements OnInit {
         contentHeight += Number(height);
       }
       let outerHeight = this.getHeight(`test_dinA4${pageIndex}`);
-      let paperHeight = outerHeight - (outerHeight * 0.18);
+      let paperHeight = outerHeight - (outerHeight * 0.23);
       question.style.maxHeight = ` ${paperHeight - contentHeight}px `
     }
   }
@@ -538,7 +533,7 @@ export class QuestionsComponent implements OnInit {
   }
 
   async getLines(contentHeight: any, questionHeight: any, questionWidth: any) {
-    let lineHeight = questionWidth / 19;
+    let lineHeight = questionWidth / 20;
     let totalLines = Math.floor((questionHeight - contentHeight) / lineHeight);
     let lines = this.element(`whitespace_lines${this.currentEditQuestion}`);
     lines.innerHTML = '';
