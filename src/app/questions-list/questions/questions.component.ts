@@ -207,13 +207,9 @@ export class QuestionsComponent implements OnInit {
   }
 
   getDefaultHeightsOfEachAddedQuestions() {
-    for (let i = 0; i < this.test.pages.length; i++) {
-      for (let j = 0; j < this.test.pages[i][0].length; j++) {
-        let height = (this.getHeight(`question${i}${j}`) * 100) / this.getHeight(`test_dinA4${i}`);
-        this.test.pages[i][0][j]['defaultheight'] = height;
-      }
-    }
-  }
+    let height = (this.getHeight(`question${this.test.pages.length - 1}${this.test.pages[this.test.pages.length - 1]['0'].length - 1}`) * 100) / this.getHeight(`test_dinA4${this.test.pages.length - 1}`);
+    this.test.pages[this.test.pages.length - 1][0][this.test.pages[this.test.pages.length - 1]['0'].length - 1]['defaultheight'] = height;
+}
 
   /**
    * This function is used to remove a question from the current test and add a styling to the button
@@ -412,7 +408,11 @@ export class QuestionsComponent implements OnInit {
   }
 
   getCurrentQuestion(pageIndex: number, pagePosition: number) {
-    this.currentEditQuestion = `${pageIndex}${pagePosition}`;
+    if (this.currentEditQuestion != `${pageIndex}${pagePosition}`) {
+      this.currentEditQuestion = `${pageIndex}${pagePosition}`;
+      console.log(this.currentEditQuestion);
+      
+    }
   }
 
   /**
@@ -430,9 +430,8 @@ export class QuestionsComponent implements OnInit {
     question.style.minHeight = this.test.pages[pageIndex][0][pagePosition]['defaultheight'] + '%';
 
    
-      this.checkMaxHeightOfLastQuestionOfPageIndex(pageIndex, pagePosition, question);
-    
-   
+  this.checkMaxHeightOfLastQuestionOfPageIndex(pageIndex, pagePosition, question);
+
 
     let questionContentHeight = Number(question.style.minHeight.replace('%', ''));
     resizer.addEventListener('mousedown', initDrag, false);
@@ -510,7 +509,6 @@ export class QuestionsComponent implements OnInit {
       let outerHeight = this.getHeight(`test_dinA4${pageIndex}`);
       let paperHeight = outerHeight - (outerHeight * 0.18);
       question.style.maxHeight = ` ${paperHeight - contentHeight}px `
-      console.log(question.style.maxHeight);
     }
   }
 
