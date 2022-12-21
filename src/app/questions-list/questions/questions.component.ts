@@ -325,8 +325,6 @@ export class QuestionsComponent implements OnInit {
    * executes setQuestionNumber
    */
   async checkHeightOfAllPreviewQuestions() {
-    console.log('checkHeightofallpreviequestions');
-    
     let contentHeight = 0;
     setTimeout(async () => {
       for (let i = 0; i < this.test.pages.length; i++) {
@@ -340,11 +338,6 @@ export class QuestionsComponent implements OnInit {
         let paperHeight = outerHeight - (outerHeight * 0.22);
         if (i > 0) {
           this.moveUpQuestionAndDeleteEmptyPages(i, paperHeight);
-          // if (this.pageIsEmpty(i)) {
-          //   setTimeout(() => {
-          //     this.test.pages.pop();  
-          //   }, 100);
-          // }
         }
         for (let j = 0; j < this.test.pages[i][0].length; j++) {
           let height = this.getHeight(`question${i}${j}`);
@@ -352,8 +345,7 @@ export class QuestionsComponent implements OnInit {
         }
         console.log('contentHeight', contentHeight, 'paperHeight', paperHeight);
         if (contentHeight > paperHeight) {
-          console.log('contentHeight', contentHeight, 'paperHeight', paperHeight);
-          
+          console.log('contentHeight', contentHeight, 'paperHeight', paperHeight);         
           this.addNewPageAndpushLastQuestion(i);
         }
       }
@@ -363,6 +355,10 @@ export class QuestionsComponent implements OnInit {
 
   addNewPageAndpushLastQuestion(i: number) {
     const question = this.test.pages[i][0].pop();
+    setTimeout(() => {
+      this.renderSquaresAndLinesOfQuestionsInTest();
+    }, 100);
+  
     if (i == this.test.pages.length - 1) {
       this.test.pages.push({ [0]: [] });
     }
@@ -373,6 +369,9 @@ export class QuestionsComponent implements OnInit {
   async moveUpQuestionAndDeleteEmptyPages(i: number, paperHeight: number) {
     if (!this.pageIsEmpty(i) && await this.spaceForFirstQuestion(i, paperHeight)) {
       const question = this.test.pages[i][0].shift();
+      setTimeout(() => {
+        this.renderSquaresAndLinesOfQuestionsInTest();
+      }, 100);
       this.test.pages[i - 1][0].push(question)
       setTimeout(() => {
         if (this.pageIsEmpty(i)) {
@@ -423,6 +422,7 @@ export class QuestionsComponent implements OnInit {
    * @param pagePosition - is the index of the question on the page
    */
   resizeQuestion(pageIndex: number, pagePosition: number) {
+    let move = false;
     let startY: number, startHeight: number;
     let resizer = this.element(`resize${this.currentEditQuestion}`);
     let question = this.element(`question${this.currentEditQuestion}`);
@@ -457,8 +457,22 @@ export class QuestionsComponent implements OnInit {
       document.documentElement.removeEventListener('mousemove', doDrag, false);
       document.documentElement.removeEventListener('mouseup', stopDrag, false);
     }
-    this.checkHeightOfAllPreviewQuestions();
-    this.setQuestionNumber();
+    this.test.pages[pageIndex][0][pagePosition]['questionHeight'] =  question.style.height;
+  }
+  check: any;
+  startInterval(mouse: string) {
+    if (mouse == 'down') {
+      this.check = setInterval(() => {
+        console.log('hallo');
+        this.checkHeightOfAllPreviewQuestions();
+        this.setQuestionNumber();
+      }, 50)
+    }
+    
+    if (mouse == 'up') { 
+      clearInterval(this.check)
+      console.log('stop');
+    }
   }
 
   resizeImage(pageIndex: number, pagePosition: number, questionPosition: number) {

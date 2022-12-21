@@ -256,7 +256,7 @@
         <!-- TEST PREVIEW -->
         <!--  -->
         <div *ngIf="loaded" id="test_print" class="test_print" [class.opacity0]="!preview"
-            >
+        (mouseup)="startInterval('up')" >
             <div id="test_dinA4{{j}}" *ngFor="let pages of test['pages'] let j = index" class="test_dinA4 page_break">
                 <div id="test_content{{j}}" class="test_content d_flex_column_start">
                     <div style="width: 100%; padding-bottom: 9%;">
@@ -310,7 +310,7 @@
                     <!-- QUESTION AND SOLUTION TEST PREVIEW -->
                     <div id="question{{ j }}{{ i }}" class="question_wrapper d_flex_column"
                         [class.solution_wrapper]="sampleSolution" *ngFor="let data of pages[0] let i = index"
-                        (mouseover)="getCurrentQuestion(j, i)" (click)="getCurrentQuestion(j, i)"
+                        (mouseover)="getCurrentQuestion(j, i)" (click)="getCurrentQuestion(j, i)" 
                         [ngStyle]="{'height': data['questionHeight'] && !sampleSolution ? data['questionHeight'] : 'fit-content'}">
                         <div id="questionContent{{j}}{{i}}" class="question_test">
                             <div class="question_head_container">
@@ -486,7 +486,7 @@
                                 </div>
                             </div>
 
-                            <div (click)="service.onEvent($event)" (mouseover)="resizeQuestion(j, i)"
+                            <div (click)="service.onEvent($event)" (mouseover)="resizeQuestion(j, i)" (mousedown)="startInterval('down')"
                                 (mousemove)="getSquaresAndLines(j, i)" id="resize{{j}}{{i}}"
                                 class="height_info_wrapper d_flex show_onHover">
                                 <span class="resize_line"></span>
