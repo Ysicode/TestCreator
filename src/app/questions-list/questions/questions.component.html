@@ -13,7 +13,7 @@
 
 </app-spinner>
 
-<div [class.d_none]="overlay" class="questions_wrapper ">
+<div  *ngIf="!logedIn" [class.d_none]="overlay" class="questions_wrapper ">
     <div class="questions_container">
         <div class="headline_test_infos d_flex">
             <div class="headline_test_infos_inside_container">
@@ -221,10 +221,26 @@
                     </div>
                 </div>
             </div>
-            <div *ngIf="openFilter" style="position: fixed; bottom: 20%;">
-                <button (click)="setFilter('Leicht')">Leicht</button>
-                <button (click)="setFilter('Mittel')">Mittel</button>
-                <button (click)="setFilter('Schwer')">Schwer</button>
+            <div *ngIf="openFilter" style="position: fixed; bottom: 20%; z-index: 999999;">
+                <div class="d_flex_column">
+                    <div class="d_flex" style="margin-bottom: 50px;">
+                        <button (click)="setDifficultyFilter('Leicht')">Leicht</button>
+                        <button (click)="setDifficultyFilter('Mittel')">Mittel</button>
+                        <button (click)="setDifficultyFilter('Schwer')">Schwer</button>
+                    </div>
+                   
+                    <div class="d_flex">
+                        <button (click)="setSubjectFilter('Chemie')">Chemie</button>
+                        <button (click)="setSubjectFilter('Spanisch')">Spanisch</button>
+                        <button (click)="setSubjectFilter('Mediengestaltung')">Mediengestaltung</button>
+                    </div>
+
+                    <div class="d_flex">
+                        <button (click)="setClassFilter('10. Klasse')">10.Klasse</button>
+                        <button (click)="setClassFilter('T2')">T2</button>
+                    </div>
+                </div>
+               
             </div>
             <div class="add_question_container d_flex">
                 <div *ngIf="search" class="add_question_btn_wrapper">
@@ -256,7 +272,7 @@
         <!-- TEST PREVIEW -->
         <!--  -->
         <div *ngIf="loaded" id="test_print" class="test_print" [class.opacity0]="!preview"
-        (mouseup)="startInterval('up')" >
+        (mouseup)="checkHeightsInterval('stop')" >
             <div id="test_dinA4{{j}}" *ngFor="let pages of test['pages'] let j = index" class="test_dinA4 page_break">
                 <div id="test_content{{j}}" class="test_content d_flex_column_start">
                     <div style="width: 100%; padding-bottom: 9%;">
@@ -478,15 +494,15 @@
                             <div id="edit_whitespace{{j}}{{i}}"
                                 class="edit_question_whitespace_wrapper d_flex show_onHover notVisible">
                                 <div class="edit_question_whitespace_btn_wrapper d_flex">
-                                    <button class="whitespace_btn d_flex" (click)="showWhite(j, i)"></button>
-                                    <button class="whitespace_btn d_flex" (click)="showLines(j, i)"><img
+                                    <button class="whitespace_btn d_flex" (click)="showWhite(j, i); checkHeightsInterval('stop')"></button>
+                                    <button class="whitespace_btn d_flex" (click)="showLines(j, i); checkHeightsInterval('stop')"><img
                                             class="whitespace_btn_icon" src="assets/lines.png" alt=""></button>
-                                    <button class="whitespace_btn d_flex" (click)="showSquare(j, i)"><img
+                                    <button class="whitespace_btn d_flex" (click)="showSquare(j, i); checkHeightsInterval('stop')"><img
                                             class="whitespace_btn_icon" src="assets/square.png" alt=""></button>
                                 </div>
                             </div>
 
-                            <div (click)="service.onEvent($event)" (mouseover)="resizeQuestion(j, i)" (mousedown)="startInterval('down')"
+                            <div (click)="service.onEvent($event); checkHeightsInterval('stop')"  (mouseover)="resizeQuestion(j, i)" (mousedown)="checkHeightsInterval('start')"
                                 (mousemove)="getSquaresAndLines(j, i)" id="resize{{j}}{{i}}"
                                 class="height_info_wrapper d_flex show_onHover">
                                 <span class="resize_line"></span>

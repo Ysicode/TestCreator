@@ -49,6 +49,7 @@ export class QuestionsComponent implements OnInit {
   currentTestHead: any;
   dinA4Pages = [];
   preview = true;
+  checkHeightsAndSetQuestionNumberInterval: any;
   editQuestionAtPreview = false;
   editImageAtPreview = false;
   public editTesthead = false;
@@ -76,9 +77,16 @@ export class QuestionsComponent implements OnInit {
   search = false;
   searchactive = false;
   currentSearch = '';
-  filterActive = false;
-  filteredDifficulty: any = 'notSelected';
-
+  //Filter Variables
+  filterOne = '';
+  filters = []
+  filteredDifficulty: any = null;
+  filteredSubject: any = null
+  filteredClass: any = null;
+  filteredBearbeitungszeit: any = null;
+  filteredPunktzahl: any = null;
+  filteredMultipleChoice: any = null;
+  filteredOnlyMyQuestion: any = null;
 
   constructor(private firestore: Firestore, public service: overlaysService) { }
   @HostListener("click", ["$event"])
@@ -93,10 +101,6 @@ export class QuestionsComponent implements OnInit {
       }, 1000);
     }
 
-  }
-
-  stopLoop = (time: any) => {
-    return new Promise((resolve) => setTimeout(resolve, time))
   }
 
   ngOnInit(): void {
@@ -137,7 +141,7 @@ export class QuestionsComponent implements OnInit {
       this.loadedQuestions.sort((x, y) => {
         return y.frage.time - x.frage.time
       })
-    })
+    }) 
   }
 
   /**
@@ -149,7 +153,6 @@ export class QuestionsComponent implements OnInit {
     this.testHeadFromFirestore$ = collectionData(testHead, { idField: 'id' });
     this.testHeadFromFirestore$.subscribe((data) => {
       this.currentTestHead = data;
-      console.log(this.currentTestHead)
       this.loaded = true;
     });
   }
@@ -345,12 +348,11 @@ export class QuestionsComponent implements OnInit {
         }
         console.log('contentHeight', contentHeight, 'paperHeight', paperHeight);
         if (contentHeight > paperHeight) {
-          console.log('contentHeight', contentHeight, 'paperHeight', paperHeight);         
+          console.log('contentHeight', contentHeight, 'paperHeight', paperHeight);
           this.addNewPageAndpushLastQuestion(i);
         }
       }
     }, 30);
-
   }
 
   addNewPageAndpushLastQuestion(i: number) {
@@ -358,7 +360,6 @@ export class QuestionsComponent implements OnInit {
     setTimeout(() => {
       this.renderSquaresAndLinesOfQuestionsInTest();
     }, 100);
-  
     if (i == this.test.pages.length - 1) {
       this.test.pages.push({ [0]: [] });
     }
@@ -378,7 +379,6 @@ export class QuestionsComponent implements OnInit {
           this.test.pages.pop();
         }
       }, 5);
-
     }
   }
 
@@ -412,7 +412,6 @@ export class QuestionsComponent implements OnInit {
   getCurrentQuestion(pageIndex: number, pagePosition: number) {
     if (this.currentEditQuestion != `${pageIndex}${pagePosition}`) {
       this.currentEditQuestion = `${pageIndex}${pagePosition}`;
-   
     }
   }
 
@@ -422,7 +421,6 @@ export class QuestionsComponent implements OnInit {
    * @param pagePosition - is the index of the question on the page
    */
   resizeQuestion(pageIndex: number, pagePosition: number) {
-    let move = false;
     let startY: number, startHeight: number;
     let resizer = this.element(`resize${this.currentEditQuestion}`);
     let question = this.element(`question${this.currentEditQuestion}`);
@@ -457,21 +455,18 @@ export class QuestionsComponent implements OnInit {
       document.documentElement.removeEventListener('mousemove', doDrag, false);
       document.documentElement.removeEventListener('mouseup', stopDrag, false);
     }
-    this.test.pages[pageIndex][0][pagePosition]['questionHeight'] =  question.style.height;
+    this.test.pages[pageIndex][0][pagePosition]['questionHeight'] = question.style.height;
   }
-  check: any;
-  startInterval(mouse: string) {
-    if (mouse == 'down') {
-      this.check = setInterval(() => {
-        console.log('hallo');
+
+  checkHeightsInterval(mouse: string) {
+    if (mouse == 'start') {
+      this.checkHeightsAndSetQuestionNumberInterval = setInterval(() => {
         this.checkHeightOfAllPreviewQuestions();
         this.setQuestionNumber();
       }, 50)
     }
-    
-    if (mouse == 'up') { 
-      clearInterval(this.check)
-      console.log('stop');
+    if (mouse == 'stop') {
+      clearInterval(this.checkHeightsAndSetQuestionNumberInterval)
     }
   }
 
@@ -483,19 +478,21 @@ export class QuestionsComponent implements OnInit {
     let question = this.element(`question${pageIndex}${pagePosition}`);
     let questionWidth = this.getWidth(`question${pageIndex}${pagePosition}`);
     resizer.addEventListener('mousedown', initDrag, false);
+
     function initDrag(e: { clientX: number; }) {
       startX = e.clientX;
       startWidth = parseInt(document.defaultView.getComputedStyle(image).width, 10);
       document.documentElement.addEventListener('mousemove', doDrag, false);
       document.documentElement.addEventListener('mouseup', stopDrag, false);
     }
+
     function doDrag(e: { clientX: number; }) {
       let width = ((startWidth + e.clientX - startX) * 100) / questionWidth;
       image.style.width = width + '%';
       // image.style.width = (startWidth + e.clientX - startX) + 'px';
       question.style.height = 'fit-content';
-
     }
+
     function stopDrag() {
       document.documentElement.removeEventListener('mousemove', doDrag, false);
       document.documentElement.removeEventListener('mouseup', stopDrag, false);
@@ -637,35 +634,89 @@ export class QuestionsComponent implements OnInit {
 
   onKeyUpSearchInput(event: any) { //Currently when press Enter
     let currentSearch = event.target.value;
-    this.searchForNameTypeId(currentSearch)
+    this.searchForNameTypeId(currentSearch);
   }
 
   searchForNameTypeId(searchvalue: string) {
     let search = searchvalue.toLowerCase().replace(/\s+/g, '');
+    window.scrollTo(0, 0);
     // str.trim().split(/\s+/);
-    if (this.filterActive) {
+    if (this.filters.length > 0) {     
       for (let i = 0; i < this.loadedQuestions.length; i++) {
         this.hide(`questionListView${i}`, 'd_none');
         this.stopLoop(10)
-
-        if (this.loadedQuestions[i].schwierigkeit == this.filteredDifficulty) {
-          this.doSearch(search, i)
+        if (this.filters.length == 1) {
+          if (this.setFilter(this.filters[0], i)) {
+            this.doSearch(search, i)
+          }
         }
+        if (this.filters.length == 2) {
+          if (this.setFilter(this.filters[0], i) && this.setFilter(this.filters[1], i)) {
+            this.doSearch(search, i)
+          }
+        }
+        if (this.filters.length == 3) {
+          if (this.setFilter(this.filters[0], i) && this.setFilter(this.filters[1], i) && this.setFilter(this.filters[2], i)) {
+            this.doSearch(search, i)
+          }
+        }       
       }
     }
 
-    if (!this.filterActive) {
-      console.log(this.loadedQuestions);
+    if (this.filters.length == 0) {
+      console.log(this.loadedQuestions, 'nofilter');
       for (let i = 0; i < this.loadedQuestions.length; i++) {
         this.hide(`questionListView${i}`, 'd_none');
         this.stopLoop(10)
         this.doSearch(search, i)
       }
     }
-    // if (notFound) {
-    //     content.innerHTML = showSearchNotFound();
-    // }
     this.getTotalQuestionNumber();
+  }
+
+  
+  setDifficultyFilter(diffculty: string) {
+    this.filteredDifficulty = diffculty;
+    this.filters.push('difficulty')
+
+    this.searchForNameTypeId('');
+    console.log(this.filters);
+    console.log(this.loadedQuestions);
+  }
+
+  setSubjectFilter(subject: string) {
+    this.filters.push('subject')
+    this.filteredSubject = subject;
+ 
+    this.searchForNameTypeId('');
+    console.log(this.filters);
+    console.log(this.loadedQuestions);
+  }
+
+  setClassFilter(slectedClass: string) {
+    this.filters.push('class')
+    this.filteredClass = slectedClass;
+ 
+    this.searchForNameTypeId('');
+    console.log(this.filters);
+    console.log(this.loadedQuestions);
+  }
+
+  setFilter(filter: string, i: number) {
+    if (filter == 'difficulty') {
+      return this.loadedQuestions[i].schwierigkeit == this.filteredDifficulty;
+    } 
+    if (filter == 'subject') {
+      return this.loadedQuestions[i].fach == this.filteredSubject;
+    }
+    if (filter == 'class') {
+      return this.loadedQuestions[i].klasse == this.filteredClass;
+    }
+
+      console.log('false');
+      
+      return false
+    
   }
 
 
@@ -737,15 +788,15 @@ export class QuestionsComponent implements OnInit {
     }
   }
 
-  setFilter(diffculty: string) {
-    this.filterActive = true;
-    this.filteredDifficulty = diffculty;
-    this.searchForNameTypeId('');
-  }
+
 
 
   toggleEditTestHead() {
     this.editTesthead = true;
+  }
+
+  stopLoop = (time: any) => {
+    return new Promise((resolve) => setTimeout(resolve, time))
   }
 
   closeEditTestHead() {
