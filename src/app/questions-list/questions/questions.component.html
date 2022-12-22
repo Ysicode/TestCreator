@@ -13,7 +13,7 @@
 
 </app-spinner>
 
-<div  *ngIf="!logedIn" [class.d_none]="overlay" class="questions_wrapper ">
+<div *ngIf="!logedIn" [class.d_none]="overlay" class="questions_wrapper ">
     <div class="questions_container">
         <div class="headline_test_infos d_flex">
             <div class="headline_test_infos_inside_container">
@@ -42,19 +42,19 @@
 
 
 
-        <!-- All Questions View  with solution-->
+        <!-- All Questions View with solution-->
         <div [class.d_none]="preview" class="questions d_flex_column" id="allQuestionsListView">
             <div class="totalQuestionsNumber_wrapper d_flex_start">
-                {{ totalQuestionsNumber == 1 ? totalQuestionsNumber + ' Aufgabe' : totalQuestionsNumber + ' Aufgaben'  }}
+                {{ totalQuestionsNumber == 1 ? totalQuestionsNumber + ' Aufgabe' : totalQuestionsNumber + ' Aufgaben' }}
             </div>
             <div *ngIf="totalQuestionsNumber == 0" class="question_wrapper_listview d_flex_column">
                 <div class="question">
                     Keine passende Aufgabe gefunden
                 </div>
-        
+
             </div>
             <div id="questionListView{{i}}" class="question_wrapper_listview d_flex_column"
-                *ngFor="let data of loadedQuestions let i = index">
+                *ngFor="let data of data.loadedQuestions let i = index">
                 <div id="question_list{{ i }}" class="question">
                     <div class="question_head_container">
                         <div class="question_info d_flex_start">
@@ -221,6 +221,8 @@
                     </div>
                 </div>
             </div>
+
+            <!-- FILTER -->
             <div *ngIf="openFilter" style="position: fixed; bottom: 20%; z-index: 999999;">
                 <div class="d_flex_column">
                     <div class="d_flex" style="margin-bottom: 50px;">
@@ -228,7 +230,10 @@
                         <button (click)="setDifficultyFilter('Mittel')">Mittel</button>
                         <button (click)="setDifficultyFilter('Schwer')">Schwer</button>
                     </div>
-                   
+                    <div  *ngFor="let button of data.loadedUserdata[0]['subjects'] ; let i = index">
+                        Hello
+                    </div>
+
                     <div class="d_flex">
                         <button (click)="setSubjectFilter('Chemie')">Chemie</button>
                         <button (click)="setSubjectFilter('Spanisch')">Spanisch</button>
@@ -240,8 +245,10 @@
                         <button (click)="setClassFilter('T2')">T2</button>
                     </div>
                 </div>
-               
             </div>
+            <!-- -->
+
+            <!-- SEARCH / BUTTONS-->
             <div class="add_question_container d_flex">
                 <div *ngIf="search" class="add_question_btn_wrapper">
                     <input class="search" #search id="search" type="search" placeholder="Suche"
@@ -263,16 +270,15 @@
                         Filtern</button>
                 </div>
             </div>
-
-
+            <!--  -->
         </div>
 
 
         <!--  -->
         <!-- TEST PREVIEW -->
         <!--  -->
-        <div *ngIf="loaded" id="test_print" class="test_print" [class.opacity0]="!preview"
-        (mouseup)="checkHeightsInterval('stop')" >
+        <div *ngIf="data.loaded" id="test_print" class="test_print" [class.opacity0]="!preview"
+            (mouseup)="checkHeightsInterval('stop')">
             <div id="test_dinA4{{j}}" *ngFor="let pages of test['pages'] let j = index" class="test_dinA4 page_break">
                 <div id="test_content{{j}}" class="test_content d_flex_column_start">
                     <div style="width: 100%; padding-bottom: 9%;">
@@ -283,8 +289,8 @@
                     <div id="testhead" class="testHead d_flex_column" *ngIf="j == 0">
                         <div class="test_head_wrapper d_flex_space">
                             <div class="test_head">
-                                <p class="school_name">{{ currentTestHead[0]['schoolname'] }}</p>
-                                <p class="testname">{{ currentTestHead[0]['testname'] }}</p>
+                                <p class="school_name">{{ data.currentTestHead[0]['schoolname'] }}</p>
+                                <p class="testname">{{ data.currentTestHead[0]['testname'] }}</p>
                             </div>
                             <div class="message_container">
                                 <p class="message">Viel <br> Erfolg!</p>
@@ -303,7 +309,7 @@
                         </div>
 
                         <div class="test_head_data d_flex_space">
-                            <p class="class">Bearbeitungszeit: {{ currentTestHead[0]['totaltime'] }} Min.</p>
+                            <p class="class">Bearbeitungszeit: {{ data.currentTestHead[0]['totaltime'] }} Min.</p>
                             <p class="test_head_data_item">Punktzahl: <b class="test_total_number">/{{
                                     currentTestPoints
                                     }}</b></p>
@@ -326,7 +332,7 @@
                     <!-- QUESTION AND SOLUTION TEST PREVIEW -->
                     <div id="question{{ j }}{{ i }}" class="question_wrapper d_flex_column"
                         [class.solution_wrapper]="sampleSolution" *ngFor="let data of pages[0] let i = index"
-                        (mouseover)="getCurrentQuestion(j, i)" (click)="getCurrentQuestion(j, i)" 
+                        (mouseover)="getCurrentQuestion(j, i)" (click)="getCurrentQuestion(j, i)"
                         [ngStyle]="{'height': data['questionHeight'] && !sampleSolution ? data['questionHeight'] : 'fit-content'}">
                         <div id="questionContent{{j}}{{i}}" class="question_test">
                             <div class="question_head_container">
@@ -494,22 +500,26 @@
                             <div id="edit_whitespace{{j}}{{i}}"
                                 class="edit_question_whitespace_wrapper d_flex show_onHover notVisible">
                                 <div class="edit_question_whitespace_btn_wrapper d_flex">
-                                    <button class="whitespace_btn d_flex" (click)="showWhite(j, i); checkHeightsInterval('stop')"></button>
-                                    <button class="whitespace_btn d_flex" (click)="showLines(j, i); checkHeightsInterval('stop')"><img
+                                    <button class="whitespace_btn d_flex"
+                                        (click)="showWhite(j, i); checkHeightsInterval('stop')"></button>
+                                    <button class="whitespace_btn d_flex"
+                                        (click)="showLines(j, i); checkHeightsInterval('stop')"><img
                                             class="whitespace_btn_icon" src="assets/lines.png" alt=""></button>
-                                    <button class="whitespace_btn d_flex" (click)="showSquare(j, i); checkHeightsInterval('stop')"><img
+                                    <button class="whitespace_btn d_flex"
+                                        (click)="showSquare(j, i); checkHeightsInterval('stop')"><img
                                             class="whitespace_btn_icon" src="assets/square.png" alt=""></button>
                                 </div>
                             </div>
 
-                            <div (click)="service.onEvent($event); checkHeightsInterval('stop')"  (mouseover)="resizeQuestion(j, i)" (mousedown)="checkHeightsInterval('start')"
+                            <div (click)="service.onEvent($event); checkHeightsInterval('stop')"
+                                (mouseover)="resizeQuestion(j, i)" (mousedown)="checkHeightsInterval('start')"
                                 (mousemove)="getSquaresAndLines(j, i)" id="resize{{j}}{{i}}"
                                 class="height_info_wrapper d_flex show_onHover">
                                 <span class="resize_line"></span>
                             </div>
                         </div>
                         <!-- whitspace SQUARES -->
-                        
+
                         <div id="whitespace_squares{{j}}{{i}}" class="d_flex_column squareWhitespace_wrapper"
                             [ngStyle]="{'display' : data['whitespace'] == 'squares' && !sampleSolution ? 'block' : 'none'}">
                         </div>
@@ -566,6 +576,6 @@
         </div>
     </div>
 
-    <app-edit-testhead *ngIf="editTesthead" (closeEditTestHeadOverlay)="editTesthead = false">
+    <app-edit-testhead *ngIf="editTesthead" (closeEditTestHeadOverlay)="editTesthead = false;">
 
     </app-edit-testhead>

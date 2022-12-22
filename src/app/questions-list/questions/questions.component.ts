@@ -1,11 +1,10 @@
-import { Component, Directive, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { async } from '@angular/core/testing';
-import { defaultAuthInstanceFactory } from '@angular/fire/auth/auth.module';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { collection, collectionData, doc, Firestore } from '@angular/fire/firestore';
 import { NgForm } from '@angular/forms';
 import { deleteDoc } from '@firebase/firestore';
-import { Observable, ReplaySubject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { EditComponent } from 'src/app/add/edit/edit.component';
+import { dataTransferService } from 'src/app/services/dataTransfer.service';
 import { overlaysService } from 'src/app/services/overlays.service';
 
 
@@ -13,7 +12,7 @@ import { overlaysService } from 'src/app/services/overlays.service';
   selector: 'app-questions',
   templateUrl: './questions.component.html',
   styleUrls: ['./questions.component.scss'],
-  providers: [overlaysService],
+  providers: [overlaysService, dataTransferService],
 
 })
 
@@ -21,11 +20,9 @@ export class QuestionsComponent implements OnInit {
   @ViewChild(EditComponent, { static: true }) editComp: EditComponent;
   @ViewChild("search") searchInput: ElementRef;
 
-
   //variables for the Questions list view
-  dataFromFirestore$: Observable<any>;
+  // dataFromFirestore$: Observable<any>;
   testHeadFromFirestore$: Observable<any>;
-  loadedQuestions = [];
   filteredQuestions = [];
   loaded = false;
 
@@ -88,7 +85,7 @@ export class QuestionsComponent implements OnInit {
   filteredMultipleChoice: any = null;
   filteredOnlyMyQuestion: any = null;
 
-  constructor(private firestore: Firestore, public service: overlaysService) { }
+  constructor(private firestore: Firestore, public service: overlaysService, public data: dataTransferService) { }
   @HostListener("click", ["$event"])
 
   login(password: string) {
@@ -105,57 +102,39 @@ export class QuestionsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getData();
+    this.data.loadSubjectsAndClasses();
+    this.data.loadQuestions();
   }
 
   getTotalQuestionNumber() {
     this.totalQuestionsNumber = 0;
-    for (let i = 0; i < this.loadedQuestions.length; i++) {
+    for (let i = 0; i < this.data.loadedQuestions.length; i++) {
       if (!document.getElementById(`questionListView${i}`).classList.contains('d_none')) {
         this.totalQuestionsNumber++
       }
-
     }
-    // setTimeout(() => {
-    //   this.totalQuestionsNumber = number;
-    // }, 500);
-
   }
+
   /**
    * This function is triggered OnInit and loads all Questions, all Subjects/Classes and the testHead
    */
   getData() {
-    this.loadQuestions();
-    this.loadtestHead();
-  }
-
-  /**
-     * this function is used to load all Questions from firebase
-     * and store it in a local object (loadedQuestions)
-     */
-  async loadQuestions() {
-    //gets all questions
-    const coll: any = collection(this.firestore, '/users/JonasWeiss/fragen');
-    this.dataFromFirestore$ = collectionData(coll, { idField: 'id' })
-    this.dataFromFirestore$.subscribe((data) => {
-      this.loadedQuestions = data;
-      this.loadedQuestions.sort((x, y) => {
-        return y.frage.time - x.frage.time
-      })
-    }) 
+ 
+    this.data.loadtestHead();
   }
 
   /**
    * This function is used to load the current testHead from firebase
    * and store it in a local object (currenttestHead)
    */
-  async loadtestHead() {
-    const testHead: any = collection(this.firestore, '/users/JonasWeiss/testHead');
-    this.testHeadFromFirestore$ = collectionData(testHead, { idField: 'id' });
-    this.testHeadFromFirestore$.subscribe((data) => {
-      this.currentTestHead = data;
-      this.loaded = true;
-    });
-  }
+  // async loadtestHead() {
+  //   const testHead: any = collection(this.firestore, '/users/JonasWeiss/testHead');
+  //   this.testHeadFromFirestore$ = collectionData(testHead, { idField: 'id' });
+  //   this.testHeadFromFirestore$.subscribe((data) => {
+  //     this.currentTestHead = data;
+  //     this.loaded = true;
+  //   });
+  // }
 
   /**
    * This function is used to delete a question form firebase
@@ -192,11 +171,11 @@ export class QuestionsComponent implements OnInit {
    * @param status is a given string (add_styling) as an argument to add styling to the button
    */
   addToTest(id: string, status: string, difficulty: string) {
-    for (let i = 0; i < this.loadedQuestions.length; i++) {
-      if (this.loadedQuestions[i]['id'] == id) {
+    for (let i = 0; i < this.data.loadedQuestions.length; i++) {
+      if (this.data.loadedQuestions[i]['id'] == id) {
         if (status == 'add_styling') {
-          this.test.pages[this.test.pages.length - 1]['0'].push(this.loadedQuestions[i]);
-          this.addedToTest.push(this.loadedQuestions[i]);
+          this.test.pages[this.test.pages.length - 1]['0'].push(this.data.loadedQuestions[i]);
+          this.addedToTest.push(this.data.loadedQuestions[i]);
           setTimeout(() => {
             this.getDefaultHeightsOfEachAddedQuestions();
           }, 200)
@@ -642,7 +621,7 @@ export class QuestionsComponent implements OnInit {
     window.scrollTo(0, 0);
     // str.trim().split(/\s+/);
     if (this.filters.length > 0) {     
-      for (let i = 0; i < this.loadedQuestions.length; i++) {
+      for (let i = 0; i < this.data.loadedQuestions.length; i++) {
         this.hide(`questionListView${i}`, 'd_none');
         this.stopLoop(10)
         if (this.filters.length == 1) {
@@ -664,8 +643,8 @@ export class QuestionsComponent implements OnInit {
     }
 
     if (this.filters.length == 0) {
-      console.log(this.loadedQuestions, 'nofilter');
-      for (let i = 0; i < this.loadedQuestions.length; i++) {
+      console.log(this.data.loadedQuestions, 'nofilter');
+      for (let i = 0; i < this.data.loadedQuestions.length; i++) {
         this.hide(`questionListView${i}`, 'd_none');
         this.stopLoop(10)
         this.doSearch(search, i)
@@ -674,113 +653,125 @@ export class QuestionsComponent implements OnInit {
     this.getTotalQuestionNumber();
   }
 
-  
+
   setDifficultyFilter(diffculty: string) {
+    for (let i = 0; i < this.filters.length; i++) {
+      if (this.filters[i] == 'difficulty') {
+        this.filters.splice(i, 1)
+        console.log(this.filters);   
+      }   
+    }
     this.filteredDifficulty = diffculty;
     this.filters.push('difficulty')
-
     this.searchForNameTypeId('');
     console.log(this.filters);
-    console.log(this.loadedQuestions);
+    console.log(this.data.loadedQuestions);
   }
 
   setSubjectFilter(subject: string) {
+    for (let i = 0; i < this.filters.length; i++) {
+      if (this.filters[i] == 'subject') {
+        this.filters.splice(i, 1)
+        console.log(this.filters);   
+      }   
+    }
     this.filters.push('subject')
     this.filteredSubject = subject;
- 
     this.searchForNameTypeId('');
     console.log(this.filters);
-    console.log(this.loadedQuestions);
+    console.log(this.data.loadedQuestions);
   }
 
   setClassFilter(slectedClass: string) {
-    this.filters.push('class')
+    for (let i = 0; i < this.filters.length; i++) {
+      if (this.filters[i] == 'class') {
+        this.filters.splice(i, 1)
+        console.log(this.filters);   
+      }   
+    }
+    this.filters.push('class');
     this.filteredClass = slectedClass;
- 
     this.searchForNameTypeId('');
     console.log(this.filters);
-    console.log(this.loadedQuestions);
+    console.log(this.data.loadedQuestions);
   }
 
   setFilter(filter: string, i: number) {
     if (filter == 'difficulty') {
-      return this.loadedQuestions[i].schwierigkeit == this.filteredDifficulty;
+      return this.data.loadedQuestions[i].schwierigkeit == this.filteredDifficulty;
     } 
     if (filter == 'subject') {
-      return this.loadedQuestions[i].fach == this.filteredSubject;
+      return this.data.loadedQuestions[i].fach == this.filteredSubject;
     }
     if (filter == 'class') {
-      return this.loadedQuestions[i].klasse == this.filteredClass;
+      return this.data.loadedQuestions[i].klasse == this.filteredClass;
     }
-
-      console.log('false');
-      
+      console.log('false'); 
       return false
-    
   }
 
 
   doSearch(search: string, i: number) {
-    for (let j = 0; j < this.loadedQuestions[i].keywords.length; j++) {
+    for (let j = 0; j < this.data.loadedQuestions[i].keywords.length; j++) {
       this.stopLoop(10)
-      if (this.loadedQuestions[i]['keywords'][j].toLowerCase().includes(search)) {
+      if (this.data.loadedQuestions[i]['keywords'][j].toLowerCase().includes(search)) {
         this.show(`questionListView${i}`, 'd_none')
       }
     }
 
     // Fach
-    if (this.loadedQuestions[i]['fach'].toLowerCase().includes(search)) {
+    if (this.data.loadedQuestions[i]['fach'].toLowerCase().includes(search)) {
       this.show(`questionListView${i}`, 'd_none')
     }
 
     // Schwierigkeit
-    if (this.loadedQuestions[i]['schwierigkeit'].toLowerCase().includes(search)) {
+    if (this.data.loadedQuestions[i]['schwierigkeit'].toLowerCase().includes(search)) {
       this.show(`questionListView${i}`, 'd_none')
     }
 
     // Klasse
-    if (this.loadedQuestions[i]['klasse'].replace(/\s+/g, '').split('.').join('').toLowerCase().includes(search.toLowerCase().split('.').join(''))) {
+    if (this.data.loadedQuestions[i]['klasse'].replace(/\s+/g, '').split('.').join('').toLowerCase().includes(search.toLowerCase().split('.').join(''))) {
       this.show(`questionListView${i}`, 'd_none')
     }
     // Punktzahl
-    if (this.loadedQuestions[i]['punktzahl'].toString().toLowerCase().includes(search.toLowerCase().replace('p', '').replace('u', '').replace('n', '').replace('k', '').replace('t', '').replace('e', ''))) {
+    if (this.data.loadedQuestions[i]['punktzahl'].toString().toLowerCase().includes(search.toLowerCase().replace('p', '').replace('u', '').replace('n', '').replace('k', '').replace('t', '').replace('e', ''))) {
       this.show(`questionListView${i}`, 'd_none')
     }
     // Minutes
-    if (this.loadedQuestions[i]['bearbeitungszeit'].toString().toLowerCase().includes(search.toLowerCase().replace('m', '').replace('i', '').replace('n', '').replace('u', '').replace('t', '').replace('e', '').replace('n', ''))) {
+    if (this.data.loadedQuestions[i]['bearbeitungszeit'].toString().toLowerCase().includes(search.toLowerCase().replace('m', '').replace('i', '').replace('n', '').replace('u', '').replace('t', '').replace('e', '').replace('n', ''))) {
       this.show(`questionListView${i}`, 'd_none')
     }
 
     // CONTENTSEARCH OF QUESTION
     // text - paragraph
-    for (let j = 0; j < this.loadedQuestions[i]['frage']['blocks'].length; j++) {
-      if (this.loadedQuestions[i]['frage']['blocks'][j]['type'] == 'paragraph') {
-        if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['text'].toLowerCase().indexOf(search) >= 0) {
+    for (let j = 0; j < this.data.loadedQuestions[i]['frage']['blocks'].length; j++) {
+      if (this.data.loadedQuestions[i]['frage']['blocks'][j]['type'] == 'paragraph') {
+        if (this.data.loadedQuestions[i]['frage']['blocks'][j]['data']['text'].toLowerCase().indexOf(search) >= 0) {
           this.show(`questionListView${i}`, 'd_none')
         }
       }
       // table
-      if (this.loadedQuestions[i]['frage']['blocks'][j]['type'] == 'table') {
-        for (let k = 0; k < Object.keys(this.loadedQuestions[i]['frage']['blocks'][j]['data']['table']).length - 1; k++) {
-          for (let l = 0; l < this.loadedQuestions[i]['frage']['blocks'][j]['data']['table'][k].length; l++) {
-            if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['table'][k][l].toLowerCase().indexOf(search) >= 0) {
+      if (this.data.loadedQuestions[i]['frage']['blocks'][j]['type'] == 'table') {
+        for (let k = 0; k < Object.keys(this.data.loadedQuestions[i]['frage']['blocks'][j]['data']['table']).length - 1; k++) {
+          for (let l = 0; l < this.data.loadedQuestions[i]['frage']['blocks'][j]['data']['table'][k].length; l++) {
+            if (this.data.loadedQuestions[i]['frage']['blocks'][j]['data']['table'][k][l].toLowerCase().indexOf(search) >= 0) {
               this.show(`questionListView${i}`, 'd_none')
             }
           }
         }
       }
       // List
-      if (this.loadedQuestions[i]['frage']['blocks'][j]['type'] == 'list') {
-        for (let k = 0; k < this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'].length; k++) {
-          if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'][k].toLowerCase().indexOf(search) >= 0) {
+      if (this.data.loadedQuestions[i]['frage']['blocks'][j]['type'] == 'list') {
+        for (let k = 0; k < this.data.loadedQuestions[i]['frage']['blocks'][j]['data']['items'].length; k++) {
+          if (this.data.loadedQuestions[i]['frage']['blocks'][j]['data']['items'][k].toLowerCase().indexOf(search) >= 0) {
             this.show(`questionListView${i}`, 'd_none')
           }
         }
       }
       // checklist
-      if (this.loadedQuestions[i]['frage']['blocks'][j]['type'] == 'checklist') {
-        for (let k = 0; k < this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'].length; k++) {
-          if (this.loadedQuestions[i]['frage']['blocks'][j]['data']['items'][k]['text'].toLowerCase().indexOf(search) >= 0) {
+      if (this.data.loadedQuestions[i]['frage']['blocks'][j]['type'] == 'checklist') {
+        for (let k = 0; k < this.data.loadedQuestions[i]['frage']['blocks'][j]['data']['items'].length; k++) {
+          if (this.data.loadedQuestions[i]['frage']['blocks'][j]['data']['items'][k]['text'].toLowerCase().indexOf(search) >= 0) {
             this.show(`questionListView${i}`, 'd_none')
           }
         }
