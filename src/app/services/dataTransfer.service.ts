@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { collection, collectionData, Firestore } from "@angular/fire/firestore";
+import { collection, collectionData, deleteDoc, doc, Firestore } from "@angular/fire/firestore";
 import { Observable } from "rxjs";
 
 
@@ -54,8 +54,14 @@ export class dataTransferService {
     });
   }
 
+  log() {
+    console.log('hello');
+  }
+ 
+  
 
-
-
+  logID(id: string) {
+    console.log(id)
+  }
 
 }

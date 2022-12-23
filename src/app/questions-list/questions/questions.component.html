@@ -215,7 +215,6 @@
                             <div class="question_edit_btn_wrapper">
                                 <button class="question_edit_btn">Edit</button>
                                 <button class="question_edit_btn" (click)="deletedata(data.id)">Delete</button>
-                                <button class="question_edit_btn" (click)="logID( data.id)">Log ID</button>
                             </div>
                         </div>
                     </div>
@@ -226,6 +225,7 @@
             <div *ngIf="openFilter" style="position: fixed; bottom: 20%; z-index: 999999;">
                 <div class="d_flex_column">
                     <div class="d_flex" style="margin-bottom: 50px;">
+                        <button class="question_edit_btn" (click)="data.log()">ds</button>
                         <button (click)="setDifficultyFilter('Leicht')">Leicht</button>
                         <button (click)="setDifficultyFilter('Mittel')">Mittel</button>
                         <button (click)="setDifficultyFilter('Schwer')">Schwer</button>
@@ -547,6 +547,7 @@
                         <span class="burger_bottom">
                         </span>
                     </div>
+                 
                     <button (click)="printTest()" class="add_question_btn">Speichern</button>
                 </div>
             </div>

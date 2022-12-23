@@ -22,7 +22,7 @@ export class QuestionsComponent implements OnInit {
 
   //variables for the Questions list view
   // dataFromFirestore$: Observable<any>;
-  testHeadFromFirestore$: Observable<any>;
+  // testHeadFromFirestore$: Observable<any>;
   filteredQuestions = [];
   loaded = false;
 
@@ -43,7 +43,6 @@ export class QuestionsComponent implements OnInit {
   //variables for the preview window
   @ViewChild("rangeSliderForm") rangebars: NgForm;
   addedToTest = [];
-  currentTestHead: any;
   dinA4Pages = [];
   preview = true;
   checkHeightsAndSetQuestionNumberInterval: any;
@@ -101,7 +100,7 @@ export class QuestionsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getData();
+    this.data.loadtestHead();
     this.data.loadSubjectsAndClasses();
     this.data.loadQuestions();
   }
@@ -116,27 +115,6 @@ export class QuestionsComponent implements OnInit {
   }
 
   /**
-   * This function is triggered OnInit and loads all Questions, all Subjects/Classes and the testHead
-   */
-  getData() {
- 
-    this.data.loadtestHead();
-  }
-
-  /**
-   * This function is used to load the current testHead from firebase
-   * and store it in a local object (currenttestHead)
-   */
-  // async loadtestHead() {
-  //   const testHead: any = collection(this.firestore, '/users/JonasWeiss/testHead');
-  //   this.testHeadFromFirestore$ = collectionData(testHead, { idField: 'id' });
-  //   this.testHeadFromFirestore$.subscribe((data) => {
-  //     this.currentTestHead = data;
-  //     this.loaded = true;
-  //   });
-  // }
-
-  /**
    * This function is used to delete a question form firebase
    * @param id is the firebase id of the question to delete it
    */
@@ -144,6 +122,7 @@ export class QuestionsComponent implements OnInit {
     const coll: any = doc(this.firestore, '/users/JonasWeiss/fragen/' + id);
     deleteDoc(coll);
   }
+
 
 
 
@@ -159,7 +138,7 @@ export class QuestionsComponent implements OnInit {
    */
   toggleAnswer(id: string) {
     if (this.currentId == id) {
-      this.currentId = '2883993'
+      this.currentId = '2883993553545543545353345'
     } else {
       this.currentId = id;
     }
@@ -620,7 +599,7 @@ export class QuestionsComponent implements OnInit {
     let search = searchvalue.toLowerCase().replace(/\s+/g, '');
     window.scrollTo(0, 0);
     // str.trim().split(/\s+/);
-    if (this.filters.length > 0) {     
+    if (this.filters.length > 0) {
       for (let i = 0; i < this.data.loadedQuestions.length; i++) {
         this.hide(`questionListView${i}`, 'd_none');
         this.stopLoop(10)
@@ -638,7 +617,7 @@ export class QuestionsComponent implements OnInit {
           if (this.setFilter(this.filters[0], i) && this.setFilter(this.filters[1], i) && this.setFilter(this.filters[2], i)) {
             this.doSearch(search, i)
           }
-        }       
+        }
       }
     }
 
@@ -658,8 +637,8 @@ export class QuestionsComponent implements OnInit {
     for (let i = 0; i < this.filters.length; i++) {
       if (this.filters[i] == 'difficulty') {
         this.filters.splice(i, 1)
-        console.log(this.filters);   
-      }   
+        console.log(this.filters);
+      }
     }
     this.filteredDifficulty = diffculty;
     this.filters.push('difficulty')
@@ -672,8 +651,8 @@ export class QuestionsComponent implements OnInit {
     for (let i = 0; i < this.filters.length; i++) {
       if (this.filters[i] == 'subject') {
         this.filters.splice(i, 1)
-        console.log(this.filters);   
-      }   
+        console.log(this.filters);
+      }
     }
     this.filters.push('subject')
     this.filteredSubject = subject;
@@ -686,8 +665,8 @@ export class QuestionsComponent implements OnInit {
     for (let i = 0; i < this.filters.length; i++) {
       if (this.filters[i] == 'class') {
         this.filters.splice(i, 1)
-        console.log(this.filters);   
-      }   
+        console.log(this.filters);
+      }
     }
     this.filters.push('class');
     this.filteredClass = slectedClass;
@@ -699,15 +678,15 @@ export class QuestionsComponent implements OnInit {
   setFilter(filter: string, i: number) {
     if (filter == 'difficulty') {
       return this.data.loadedQuestions[i].schwierigkeit == this.filteredDifficulty;
-    } 
+    }
     if (filter == 'subject') {
       return this.data.loadedQuestions[i].fach == this.filteredSubject;
     }
     if (filter == 'class') {
       return this.data.loadedQuestions[i].klasse == this.filteredClass;
     }
-      console.log('false'); 
-      return false
+    console.log('false');
+    return false
   }
 
 
@@ -798,9 +777,7 @@ export class QuestionsComponent implements OnInit {
     window.print();
   }
 
-  logID(id: string) {
-    console.log(id)
-  }
+
 
 
 }
