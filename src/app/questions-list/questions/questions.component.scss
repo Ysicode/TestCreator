@@ -7,6 +7,57 @@ body {
     visibility: visible !important;
 }
 
+
+// Filter styles
+
+.selectedButton {
+    border: 2px solid #2c3e50;
+}
+
+.subject_btn {
+    background: linear-gradient(to right, #4babc3, #5fc1d8);
+    color: #424949;
+    border-radius: 30px;
+    font-size: 17px;
+    padding: 10px 30px 10px 30px;
+    margin: 15px;
+    border: none;
+    &:hover {
+        cursor: pointer;
+        opacity: 0.8;
+    }
+}
+
+.filter_overlay {
+    position: fixed;
+    bottom: 20%;
+    z-index: 9999999;
+    background: #f2f3f4;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+.question_add_btn {
+    background: linear-gradient(to right, #c2c2c2, #c8d4d1);
+    border: none;
+    border-radius: 50px;
+    padding: 7px;
+    &:hover {
+        opacity: 0.8;
+        cursor: pointer;
+    }
+}
+
+.close_overlay_window_btn {
+    position: fixed;
+    right: 20px;
+    top: 20px;
+}
+
+// _____________
+
 .add_question_overlay {
     position: absolute;
     top: 0;
@@ -705,6 +756,7 @@ input:-webkit-autofill {
     background: black;
     background: linear-gradient(to right, #4babc3, #5fc1d8);
 }
+
 
 /*
 Styles für die Vorschau sektion

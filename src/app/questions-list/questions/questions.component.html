@@ -54,27 +54,27 @@
 
             </div>
             <div id="questionListView{{i}}" class="question_wrapper_listview d_flex_column"
-                *ngFor="let data of data.loadedQuestions let i = index">
+                *ngFor="let questionData of data.loadedQuestions let i = index">
                 <div id="question_list{{ i }}" class="question">
                     <div class="question_head_container">
                         <div class="question_info d_flex_start">
                             <div class="question_info__difficulty_btn d_flex"
-                                [class.dificulty_leicht_btn]="data.schwierigkeit == 'Leicht'"
-                                [class.dificulty_mittel_btn]="data.schwierigkeit == 'Mittel'"
-                                [class.dificulty_schwer_btn]="data.schwierigkeit == 'Schwer'">
-                                <p class="margin_zero">{{ data.schwierigkeit }}</p>
+                                [class.dificulty_leicht_btn]="questionData.schwierigkeit == 'Leicht'"
+                                [class.dificulty_mittel_btn]="questionData.schwierigkeit == 'Mittel'"
+                                [class.dificulty_schwer_btn]="questionData.schwierigkeit == 'Schwer'">
+                                <p class="margin_zero">{{ questionData.schwierigkeit }}</p>
                             </div>
                             <div class="question_info_btn">
-                                {{ data.fach }}
+                                {{ questionData.fach }}
                             </div>
                             <div class="question_info_btn">
-                                {{ data.klasse }}
+                                {{ questionData.klasse }}
                             </div>
                             <div class="question_info_btn">
-                                {{ data.punktzahl }} Pkt
+                                {{ questionData.punktzahl }} Pkt
                             </div>
                             <div class="question_info_btn">
-                                {{ data.bearbeitungszeit }} Min
+                                {{ questionData.bearbeitungszeit }} Min
                             </div>
                         </div>
 
@@ -82,20 +82,22 @@
 
                         <div class="question_add">
                             <button id="{{ 'add_btn' + i }}"
-                                (click)="addToTest(data.id, 'add_styling', data.schwierigkeit)"
+                                (click)="addToTest(questionData.id, 'add_styling', questionData.schwierigkeit)"
                                 class="question_add_btn d_flex"><img class="add_icon" src="assets/plus_icon.png" alt="">
                             </button>
-                            <button id="{{ 'remove_btn' + i }}" (click)="removeFromTest(data.id, data.schwierigkeit)"
+                            <button id="{{ 'remove_btn' + i }}"
+                                (click)="removeFromTest(questionData.id, questionData.schwierigkeit)"
                                 class="question_add_btn d_none d_flex"><img class="remove_icon"
                                     src="assets/plus_icon.png" alt="">
                             </button>
                         </div>
                     </div>
 
-                    <div *ngFor="let question of data['frage']['blocks']">
+                    <div *ngFor="let question of questionData['frage']['blocks']">
                         <div class="question_container" [innerHTML]="question['data']['text'] ">
                         </div>
 
+                        <!-- Checkbox -->
                         <div ngClass="question_container" *ngIf="question['type'] == 'checklist'" class="margin_left ">
                             <div class="element_margin_text d_flex_start"
                                 *ngFor="let item of question['data']['items'] let k = index">
@@ -141,20 +143,21 @@
 
                     <!-- Rendering Answers  -->
                     <div class="answer_btn_container ">
-                        <div class="answer_btn_wrapper d_flex_end" (click)="toggleAnswer(data.id)">
-                            <button [class.answer_btn_schwer]="data.schwierigkeit == 'Schwer'"
-                                [class.answer_btn_mittel]="data.schwierigkeit == 'Mittel'"
-                                [class.answer_btn_leicht]="data.schwierigkeit == 'Leicht'"
-                                class="answer_btn d_flex"><img [class.question_arrow_turned]="currentId == data.id"
-                                    class="question_arrow" src="assets/arrow_slim.png">
+                        <div class="answer_btn_wrapper d_flex_end" (click)="toggleAnswer(questionData.id)">
+                            <button [class.answer_btn_schwer]="questionData.schwierigkeit == 'Schwer'"
+                                [class.answer_btn_mittel]="questionData.schwierigkeit == 'Mittel'"
+                                [class.answer_btn_leicht]="questionData.schwierigkeit == 'Leicht'"
+                                class="answer_btn d_flex"><img
+                                    [class.question_arrow_turned]="currentId == questionData.id" class="question_arrow"
+                                    src="assets/arrow_slim.png">
                                 Antwort
                             </button>
                         </div>
 
 
-                        <div *ngIf="currentId == data.id" class="answer_wrapper">
+                        <div *ngIf="currentId == questionData.id" class="answer_wrapper">
                             <div class="">
-                                <div *ngFor="let question of data['antwort']['blocks']">
+                                <div *ngFor="let question of questionData['antwort']['blocks']">
                                     <div class="question_container" [innerHTML]="question['data']['text'] ">
                                     </div>
 
@@ -214,7 +217,9 @@
                             </div>
                             <div class="question_edit_btn_wrapper">
                                 <button class="question_edit_btn">Edit</button>
-                                <button class="question_edit_btn" (click)="deletedata(data.id)">Delete</button>
+                                <button class="question_edit_btn" (click)="data.log(questionData.id)">ds</button>
+                                <button class="question_edit_btn"
+                                    (click)="data.deletedata(questionData.id)">Delete</button>
                             </div>
                         </div>
                     </div>
@@ -222,29 +227,36 @@
             </div>
 
             <!-- FILTER -->
-            <div *ngIf="openFilter" style="position: fixed; bottom: 20%; z-index: 999999;">
+            <div *ngIf="openFilter" class="filter_overlay d_flex">
                 <div class="d_flex_column">
                     <div class="d_flex" style="margin-bottom: 50px;">
-                        <button class="question_edit_btn" (click)="data.log()">ds</button>
-                        <button (click)="setDifficultyFilter('Leicht')">Leicht</button>
-                        <button (click)="setDifficultyFilter('Mittel')">Mittel</button>
-                        <button (click)="setDifficultyFilter('Schwer')">Schwer</button>
+                        <button (click)="setDifficultyFilter('Leicht')" class="subject_btn dificulty_leicht_btn"
+                            [class.selectedButton]="filteredDifficulty == 'Leicht'">Leicht</button>
+                        <button (click)="setDifficultyFilter('Mittel')" class="subject_btn dificulty_mittel_btn"
+                            [class.selectedButton]="filteredDifficulty == 'Mittel'">Mittel</button>
+                        <button (click)="setDifficultyFilter('Schwer')" class="subject_btn dificulty_schwer_btn"
+                            [class.selectedButton]="filteredDifficulty == 'Schwer'">Schwer</button>
                     </div>
-                    <div  *ngFor="let button of data.loadedUserdata[0]['subjects'] ; let i = index">
-                        Hello
-                    </div>
-
-                    <div class="d_flex">
-                        <button (click)="setSubjectFilter('Chemie')">Chemie</button>
-                        <button (click)="setSubjectFilter('Spanisch')">Spanisch</button>
-                        <button (click)="setSubjectFilter('Mediengestaltung')">Mediengestaltung</button>
+                    <div class="d_flex" style="margin-bottom: 50px;">
+                        <button *ngFor="let subject of data.loadedUserdata[0].subjects ; let i = index"
+                            (click)="setSubjectFilter(subject, i)" class="subject_btn"
+                            [class.selectedButton]="i == selectedSubjectButton">{{ subject }}</button>
                     </div>
 
-                    <div class="d_flex">
-                        <button (click)="setClassFilter('10. Klasse')">10.Klasse</button>
-                        <button (click)="setClassFilter('T2')">T2</button>
+                    <div class="d_flex" style="margin-bottom: 50px;">
+                        <button *ngFor="let class of data.loadedUserdata[0].classes; let i = index"
+                            (click)="setClassFilter(class, i)" class="subject_btn"
+                            [class.selectedButton]="i == selectedClassButton">{{class}}</button>
                     </div>
+                    <button type="button" class="subject_btn cancel_btn" (click)="openFilter = false">Abbrechen</button>
+                    <button class="subject_btn addNew_btn" (click)="openFilter = false">
+                        Filter anwenden</button>
                 </div>
+                <button type="button" (click)="openFilter = false"
+                    class="question_add_btn d_flex close_overlay_window_btn"><img class="remove_icon"
+                        src="assets/plus_icon.png">
+                </button>
+
             </div>
             <!-- -->
 
@@ -547,7 +559,7 @@
                         <span class="burger_bottom">
                         </span>
                     </div>
-                 
+
                     <button (click)="printTest()" class="add_question_btn">Speichern</button>
                 </div>
             </div>

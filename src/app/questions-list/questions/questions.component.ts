@@ -83,6 +83,8 @@ export class QuestionsComponent implements OnInit {
   filteredPunktzahl: any = null;
   filteredMultipleChoice: any = null;
   filteredOnlyMyQuestion: any = null;
+  selectedSubjectButton: number;
+  selectedClassButton: number;
 
   constructor(private firestore: Firestore, public service: overlaysService, public data: dataTransferService) { }
   @HostListener("click", ["$event"])
@@ -114,14 +116,7 @@ export class QuestionsComponent implements OnInit {
     }
   }
 
-  /**
-   * This function is used to delete a question form firebase
-   * @param id is the firebase id of the question to delete it
-   */
-  deletedata(id: string) {
-    const coll: any = doc(this.firestore, '/users/JonasWeiss/fragen/' + id);
-    deleteDoc(coll);
-  }
+ 
 
 
 
@@ -637,42 +632,49 @@ export class QuestionsComponent implements OnInit {
     for (let i = 0; i < this.filters.length; i++) {
       if (this.filters[i] == 'difficulty') {
         this.filters.splice(i, 1)
-        console.log(this.filters);
       }
     }
-    this.filteredDifficulty = diffculty;
-    this.filters.push('difficulty')
+    if (this.filteredDifficulty == diffculty) {
+      this.filteredDifficulty = '';
+    } else {
+      this.filteredDifficulty = diffculty;
+      this.filters.push('difficulty')
+    }
     this.searchForNameTypeId('');
-    console.log(this.filters);
-    console.log(this.data.loadedQuestions);
   }
 
-  setSubjectFilter(subject: string) {
+  setSubjectFilter(subject: any, index: number) { 
     for (let i = 0; i < this.filters.length; i++) {
       if (this.filters[i] == 'subject') {
-        this.filters.splice(i, 1)
-        console.log(this.filters);
+        this.filters.splice(i, 1)    
       }
     }
-    this.filters.push('subject')
-    this.filteredSubject = subject;
+    if (this.filteredSubject == subject) {
+      this.filteredSubject = '';
+      this.selectedSubjectButton = -1; 
+    } else {
+      this.filteredSubject = subject;
+      this.filters.push('subject');
+      this.selectedSubjectButton = index;  
+    }
     this.searchForNameTypeId('');
-    console.log(this.filters);
-    console.log(this.data.loadedQuestions);
   }
 
-  setClassFilter(slectedClass: string) {
+  setClassFilter(slectedClass: any, index: number) {
     for (let i = 0; i < this.filters.length; i++) {
       if (this.filters[i] == 'class') {
-        this.filters.splice(i, 1)
-        console.log(this.filters);
+        this.filters.splice(i, 1)    
       }
+    } 
+    if (this.filteredClass == slectedClass) {
+      this.filteredSubject = '';
+      this.selectedClassButton = -1; 
+    } else {
+      this.filteredClass = slectedClass;
+      this.filters.push('class');
+      this.selectedClassButton = index;
     }
-    this.filters.push('class');
-    this.filteredClass = slectedClass;
     this.searchForNameTypeId('');
-    console.log(this.filters);
-    console.log(this.data.loadedQuestions);
   }
 
   setFilter(filter: string, i: number) {
