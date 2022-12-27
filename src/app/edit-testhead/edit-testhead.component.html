@@ -1,8 +1,16 @@
 <div (click)="closeEditTestHead()"  class="inputs_container d_flex">
     <div (click)="$event.stopPropagation()" class="inputs_wrapper d_flex_column">
         <form #editTestHeadForm="ngForm" class="form_wrapper d_flex_column" (ngSubmit)="addData(editTestHeadForm.value)">
-            <input class="inputfield" type="text" name="schoolname" ngModel>
-            <input class="inputfield" type="text" name="testname" ngModel>
+            <div class="input_wrapper">
+                <input #schoolname class="inputfield" type="text" maxlength="70" name="schoolname" ngModel (keyup)="checkLengthOfInput($event)">
+                <p class="input_maxlength">Noch {{70 - schoolname.value.length}} Zeichen</p>
+                
+            </div>
+           <div class="input_wrapper">
+            <input #testname class="inputfield" type="text" maxlength="70" name="testname" ngModel (keyup)="checkLengthOfInput($event)"l>
+            <p class="input_maxlength">Noch {{70 - testname.value.length}} Zeichen</p>
+           </div>
+          
             <p class="timeNumber">  Gesamtzeit {{ totalTime.value }} Min.</p>
             <input class="rangebar" #totalTime type="range" min="10" max="300" step="1" name="totaltime" ngModel>
             <div class="d_flex">
@@ -10,5 +18,8 @@
                 <button class="save_btn" type="submit">Speichern</button>
             </div>  
         </form>
+        <div [class.d_none]="!alertService.alert" class="alert d_flex" id="alert">
+
+        </div>
     </div>
 </div>

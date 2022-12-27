@@ -46,6 +46,7 @@
         <div [class.d_none]="preview" class="questions d_flex_column" id="allQuestionsListView">
             <div class="totalQuestionsNumber_wrapper d_flex_start">
                 {{ totalQuestionsNumber == 1 ? totalQuestionsNumber + ' Aufgabe' : totalQuestionsNumber + ' Aufgaben' }}
+                {{filters.length != 0 ? '/ ' + filters.length + ' Filter' : ''}}
             </div>
             <div *ngIf="totalQuestionsNumber == 0" class="question_wrapper_listview d_flex_column">
                 <div class="question">
@@ -227,30 +228,72 @@
             </div>
 
             <!-- FILTER -->
-            <div *ngIf="openFilter" class="filter_overlay d_flex">
-                <div class="d_flex_column">
-                    <div class="d_flex" style="margin-bottom: 50px;">
-                        <button (click)="setDifficultyFilter('Leicht')" class="subject_btn dificulty_leicht_btn"
-                            [class.selectedButton]="filteredDifficulty == 'Leicht'">Leicht</button>
-                        <button (click)="setDifficultyFilter('Mittel')" class="subject_btn dificulty_mittel_btn"
-                            [class.selectedButton]="filteredDifficulty == 'Mittel'">Mittel</button>
-                        <button (click)="setDifficultyFilter('Schwer')" class="subject_btn dificulty_schwer_btn"
-                            [class.selectedButton]="filteredDifficulty == 'Schwer'">Schwer</button>
-                    </div>
-                    <div class="d_flex" style="margin-bottom: 50px;">
-                        <button *ngFor="let subject of data.loadedUserdata[0].subjects ; let i = index"
-                            (click)="setSubjectFilter(subject, i)" class="subject_btn"
-                            [class.selectedButton]="i == selectedSubjectButton">{{ subject }}</button>
+            <div *ngIf="openFilter" class="filter_overlay">
+                <div class="main_wrapper d_flex_column ">
+                    <div class="d_flex_column">
+                        <h2>Nach Fach filtern</h2>
+                        <div class="subject_btn_wrapper d_flex">
+                            <button *ngFor="let subject of data.loadedUserdata[0].subjects ; let i = index"
+                                (click)="setSubjectFilter(subject, i)" class="subject_btn"
+                                [class.selectedButton]="i == selectedSubjectButton">{{ subject }}</button>
+                        </div>
                     </div>
 
-                    <div class="d_flex" style="margin-bottom: 50px;">
-                        <button *ngFor="let class of data.loadedUserdata[0].classes; let i = index"
-                            (click)="setClassFilter(class, i)" class="subject_btn"
-                            [class.selectedButton]="i == selectedClassButton">{{class}}</button>
+                    <div class="section_separator margin_top_bottom"></div>
+
+                    <div class="d_flex_column">
+                        <h2>Nach Klasse filtern</h2>
+                        <div class="subject_btn_wrapper d_flex">
+                            <button *ngFor="let class of data.loadedUserdata[0].classes; let i = index"
+                                (click)="setClassFilter(class, i)" class="subject_btn"
+                                [class.selectedButton]="i == selectedClassButton">{{class}}</button>
+                        </div>
                     </div>
-                    <button type="button" class="subject_btn cancel_btn" (click)="openFilter = false">Abbrechen</button>
-                    <button class="subject_btn addNew_btn" (click)="openFilter = false">
-                        Filter anwenden</button>
+
+                    <div class="section_separator margin_top_bottom"></div>
+
+                    <div class="d_flex_column">
+                        <h2>Nach Schwierigkeit filtern</h2>
+                        <div class="subject_btn_wrapper d_flex">
+                            <button (click)="setDifficultyFilter('Leicht')" class="subject_btn dificulty_leicht_btn"
+                                [class.selectedButton]="filteredDifficulty == 'Leicht'">Leicht</button>
+                            <button (click)="setDifficultyFilter('Mittel')" class="subject_btn dificulty_mittel_btn"
+                                [class.selectedButton]="filteredDifficulty == 'Mittel'">Mittel</button>
+                            <button (click)="setDifficultyFilter('Schwer')" class="subject_btn dificulty_schwer_btn"
+                                [class.selectedButton]="filteredDifficulty == 'Schwer'">Schwer</button>
+                        </div>
+                    </div>
+                    <div class="section_separator margin_top_bottom"></div>
+
+                    <div class="d_flex_column">
+                        <h2>Nach Art filtern</h2>
+                        <div class="d_flex subject_btn_wrapper">
+
+                            <button (click)="setKindOfQuestionFilter('standard')"
+                                class="subject_btn dificulty_mittel_btn"
+                                [class.selectedButton]="filteredKind == 'standard'">Standard</button>
+
+
+                            <button (click)="setKindOfQuestionFilter('multipleChoice')"
+                                class="subject_btn dificulty_mittel_btn"
+                                [class.selectedButton]="filteredKind == 'multipleChoice'">Multiple Choice</button>
+
+
+                            <button (click)="setKindOfQuestionFilter('unteraufgaben')"
+                                class="subject_btn dificulty_mittel_btn"
+                                [class.selectedButton]="filteredKind == 'unteraufgaben'">Unteraufgaben</button>
+
+                        </div>
+                    </div>
+                    <div class="section_separator margin_top_bottom"></div>
+
+                    <div class="subject_btn_wrapper d_flex">
+                        <button type="button" class="subject_btn cancel_btn"
+                            (click)="openFilter = false">Abbrechen</button>
+                        <button class="subject_btn addNew_btn" (click)="openFilter = false">
+                            Filter anwenden</button>
+                    </div>
+
                 </div>
                 <button type="button" (click)="openFilter = false"
                     class="question_add_btn d_flex close_overlay_window_btn"><img class="remove_icon"
@@ -258,6 +301,8 @@
                 </button>
 
             </div>
+
+
             <!-- -->
 
             <!-- SEARCH / BUTTONS-->
@@ -289,11 +334,14 @@
         <!--  -->
         <!-- TEST PREVIEW -->
         <!--  -->
-        <div *ngIf="data.loaded" id="test_print" class="test_print" [class.opacity0]="!preview"
+        <div *ngIf="data.loaded" id="test_print" class="test_print" [class.opacity0]="!preview" contenteditable="true"
             (mouseup)="checkHeightsInterval('stop')">
             <div id="test_dinA4{{j}}" *ngFor="let pages of test['pages'] let j = index" class="test_dinA4 page_break">
+                <div id="page_number">
+                    <p style="margin-bottom: 0px;" class="page_number"> {{j + 1}}/{{ test['pages'].length }}</p>
+                </div>
                 <div id="test_content{{j}}" class="test_content d_flex_column_start">
-                    <div style="width: 100%; padding-bottom: 9%;">
+                    <div style="width: 100%; padding-bottom: 3%;">
 
                     </div>
 
@@ -542,9 +590,7 @@
                         </div>
                     </div>
 
-                    <div id="page_number" class="page_number_wrapper d_flex">
-                        <p class="page_number"> {{j + 1}}/{{ test['pages'].length }}</p>
-                    </div>
+                    
                 </div>
 
             </div>

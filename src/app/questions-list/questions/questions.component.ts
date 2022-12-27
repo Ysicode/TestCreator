@@ -1,3 +1,4 @@
+import { makeBindingParser } from '@angular/compiler';
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { collection, collectionData, doc, Firestore } from '@angular/fire/firestore';
 import { NgForm } from '@angular/forms';
@@ -74,17 +75,19 @@ export class QuestionsComponent implements OnInit {
   searchactive = false;
   currentSearch = '';
   //Filter Variables
-  filterOne = '';
+  
   filters = []
   filteredDifficulty: any = null;
   filteredSubject: any = null
+  selectedSubjectButton: number;
   filteredClass: any = null;
+  selectedClassButton: number;
+  filteredKind: any = null;
+
+  filteredOnlyMyQuestion: any = null;
   filteredBearbeitungszeit: any = null;
   filteredPunktzahl: any = null;
-  filteredMultipleChoice: any = null;
-  filteredOnlyMyQuestion: any = null;
-  selectedSubjectButton: number;
-  selectedClassButton: number;
+  
 
   constructor(private firestore: Firestore, public service: overlaysService, public data: dataTransferService) { }
   @HostListener("click", ["$event"])
@@ -105,6 +108,7 @@ export class QuestionsComponent implements OnInit {
     this.data.loadtestHead();
     this.data.loadSubjectsAndClasses();
     this.data.loadQuestions();
+
   }
 
   getTotalQuestionNumber() {
@@ -116,7 +120,7 @@ export class QuestionsComponent implements OnInit {
     }
   }
 
- 
+
 
 
 
@@ -635,15 +639,18 @@ export class QuestionsComponent implements OnInit {
       }
     }
     if (this.filteredDifficulty == diffculty) {
-      this.filteredDifficulty = '';
+      this.filteredDifficulty = ''; 
     } else {
       this.filteredDifficulty = diffculty;
       this.filters.push('difficulty')
     }
     this.searchForNameTypeId('');
+    console.log(this.filters);
   }
 
   setSubjectFilter(subject: any, index: number) { 
+    console.log(subject);
+    
     for (let i = 0; i < this.filters.length; i++) {
       if (this.filters[i] == 'subject') {
         this.filters.splice(i, 1)    
@@ -652,12 +659,14 @@ export class QuestionsComponent implements OnInit {
     if (this.filteredSubject == subject) {
       this.filteredSubject = '';
       this.selectedSubjectButton = -1; 
+
     } else {
       this.filteredSubject = subject;
       this.filters.push('subject');
       this.selectedSubjectButton = index;  
     }
     this.searchForNameTypeId('');
+    console.log(this.filters);
   }
 
   setClassFilter(slectedClass: any, index: number) {
@@ -667,14 +676,33 @@ export class QuestionsComponent implements OnInit {
       }
     } 
     if (this.filteredClass == slectedClass) {
-      this.filteredSubject = '';
+      this.filteredClass = '';
       this.selectedClassButton = -1; 
+
     } else {
       this.filteredClass = slectedClass;
       this.filters.push('class');
       this.selectedClassButton = index;
     }
     this.searchForNameTypeId('');
+    console.log(this.filters);
+  }
+
+  setKindOfQuestionFilter(slectedKind: any) {
+    for (let i = 0; i < this.filters.length; i++) {
+      if (this.filters[i] == 'kind') {
+        this.filters.splice(i, 1)    
+      }
+    } 
+    if (this.filteredKind == slectedKind) {
+      this.filteredKind = '';
+    } else {
+      this.filteredKind = slectedKind;
+      this.filters.push('kind');
+    }
+    this.searchForNameTypeId('');
+    console.log(this.data.loadedQuestions);
+    console.log(this.filters);
   }
 
   setFilter(filter: string, i: number) {
@@ -686,6 +714,9 @@ export class QuestionsComponent implements OnInit {
     }
     if (filter == 'class') {
       return this.data.loadedQuestions[i].klasse == this.filteredClass;
+    }
+    if (filter == 'kind') {
+      return this.data.loadedQuestions[i].kindOf == this.filteredKind;
     }
     console.log('false');
     return false

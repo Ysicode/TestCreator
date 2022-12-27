@@ -102,6 +102,24 @@ h3 {
     background-color: #0000003b;
 }
 
+.alert {
+    position: fixed;
+    font-size: 15px;
+    right: 30;
+    right: 30px;
+    bottom: 30px;
+    width: 300px;
+    height: fit-content;
+    min-height: 100px;
+    background: white;
+    box-shadow: 0 24px 24px -18px rgb(69 104 129 / 33%), 0 9px 45px 0 rgb(114 119 160 / 12%);
+    border-left: 3px solid red;
+}
+
+.d_none {
+    display: none;
+}
+
 @media (max-width: 850px) {
     h2 {
         font-size: 14px !important;

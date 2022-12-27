@@ -10,12 +10,13 @@ import Table from '@editorjs/table';
 import { getDownloadURL, getStorage, ref, uploadBytes } from '@angular/fire/storage';
 import { Storage } from '@angular/fire/storage';
 import { overlaysService } from 'src/app/services/overlays.service';
+import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss'],
-  providers: [overlaysService],
+  providers: [overlaysService, AlertService],
 })
 export class EditComponent implements OnInit, AfterViewInit {
   dataFromFirestore$: Observable<any>;
@@ -32,11 +33,14 @@ export class EditComponent implements OnInit, AfterViewInit {
   currentSubjectChoice: string;
   currentClassChoice: string;
   currentDifficulty: any;
+  currentKindOfQuestion: any;
   newSubject: Boolean = false;
   newClass: Boolean = false;
   editMode: Boolean = false;
   multipleChoiceEditor: Boolean = false;
-  
+
+  selectedKind = 'standard';
+
 
   // EditorJS
   @ViewChild('questionEditor', { read: ElementRef, static: true })
@@ -53,7 +57,7 @@ export class EditComponent implements OnInit, AfterViewInit {
 
   Checklist = require('@editorjs/checklist');
   Marker = require('@editorjs/marker');
-  constructor(private firestore: Firestore, private storage: Storage, public service: overlaysService) { }
+  constructor(private firestore: Firestore, private storage: Storage, public service: overlaysService, public alertService: AlertService) { }
 
   ngOnInit(): void {
     this.loadSubjectsAndClasses();
@@ -67,7 +71,7 @@ export class EditComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.setForm();
     }, 700);
-   
+
   }
 
   closeEditComponent() {
@@ -75,6 +79,43 @@ export class EditComponent implements OnInit, AfterViewInit {
     this.service.windowScrollTop();
     this.clearForm();
     this.currentDifficulty = '';
+  }
+
+  checkAlert() {
+    if (!this.currentSubjectChoice) {
+      this.alertService.alert = true;
+      let alert = document.getElementById('alert');
+      alert.innerHTML = this.alertService.showAlert('Bitte ein Fach wählen');
+      return false
+    } 
+    if (!this.currentClassChoice) {
+      this.alertService.alert = true;
+      let alert = document.getElementById('alert');
+      alert.innerHTML = this.alertService.showAlert('Bitte eine Klasse wählen');
+      return false
+    } 
+    if (!this.currentDifficulty) {
+      this.alertService.alert = true;
+      let alert = document.getElementById('alert');
+      alert.innerHTML = this.alertService.showAlert('Bitte eine Schwierigkeit wählen');
+      return false
+    }  
+    if (this.currentAnswer.blocks.length == 0) {
+      this.alertService.alert = true;
+      let alert = document.getElementById('alert');
+      alert.innerHTML = this.alertService.showAlert('Bitte eine Lösung erstellen');
+      return false
+    }  
+    if (this.currentQuestion.blocks.length == 0) {
+      this.alertService.alert = true;
+      let alert = document.getElementById('alert');
+      alert.innerHTML = this.alertService.showAlert('Bitte eine Aufgabe erstellen');
+      return false
+    }  
+    else {
+      return true
+    }
+
   }
 
   toggleMultipleChoiceEditor() {
@@ -98,11 +139,11 @@ export class EditComponent implements OnInit, AfterViewInit {
 
   //Standard Questions Editor
   initializeQuestionEditor(): void {
-    this.questionEditor = this.initializeEditor(this.questionEditorElement.nativeElement);  
+    this.questionEditor = this.initializeEditor(this.questionEditorElement.nativeElement);
   }
 
-   //Standard Answer Editor
-   initializeAnswerEditor(): void {
+  //Standard Answer Editor
+  initializeAnswerEditor(): void {
     this.answerEditor = this.initializeEditor(this.answerEditorElement.nativeElement);
   }
 
@@ -126,6 +167,9 @@ export class EditComponent implements OnInit, AfterViewInit {
   choiceSubject(subjectChoice: any, index: number) {
     this.currentSubjectChoice = subjectChoice;
     this.selectedSubjectButton = index;
+    if (this.alertService.alert) {
+      this.alertService.alert = false;
+    }
   }
 
   /**
@@ -137,6 +181,10 @@ export class EditComponent implements OnInit, AfterViewInit {
     } else {
       this.newClass = true;
     }
+  }
+
+  selectKind(selection: string) {
+    this.selectedKind = selection;
   }
 
   /**
@@ -184,6 +232,9 @@ export class EditComponent implements OnInit, AfterViewInit {
   choiceClass(classChoice: any, index: number) {
     this.currentClassChoice = classChoice;
     this.selectedClassButton = index;
+    if (this.alertService.alert) {
+      this.alertService.alert = false;
+    }
   }
 
   /**
@@ -197,17 +248,23 @@ export class EditComponent implements OnInit, AfterViewInit {
     })
     this.selectedSubjectButton = -1;
     this.selectedClassButton = -1;
+    this.selectedKind = 'standard';
+    this.currentDifficulty = '';
   }
 
   selectDifficulty(difficulty: string) {
     this.currentDifficulty = difficulty;
+    if (this.alertService.alert) {
+      this.alertService.alert = false;
+    }
   }
 
   async addData(question: any) {
-    this.service.loading = true;
     await this.saveEditorData();
     setTimeout(() => {
-      if (!this.editMode) {
+      if (!this.editMode && this.checkAlert()) {
+        console.log(this.checkAlert());
+        this.service.loading = true;
         const coll: any = collection(this.firestore, '/users/JonasWeiss/fragen');
         setDoc(doc(coll), {
           fach: this.currentSubjectChoice,
@@ -217,6 +274,7 @@ export class EditComponent implements OnInit, AfterViewInit {
           klasse: this.currentClassChoice,
           punktzahl: Number(question.punktzahl),
           bearbeitungszeit: Number(question.bearbeitungszeit),
+          kindOf: this.selectedKind,
           keywords: question.keywords.split(',')
         }).then(() => {
           this.service.loading = false;
@@ -226,22 +284,25 @@ export class EditComponent implements OnInit, AfterViewInit {
           this.questionEditor.clear();
         }).then(() => {
           this.answerEditor.clear();
+          this.editMode = false;
         })
-      } else {
-        const coll: any = doc(this.firestore, '/users/JonasWeiss/fragen/' + this.currentId);
-        updateDoc(coll, {
-          fach: this.currentSubjectChoice,
-          frage: { frage: question.frage, antwort: question.antwort },
-          klasse: this.currentClassChoice,
-          punktzahl: Number(question.punktzahl),
-          bearbeitungszeit: Number(question.bearbeitungszeit),
-          keywords: question.keywords.split(',')
-        }).then(() => {
-          this.service.loading = false;
-          this.closeEditComponent();
-        })
-        this.editMode = false;
       }
+      // else {
+      //   const coll: any = doc(this.firestore, '/users/JonasWeiss/fragen/' + this.currentId);
+      //   updateDoc(coll, {
+      //     fach: this.currentSubjectChoice,
+      //     frage: { frage: question.frage, antwort: question.antwort },
+      //     klasse: this.currentClassChoice,
+      //     punktzahl: Number(question.punktzahl),
+      //     bearbeitungszeit: Number(question.bearbeitungszeit),
+      //     keywords: question.keywords.split(',')
+      //   }).then(() => {
+      //     this.service.loading = false;
+      //     this.closeEditComponent();
+      //   })
+      //  
+      // }
+
     }, 700);
   }
 
@@ -285,13 +346,12 @@ export class EditComponent implements OnInit, AfterViewInit {
             this.currentQuestion['blocks'][i]['data']['table']['length'] = Object.keys(this.currentQuestion['blocks'][i]['data']['table']);
           }
           this.currentQuestion['blocks'][i]['data']['content'] = 'deleted';
-        }
-        this.questionEditor.clear();
+        }   
       });
       setTimeout(() => {
         console.log('Das ist die Aufgabe', this.currentQuestion);
       }, 200);
-  
+
       this.answerEditor.save().then(data => {
         this.currentAnswer = data;
         for (let i = 0; i < data.blocks.length; i++) { //If a table was in use of the editor nested array cannot saved in firestore
@@ -307,9 +367,8 @@ export class EditComponent implements OnInit, AfterViewInit {
       });
       setTimeout(() => {
         console.log('Das ist die Antwort', this.currentAnswer);
-       
       }, 500);
-    }  
+    }
   }
 
 
@@ -333,56 +392,56 @@ export class EditComponent implements OnInit, AfterViewInit {
    * @returns the Editor with all configs
    */
   initializeEditor(htmlElement: any) {
-    return  new EditorJS({
-        minHeight: 100,
-        holder: htmlElement,
-        tools: {
-          underline: Underline,
-          Marker: {
-            class: this.Marker,
-            shortcut: 'CMD+SHIFT+M',
+    return new EditorJS({
+      minHeight: 100,
+      holder: htmlElement,
+      tools: {
+        underline: Underline,
+        Marker: {
+          class: this.Marker,
+          shortcut: 'CMD+SHIFT+M',
+        },
+        table: {
+          class: Table,
+          inlineToolbar: true,
+          config: {
+            rows: 2,
+            cols: 2,
           },
-          table: {
-            class: Table,
-            inlineToolbar: true,
-            config: {
-              rows: 2,
-              cols: 2,
-            },
-          },
-          list: {
-            class: List,
-            inlineToolbar: true,
-            config: {
-              defaultStyle: 'unordered'
-            }
-          },
-          image: {
-            class: ImageTool,
-            config: {
-              uploader: {
-                async uploadByFile(file: any) {
-                  const storage = getStorage();
-                  const storageRef = ref(storage, file.name);
-                  const metadata = {
-                    contentType: 'image/jpeg',
+        },
+        list: {
+          class: List,
+          inlineToolbar: true,
+          config: {
+            defaultStyle: 'unordered'
+          }
+        },
+        image: {
+          class: ImageTool,
+          config: {
+            uploader: {
+              async uploadByFile(file: any) {
+                const storage = getStorage();
+                const storageRef = ref(storage, file.name);
+                const metadata = {
+                  contentType: 'image/jpeg',
+                  size: file.size,
+                };
+                const snapshot = await uploadBytes(storageRef, file, metadata);
+                const downloadURL = await getDownloadURL(snapshot.ref);
+                return {
+                  success: 1,
+                  file: {
+                    url: downloadURL,
                     size: file.size,
-                  };
-                  const snapshot = await uploadBytes(storageRef, file, metadata);
-                  const downloadURL = await getDownloadURL(snapshot.ref);
-                  return {
-                    success: 1,
-                    file: {
-                      url: downloadURL,
-                      size: file.size,
-                    }
-                  };
-                }
+                  }
+                };
               }
             }
-          },
-        }
-      });
-    }
+          }
+        },
+      }
+    });
+  }
 
 }

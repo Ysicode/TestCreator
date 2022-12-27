@@ -14,6 +14,16 @@ body {
     border: 2px solid #2c3e50;
 }
 
+.margin_top_bottom {
+    margin-top: 75px;
+    margin-bottom: 75px;
+}
+
+.main_wrapper {
+    max-width: 1700px;
+    width: 80vw;
+}
+
 .subject_btn {
     background: linear-gradient(to right, #4babc3, #5fc1d8);
     color: #424949;
@@ -28,7 +38,24 @@ body {
     }
 }
 
+.subject_btn_wrapper {
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.section_separator {
+    max-width: 500px;
+    width: 70%;
+    height: 2px;
+    background-color: #0000003b;
+}
+
 .filter_overlay {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    overflow: auto;
+    padding-bottom: 100px;
     position: fixed;
     bottom: 20%;
     z-index: 9999999;
@@ -906,7 +933,8 @@ Styles für die Vorschau sektion
     justify-content: space-between;
     flex-direction: column;
     position: relative;
-    height: calc((100vw) * 1.538);
+    // height: calc((100vw) * 1.538);
+    height: calc((100vw) * 1.380);
     background: white;
     max-height: 1615px;
     // max-height: 1310px;
@@ -917,7 +945,7 @@ Styles für die Vorschau sektion
 
 .page_number_wrapper {
     position: absolute;
-    bottom: 2vw;
+    top: 2%;
 
     .page_number {
         margin-top: 0px;
@@ -1341,7 +1369,7 @@ Styles für die Vorschau sektion
     }
 
     .page_number_wrapper {
-        bottom: 20;
+      
 
         .page_number {
             font-size: 16.5px;
@@ -1406,6 +1434,12 @@ Styles für die Vorschau sektion
     }
 }
 
+@media (min-width: 500px) {
+    .totalQuestionsNumber_wrapper {
+        font-size: 15px;
+    }
+}
+
 @media print {
     .headline_test_infos,
     .add_question_container {
@@ -1417,7 +1451,6 @@ Styles für die Vorschau sektion
         top: 0;
         left: 0;
         right: 0;
-
         visibility: visible !important;
     }
 }

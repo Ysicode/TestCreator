@@ -4,13 +4,18 @@
     margin-top: 50px;
 }
 
+.d_none {
+    display: none;
+}
+
 .section {
     margin-top: 75px;
     padding-bottom: 75px;
 }
 
 .section_separator {
-    width: 500px;
+    max-width: 500px;
+    width: 70%;
     height: 2px;
     background-color: #0000003b;
 }
@@ -318,9 +323,14 @@ h3 {
 }
 
 .section_separator {
-    width: 500px;
+    max-width: 500px;
+    width: 70%;
     height: 2px;
     background-color: #0000003b;
+}
+
+.d_none {
+    display: none;
 }
 
 @media (max-width: 850px) {
