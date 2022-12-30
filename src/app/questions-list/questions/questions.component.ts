@@ -1,5 +1,5 @@
 import { makeBindingParser } from '@angular/compiler';
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { collection, collectionData, doc, Firestore } from '@angular/fire/firestore';
 import { NgForm } from '@angular/forms';
 import { deleteDoc } from '@firebase/firestore';
@@ -7,7 +7,9 @@ import { Observable } from 'rxjs';
 import { EditComponent } from 'src/app/add/edit/edit.component';
 import { dataTransferService } from 'src/app/services/dataTransfer.service';
 import { overlaysService } from 'src/app/services/overlays.service';
-
+import * as htmlToImage from 'html-to-image';
+import { toPng, toJpeg, toBlob, toPixelData, toSvg } from 'html-to-image';
+import * as markerjs2 from 'markerjs2';
 
 @Component({
   selector: 'app-questions',
@@ -75,7 +77,7 @@ export class QuestionsComponent implements OnInit {
   searchactive = false;
   currentSearch = '';
   //Filter Variables
-  
+
   filters = []
   filteredDifficulty: any = null;
   filteredSubject: any = null
@@ -86,11 +88,20 @@ export class QuestionsComponent implements OnInit {
 
   filteredOnlyMyQuestion: any = null;
   filteredBearbeitungszeit: any = null;
-  filteredPunktzahl: any = null;
-  
+  filteredPunktzahl: any = null
+
+
+
+  @ViewChild('dem') dem: ElementRef<HTMLElement>;
+
+  private isDrawing = false;
+
 
   constructor(private firestore: Firestore, public service: overlaysService, public data: dataTransferService) { }
   @HostListener("click", ["$event"])
+
+
+
 
   login(password: string) {
     if (password == 'superPin1984!') {
@@ -101,14 +112,35 @@ export class QuestionsComponent implements OnInit {
         this.wrongPassword = false;
       }, 1000);
     }
-
   }
+
+
+
+  // private startDrawing(event: MouseEvent) {
+  //   this.isDrawing = true;
+  //   this.ctx.lineWidth = 0.1;
+  //   this.ctx.strokeStyle = 'red'
+  //   this.ctx.beginPath();
+  //   this.ctx.moveTo(event.offsetX, event.offsetY);
+  // }
+
+  // private stopDrawing() {
+  //   this.isDrawing = false;
+  // }
+
+  // private draw(event: MouseEvent) {
+  //   if (!this.isDrawing) {
+  //     return;
+  //   }
+
+  //   this.ctx.lineTo(event.offsetX, event.offsetY);
+  //   this.ctx.stroke();
+  // }
 
   ngOnInit(): void {
     this.data.loadtestHead();
     this.data.loadSubjectsAndClasses();
     this.data.loadQuestions();
-
   }
 
   getTotalQuestionNumber() {
@@ -121,10 +153,135 @@ export class QuestionsComponent implements OnInit {
   }
 
 
+  openEditTools(): void {
+    const sampleImage = document.getElementById('dem');
+    this.showMarkerArea(sampleImage);
+  }
+
+  showMarkerArea(target: any) {
+    const markerArea = new markerjs2.MarkerArea(target);
+    markerArea.addEventListener("render", (event) => (target.src = event.dataUrl));
+    markerArea.show();
+    markerArea.settings.defaultColor = 'black';
+    markerArea.uiStyleSettings.toolbarOverflowBlockStyleColorsClassName = "bg-white";
+    markerArea.availableMarkerTypes = markerArea.ALL_MARKER_TYPES;
+    this.setToolbarStyleing();
+  }
+
+  setToolbarStyleing() {
+    Array.from(document.getElementsByClassName('__markerjs2__0_toolbar')).forEach((ele) => {
+      ele.id = 'toolbar';
+    });
+
+    Array.from(document.getElementsByClassName('__markerjs2__0_toolbox')).forEach((ele) => {
+      ele.id = 'toolbox';
+    });
 
 
 
 
+
+
+
+
+
+
+    // toolBar sytle
+    let bar = document.getElementById('toolbar');
+    bar.style.position = 'sticky';
+    bar.style.top = '0';
+    bar.style.zIndex = '5';
+    bar.style.borderTopLeftRadius = '0px';
+    bar.style.borderTopRightRadius = '0px';
+
+
+    bar.addEventListener('click', (event) => {
+      Array.from(document.getElementsByClassName('__markerjs2__0_toolbox-button-row')).forEach((ele) => {
+        ele.id = 'buttonRow';
+        console.log(ele);
+      });
+
+      let row = document.getElementById('buttonRow');
+      row.style.flexDirection = 'column';
+      row.style.width = '40px';
+    })
+
+
+    // toolBox
+    let box = document.getElementById('toolbox');
+    box.style.position = 'fixed';
+    box.style.top = '100px';
+    box.style.display = 'flex';
+    box.style.flexDirection = 'column';
+    box.style.width = '100px';
+    box.style.borderRadius = '0';
+
+
+
+    box.addEventListener('click', (event) => {
+      Array.from(document.getElementsByClassName('__markerjs2__0_toolbox-panel-row')).forEach((ele) => {
+        ele.id = 'panelRow';
+      });
+
+      let panel = document.getElementById('panelRow');
+      panel.style.position = 'fixed';
+      panel.style.top = '40px';
+    })
+
+
+
+
+
+
+
+  }
+
+  // this.ctx = this.canvas.nativeElement.getContext('2d');
+
+  // this.canvas.nativeElement.addEventListener('mousedown', (event) => {
+  //   this.startDrawing(event);
+  // });
+  // this.canvas.nativeElement.addEventListener('mouseup', () => {
+  //   this.stopDrawing();
+  // });
+  // this.canvas.nativeElement.addEventListener('mouseout', () => {
+  //   this.stopDrawing();
+  // });
+  // this.canvas.nativeElement.addEventListener('mousemove', (event) => {
+  //   this.draw(event);
+  // });
+  // // this.canvas = this.canvasRef.nativeElement;
+  // // this.ctx = this.canvas.getContext('2d');
+
+  // // this.setCanvasBackground();
+  // onDraw(point: { x: number, y: number }) {
+  //   console.log(point.x, point.y);
+  //   this.ctx.fillStyle = 'black';
+  //   console.log(this.ctx.fillStyle);
+  //   this.ctx.fillRect(point.x, point.y, 1,1);
+  // }
+
+  // private setCanvasBackground() {
+  //   this.ctx.fillStyle = "white";
+  //   this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+  // }
+
+
+
+  saveHtmlAsPNG() {
+    let node = document.getElementById('demoCanvas');
+    htmlToImage.toPng(node)
+      .then(function (dataUrl) {
+        var img = new Image();
+        img.src = dataUrl;
+        img.style.width = '100vw'
+        document.body.appendChild(img);
+        window.open(img.src)
+      })
+      .catch(function (error) {
+        console.error('oops, something went wrong!', error);
+      });
+  }
 
 
   //
@@ -639,7 +796,7 @@ export class QuestionsComponent implements OnInit {
       }
     }
     if (this.filteredDifficulty == diffculty) {
-      this.filteredDifficulty = ''; 
+      this.filteredDifficulty = '';
     } else {
       this.filteredDifficulty = diffculty;
       this.filters.push('difficulty')
@@ -648,22 +805,22 @@ export class QuestionsComponent implements OnInit {
     console.log(this.filters);
   }
 
-  setSubjectFilter(subject: any, index: number) { 
+  setSubjectFilter(subject: any, index: number) {
     console.log(subject);
-    
+
     for (let i = 0; i < this.filters.length; i++) {
       if (this.filters[i] == 'subject') {
-        this.filters.splice(i, 1)    
+        this.filters.splice(i, 1)
       }
     }
     if (this.filteredSubject == subject) {
       this.filteredSubject = '';
-      this.selectedSubjectButton = -1; 
+      this.selectedSubjectButton = -1;
 
     } else {
       this.filteredSubject = subject;
       this.filters.push('subject');
-      this.selectedSubjectButton = index;  
+      this.selectedSubjectButton = index;
     }
     this.searchForNameTypeId('');
     console.log(this.filters);
@@ -672,12 +829,12 @@ export class QuestionsComponent implements OnInit {
   setClassFilter(slectedClass: any, index: number) {
     for (let i = 0; i < this.filters.length; i++) {
       if (this.filters[i] == 'class') {
-        this.filters.splice(i, 1)    
+        this.filters.splice(i, 1)
       }
-    } 
+    }
     if (this.filteredClass == slectedClass) {
       this.filteredClass = '';
-      this.selectedClassButton = -1; 
+      this.selectedClassButton = -1;
 
     } else {
       this.filteredClass = slectedClass;
@@ -691,9 +848,9 @@ export class QuestionsComponent implements OnInit {
   setKindOfQuestionFilter(slectedKind: any) {
     for (let i = 0; i < this.filters.length; i++) {
       if (this.filters[i] == 'kind') {
-        this.filters.splice(i, 1)    
+        this.filters.splice(i, 1)
       }
-    } 
+    }
     if (this.filteredKind == slectedKind) {
       this.filteredKind = '';
     } else {
@@ -816,6 +973,10 @@ export class QuestionsComponent implements OnInit {
 }
 
 
+
+function html2canvas(nativeElement: any) {
+  throw new Error('Function not implemented.');
+}
  // showFile() {
   //   console.log(this.file);
   // }

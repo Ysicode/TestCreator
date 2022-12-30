@@ -26,7 +26,9 @@
     "@editorjs/list": "^1.7.0",
     "@editorjs/table": "^2.0.4",
     "@editorjs/underline": "^1.0.0",
+    "html-to-image": "^1.11.3",
     "html2pdf.js": "^0.10.1",
+    "markerjs2": "^2.28.1",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
