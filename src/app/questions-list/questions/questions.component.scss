@@ -7,12 +7,12 @@ body {
     visibility: visible !important;
 }
 
-.toolbar {
-    background: rgb(75 171 195) !important;
-    background-color: none;
-    position: sticky !important;
-    top: 0 !important;
-}
+// .toolbar {
+//     background: rgb(75 171 195) !important;
+//     background-color: none;
+//     position: sticky !important;
+//     top: 0 !important;
+// }
 
 // Filter styles
 
@@ -947,9 +947,9 @@ Styles für die Vorschau sektion
     flex-direction: column;
     position: relative;
     // height: calc((100vw) * 1.538);
-    height: calc((100vw) * 1.390);
+    height: calc((100vw) * 1.394);
     background: white;
-    max-height: 1615px;
+    max-height: 1487px;
     // max-height: 1310px;
     width: 100%;
     margin-bottom: 2vw;
@@ -1465,5 +1465,6 @@ Styles für die Vorschau sektion
         left: 0;
         right: 0;
         visibility: visible !important;
+        transform: scale(1);
     }
 }

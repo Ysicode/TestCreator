@@ -15,7 +15,7 @@
 
 <div *ngIf="!logedIn" [class.d_none]="overlay" class="questions_wrapper ">
     <div class="questions_container">
-        <div class="headline_test_infos d_flex d_none">
+        <div class="headline_test_infos d_flex">
             <div class="headline_test_infos_inside_container">
                 <div class="headline_infos d_flex_end_end">
                     <div class="test_infos_wrapper d_flex">
@@ -84,11 +84,11 @@
                         <div class="question_add">
                             <button id="{{ 'add_btn' + i }}"
                                 (click)="addToTest(questionData.id, 'add_styling', questionData.schwierigkeit)"
-                                class="question_add_btn d_flex"><img class="add_icon" crossorigin="anonymous" src="assets/plus_icon.png" alt="">
+                                class="question_add_btn d_flex"><img class="add_icon" src="assets/plus_icon.png" alt="">
                             </button>
                             <button id="{{ 'remove_btn' + i }}"
                                 (click)="removeFromTest(questionData.id, questionData.schwierigkeit)"
-                                class="question_add_btn d_none d_flex"><img class="remove_icon" crossorigin="anonymous"
+                                class="question_add_btn d_none d_flex"><img class="remove_icon" 
                                     src="assets/plus_icon.png" alt="">
                             </button>
                         </div>
@@ -109,7 +109,7 @@
                         </div>
 
                         <div class="element_margin_text" *ngIf="question['data']['file']">
-                            <img crossorigin="anonymous" loading="lazy" class="question_img" src="{{ question['data']['file']['url'] }}" alt="">
+                            <img loading="lazy" class="question_img" src="{{ question['data']['file']['url'] }}" alt="">
 
                         </div>
 
@@ -149,7 +149,7 @@
                                 [class.answer_btn_mittel]="questionData.schwierigkeit == 'Mittel'"
                                 [class.answer_btn_leicht]="questionData.schwierigkeit == 'Leicht'"
                                 class="answer_btn d_flex"><img
-                                    [class.question_arrow_turned]="currentId == questionData.id" class="question_arrow" crossorigin="anonymous"
+                                    [class.question_arrow_turned]="currentId == questionData.id" class="question_arrow" 
                                     src="assets/arrow_slim.png">
                                 Antwort
                             </button>
@@ -168,7 +168,7 @@
                                         <div class="element_margin_text d_flex_start"
                                             *ngFor="let item of question['data']['items'] let k = index">
                                             <div class="checkfield d_flex" [class.checked]="item['checked'] == true">
-                                                <img class="checkbox_icon" *ngIf="item['checked'] == true" crossorigin="anonymous"
+                                                <img class="checkbox_icon" *ngIf="item['checked'] == true" 
                                                     src="assets/plus_icon.png" alt="">
                                             </div>
                                             <p class="checkbox_item" [innerHTML]="item['text']"></p>
@@ -176,7 +176,7 @@
                                     </div>
 
                                     <div class="element_margin_text" *ngIf="question['data']['file']">
-                                        <img loading="lazy" class="question_img" crossorigin="anonymous"
+                                        <img loading="lazy" class="question_img"
                                             src="{{ question['data']['file']['url'] }}" alt="">
 
                                     </div>
@@ -296,7 +296,7 @@
 
                 </div>
                 <button type="button" (click)="openFilter = false"
-                    class="question_add_btn d_flex close_overlay_window_btn"><img class="remove_icon" crossorigin="anonymous"
+                    class="question_add_btn d_flex close_overlay_window_btn"><img class="remove_icon" 
                         src="assets/plus_icon.png">
                 </button>
 
@@ -311,7 +311,7 @@
                     <input class="search" #search id="search" type="search" placeholder="Suche"
                         value="{{currentSearch}}" (keyup)="onKeyUpSearchInput($event)"
                         (keyup.enter)="closeSearch(search.value)">
-                    <button class="shot_search_btn d_flex" (click)="closeSearch(search.value)"><img crossorigin="anonymous"
+                    <button class="shot_search_btn d_flex" (click)="closeSearch(search.value)"><img 
                             class="search_close_icon" src="assets/search.png" alt=""></button>
                 </div>
 
@@ -321,7 +321,7 @@
 
                     <div class="menu_burger">
                         <!-- <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="manage_search"></mat-icon> -->
-                        <img crossorigin="anonymous" (click)="openSearch()" style="width: 60%;" src="assets/search.png" alt="">
+                        <img  (click)="openSearch()" style="width: 60%;" src="assets/search.png" alt="">
                     </div>
                     <button class="add_question_btn" (click)="openFilter = true">
                         Filtern</button>
@@ -331,47 +331,18 @@
         </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         <!--  -->
         <!-- TEST PREVIEW -->
         <!--  -->
         <div *ngIf="data.loaded" id="test_print" class="test_print" [class.opacity0]="!preview" style="position: relative;"
             (mouseup)="checkHeightsInterval('stop')">
-            <button style="z-index: 999999999;
-            position: fixed;
-            bottom: 20px;
-            background: #4babc3;
-            border: none;
-            right: 20px;
-            height: 50px;
-            width: 50px;
-            border-radius: 50px;" (click)="openEditTools()">Tools</button>
-            <!-- <button style="z-index: 999999999;" (click)="saveHtmlAsPNG()">save</button> -->
-            <div style="position: absolute;
-            height: 100%;
-            display: flex;
-            width: 100%;">
-                <img #dem id="dem" alt="" style="z-index: 3; width: 100%; height: 100%;" crossorigin="anonymous">
-            </div>
-            
+            <!-- <div id="myDiv" style="position: absolute; top: 0; right: 0; left: 0; bottom: 0; z-index: 999;
+            background-color: #ff00000d;"  contenteditable="true">
+                    <button (click)="saveHtmlAsPNG()">save</button>
+            </div> -->
             <div id="test_dinA4{{j}}" *ngFor="let pages of test['pages'] let j = index" class="test_dinA4 page_break">
                 <div id="page_number">
-                    <p style="margin-bottom: 0px;" class="page_number"> {{j + 1}}/{{ test['pages'].length }}</p>
+                    <p style="margin-bottom: 0px;" class="page_number">{{j + 1}}/{{ test['pages'].length }}</p>
                 </div>
                 <div id="test_content{{j}}" class="test_content d_flex_column_start">
                     <div style="width: 100%; padding-bottom: 3%;">
@@ -416,7 +387,7 @@
 
                     <div class="added_questions_empty_container d_flex_column"
                         *ngIf="test['pages'][0][0].length == 0 && j == 0 && test['pages'].length < 2 ">
-                        <button (click)="openPreview()" class="question_add_btn d_flex"><img class="add_icon" crossorigin="anonymous"
+                        <button (click)="openPreview()" class="question_add_btn d_flex"><img class="add_icon"
                                 src="assets/add.png" alt=""></button>
                         <p class="added_questions_empty_info">Noch keine Aufgaben hinzugefügt</p>
                     </div>
@@ -430,32 +401,32 @@
                         <div id="questionContent{{j}}{{i}}" class="question_test">
                             <div class="question_head_container">
                                 <div class="question_info d_flex_start">
-                                    <div class="question_test_number d_flex">
+                                    <div class="question_test_number d_flex" >
                                         {{!sampleSolution ? 'Aufgabe' : 'Lösung'}} <p class="test_number"
                                             id="question_number{{ j }}{{ i }}"></p>
                                     </div>
 
                                 </div>
-                                <div class="question_add d_flex">
+                                <div class="question_add d_flex" >
                                     <div class="question_test_points">
                                         /{{ data['punktzahl'] }}
                                     </div>
                                 </div>
                                 <button id="{{ 'remove_btn' + i }}"
-                                    (click)="removeFromTest(data['id'], data['schwierigkeit'])"
-                                    class="remove_from_test_btn show_onHover d_flex"><img class="remove_icon" crossorigin="anonymous"
+                                    (click)="removeFromTest(data['id'], data['schwierigkeit']); deleteEmptyPages(j)"
+                                    class="remove_from_test_btn show_onHover d_flex"><img class="remove_icon" 
                                         src="assets/x_icon.png" alt=""></button>
                             </div>
 
                             <!-- QUESTION -->
                             <ng-container *ngIf="!sampleSolution">
-                                <div *ngFor="let question of data['frage']['blocks'] let k = index" contenteditable="true">
+                                <div *ngFor="let question of data['frage']['blocks'] let k = index">
 
-                                    <div class="preview_question_container" [innerHTML]="question['data']['text'] ">
+                                    <div class="preview_question_container" [innerHTML]="question['data']['text'] " >
                                         <!-- Text -->
                                     </div>
 
-                                    <div *ngIf="question['type'] == 'checklist'" class="margin_left ">
+                                    <div *ngIf="question['type'] == 'checklist'" class="margin_left " >
                                         <!-- Checklists -->
                                         <div class="element_margin_text d_flex_start"
                                             *ngFor="let item of question['data']['items']">
@@ -472,7 +443,7 @@
                                                 (mouseover)="resizeImage(j, i, k)" class="img_edit_wrapper d_flex"
                                                 [ngStyle]="{'width': question['width'] ? question['width'] : '30%'}">
                                                 <img id="questionImage{{ j }}{{ i }}{{ k }}"
-                                                    class="preview_question_img" crossorigin="anonymous"
+                                                    class="preview_question_img" 
                                                     src="{{ question['data']['file']['url'] }}" alt="">
                                                 <div (click)="service.onEvent($event)"
                                                     id="resizeImage{{ j }}{{ i }}{{ k }}"
@@ -484,7 +455,7 @@
                                     </div>
 
                                     <div class="preview_question_container"
-                                        *ngFor="let items of question['data']['items'] let i = index">
+                                        *ngFor="let items of question['data']['items'] let i = index" >
                                         <!-- Lists -->
                                         <div class="margin_left element_margin_text"
                                             *ngIf="question['data']['style'] == 'ordered'">
@@ -526,12 +497,12 @@
                                         <!-- Text -->
                                     </div>
 
-                                    <div *ngIf="question['type'] == 'checklist'" class="margin_left ">
+                                    <div *ngIf="question['type'] == 'checklist'" class="margin_left " >
                                         <!-- Checklists -->
                                         <div class="element_margin_text d_flex_start"
                                             *ngFor="let item of question['data']['items'] let k = index">
                                             <div class="checkfield d_flex" [class.checked]="item['checked'] == true">
-                                                <img class="checkbox_icon" *ngIf="item['checked'] == true" crossorigin="anonymous"
+                                                <img class="checkbox_icon" *ngIf="item['checked'] == true" 
                                                     src="assets/plus_icon.png" alt="">
                                             </div>
                                             <p class="checkbox_item" [innerHTML]="item['text']"></p>
@@ -543,7 +514,7 @@
                                         <div class="img_wrapper d_flex_start">
                                             <div id="img_edit_wrapper{{j}}{{i}}{{k}}" class="img_edit_wrapper d_flex"
                                                 [ngStyle]="{'width': question['width'] ? question['width'] : '30%'}">
-                                                <img id="questionImage{{ j }}{{ i }}{{k}}" class="preview_question_img" crossorigin="anonymous"
+                                                <img id="questionImage{{ j }}{{ i }}{{k}}" class="preview_question_img" 
                                                     src="{{ question['data']['file']['url'] }}" alt="">
                                                 <div (click)="service.onEvent($event)" id="resizeImage{{j}}{{i}}{{k}}"
                                                     class="resize_image d_flex show_onHover">
@@ -554,7 +525,7 @@
                                     </div>
 
                                     <div class="preview_question_container"
-                                        *ngFor="let items of question['data']['items'] let i = index">
+                                        *ngFor="let items of question['data']['items'] let i = index" >
                                         <!-- Lists -->
                                         <div class="margin_left element_margin_text"
                                             *ngIf="question['data']['style'] == 'ordered'">
@@ -564,7 +535,7 @@
                                             </ol>
                                         </div>
                                         <div class="margin_left element_margin_text"
-                                            *ngIf="question['data']['style'] == 'unordered'">
+                                            *ngIf="question['data']['style'] == 'unordered'" >
                                             <ul class="preview_unordered_list">
                                                 <li [innerHTML]="items"></li>
                                             </ul>
@@ -572,7 +543,7 @@
                                     </div>
 
                                     <div class="preview_question_container element_margin_text"
-                                        *ngIf="question['data']['table']">
+                                        *ngIf="question['data']['table']" >
                                         <!-- tables -->
                                         <div [class.bold]="i == 0 && question['data']['withHeadings'] == true "
                                             class="d_flex_start tableRow"
@@ -596,16 +567,16 @@
                                     <button class="whitespace_btn d_flex"
                                         (click)="showWhite(j, i); checkHeightsInterval('stop')"></button>
                                     <button class="whitespace_btn d_flex"
-                                        (click)="showLines(j, i); checkHeightsInterval('stop')"><img crossorigin="anonymous"
+                                        (click)="showLines(j, i); checkHeightsInterval('stop')"><img 
                                             class="whitespace_btn_icon" src="assets/lines.png" alt=""></button>
                                     <button class="whitespace_btn d_flex"
-                                        (click)="showSquare(j, i); checkHeightsInterval('stop')"><img crossorigin="anonymous"
+                                        (click)="showSquare(j, i); checkHeightsInterval('stop')"><img 
                                             class="whitespace_btn_icon" src="assets/square.png" alt=""></button>
                                 </div>
                             </div>
 
-                            <div (click)="service.onEvent($event); checkHeightsInterval('stop')"
-                                (mouseover)="resizeQuestion(j, i)" (mousedown)="checkHeightsInterval('start')"
+                            <div (click)="service.onEvent($event)"
+                                (mouseover)="resizeQuestion(j, i)" (mousedown)="checkHeightsInterval('start')" (mouseup)="checkHeightsInterval('stop')"
                                 (mousemove)="getSquaresAndLines(j, i)" id="resize{{j}}{{i}}"
                                 class="height_info_wrapper d_flex show_onHover">
                                 <span class="resize_line"></span>

@@ -7,9 +7,7 @@ import { Observable } from 'rxjs';
 import { EditComponent } from 'src/app/add/edit/edit.component';
 import { dataTransferService } from 'src/app/services/dataTransfer.service';
 import { overlaysService } from 'src/app/services/overlays.service';
-import * as htmlToImage from 'html-to-image';
-import { toPng, toJpeg, toBlob, toPixelData, toSvg } from 'html-to-image';
-import * as markerjs2 from 'markerjs2';
+
 
 @Component({
   selector: 'app-questions',
@@ -90,18 +88,8 @@ export class QuestionsComponent implements OnInit {
   filteredBearbeitungszeit: any = null;
   filteredPunktzahl: any = null
 
-
-
-  @ViewChild('dem') dem: ElementRef<HTMLElement>;
-
-  private isDrawing = false;
-
-
   constructor(private firestore: Firestore, public service: overlaysService, public data: dataTransferService) { }
   @HostListener("click", ["$event"])
-
-
-
 
   login(password: string) {
     if (password == 'superPin1984!') {
@@ -114,28 +102,6 @@ export class QuestionsComponent implements OnInit {
     }
   }
 
-
-
-  // private startDrawing(event: MouseEvent) {
-  //   this.isDrawing = true;
-  //   this.ctx.lineWidth = 0.1;
-  //   this.ctx.strokeStyle = 'red'
-  //   this.ctx.beginPath();
-  //   this.ctx.moveTo(event.offsetX, event.offsetY);
-  // }
-
-  // private stopDrawing() {
-  //   this.isDrawing = false;
-  // }
-
-  // private draw(event: MouseEvent) {
-  //   if (!this.isDrawing) {
-  //     return;
-  //   }
-
-  //   this.ctx.lineTo(event.offsetX, event.offsetY);
-  //   this.ctx.stroke();
-  // }
 
   ngOnInit(): void {
     this.data.loadtestHead();
@@ -152,137 +118,7 @@ export class QuestionsComponent implements OnInit {
     }
   }
 
-
-  openEditTools(): void {
-    const sampleImage = document.getElementById('dem');
-    this.showMarkerArea(sampleImage);
-  }
-
-  showMarkerArea(target: any) {
-    const markerArea = new markerjs2.MarkerArea(target);
-    markerArea.addEventListener("render", (event) => (target.src = event.dataUrl));
-    markerArea.show();
-    markerArea.settings.defaultColor = 'black';
-    markerArea.uiStyleSettings.toolbarOverflowBlockStyleColorsClassName = "bg-white";
-    markerArea.availableMarkerTypes = markerArea.ALL_MARKER_TYPES;
-    this.setToolbarStyleing();
-  }
-
-  setToolbarStyleing() {
-    Array.from(document.getElementsByClassName('__markerjs2__0_toolbar')).forEach((ele) => {
-      ele.id = 'toolbar';
-    });
-
-    Array.from(document.getElementsByClassName('__markerjs2__0_toolbox')).forEach((ele) => {
-      ele.id = 'toolbox';
-    });
-
-
-
-
-
-
-
-
-
-
-    // toolBar sytle
-    let bar = document.getElementById('toolbar');
-    bar.style.position = 'sticky';
-    bar.style.top = '0';
-    bar.style.zIndex = '5';
-    bar.style.borderTopLeftRadius = '0px';
-    bar.style.borderTopRightRadius = '0px';
-
-
-    bar.addEventListener('click', (event) => {
-      Array.from(document.getElementsByClassName('__markerjs2__0_toolbox-button-row')).forEach((ele) => {
-        ele.id = 'buttonRow';
-        console.log(ele);
-      });
-
-      let row = document.getElementById('buttonRow');
-      row.style.flexDirection = 'column';
-      row.style.width = '40px';
-    })
-
-
-    // toolBox
-    let box = document.getElementById('toolbox');
-    box.style.position = 'fixed';
-    box.style.top = '100px';
-    box.style.display = 'flex';
-    box.style.flexDirection = 'column';
-    box.style.width = '100px';
-    box.style.borderRadius = '0';
-
-
-
-    box.addEventListener('click', (event) => {
-      Array.from(document.getElementsByClassName('__markerjs2__0_toolbox-panel-row')).forEach((ele) => {
-        ele.id = 'panelRow';
-      });
-
-      let panel = document.getElementById('panelRow');
-      panel.style.position = 'fixed';
-      panel.style.top = '40px';
-    })
-
-
-
-
-
-
-
-  }
-
-  // this.ctx = this.canvas.nativeElement.getContext('2d');
-
-  // this.canvas.nativeElement.addEventListener('mousedown', (event) => {
-  //   this.startDrawing(event);
-  // });
-  // this.canvas.nativeElement.addEventListener('mouseup', () => {
-  //   this.stopDrawing();
-  // });
-  // this.canvas.nativeElement.addEventListener('mouseout', () => {
-  //   this.stopDrawing();
-  // });
-  // this.canvas.nativeElement.addEventListener('mousemove', (event) => {
-  //   this.draw(event);
-  // });
-  // // this.canvas = this.canvasRef.nativeElement;
-  // // this.ctx = this.canvas.getContext('2d');
-
-  // // this.setCanvasBackground();
-  // onDraw(point: { x: number, y: number }) {
-  //   console.log(point.x, point.y);
-  //   this.ctx.fillStyle = 'black';
-  //   console.log(this.ctx.fillStyle);
-  //   this.ctx.fillRect(point.x, point.y, 1,1);
-  // }
-
-  // private setCanvasBackground() {
-  //   this.ctx.fillStyle = "white";
-  //   this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-  // }
-
-
-
-  saveHtmlAsPNG() {
-    let node = document.getElementById('demoCanvas');
-    htmlToImage.toPng(node)
-      .then(function (dataUrl) {
-        var img = new Image();
-        img.src = dataUrl;
-        img.style.width = '100vw'
-        document.body.appendChild(img);
-        window.open(img.src)
-      })
-      .catch(function (error) {
-        console.error('oops, something went wrong!', error);
-      });
-  }
-
+  
 
   //
   // Functions all questions list view
@@ -350,8 +186,7 @@ export class QuestionsComponent implements OnInit {
     }
     setTimeout(() => {
       this.setQuestionNumber();
-      this.checkHeightOfAllPreviewQuestions();
-    }, 30);
+    }, 50);
   }
 
   /**
@@ -452,7 +287,7 @@ export class QuestionsComponent implements OnInit {
         }
         await this.stopLoop(10);
         let outerHeight = this.getHeight(`test_dinA4${i}`);
-        let paperHeight = outerHeight - (outerHeight * 0.22);
+        let paperHeight = outerHeight - (outerHeight * 0.15);
         if (i > 0) {
           this.moveUpQuestionAndDeleteEmptyPages(i, paperHeight);
         }
@@ -460,9 +295,7 @@ export class QuestionsComponent implements OnInit {
           let height = this.getHeight(`question${i}${j}`);
           contentHeight += Number(height);
         }
-        console.log('contentHeight', contentHeight, 'paperHeight', paperHeight);
         if (contentHeight > paperHeight) {
-          console.log('contentHeight', contentHeight, 'paperHeight', paperHeight);
           this.addNewPageAndpushLastQuestion(i);
         }
       }
@@ -479,6 +312,12 @@ export class QuestionsComponent implements OnInit {
     }
     this.test.pages[i + 1][0].push(question)
     this.test.pages[i + 1][0].reverse();
+  }
+
+  deleteEmptyPages(i: number) {
+    if (this.pageIsEmpty(i)) {
+      this.test.pages.pop();
+    }
   }
 
   async moveUpQuestionAndDeleteEmptyPages(i: number, paperHeight: number) {
@@ -554,7 +393,9 @@ export class QuestionsComponent implements OnInit {
     }
 
     function doDrag(e: { clientY: number; }) {
-      let height = ((startHeight + e.clientY - startY) * 100) / page;
+      // console.log('startheight', startHeight, 'e<Client', e.clientY, 'startY', startY);
+      
+      let height = ((startHeight + e.clientY - startY) * 102.5) / page;
       question.style.height = height + '%';
       let questionHeight = Number(question.style.height.replace('%', ''));
       if (questionHeight > questionContentHeight + 5) {
@@ -572,15 +413,21 @@ export class QuestionsComponent implements OnInit {
     this.test.pages[pageIndex][0][pagePosition]['questionHeight'] = question.style.height;
   }
 
-  checkHeightsInterval(mouse: string) {
-    if (mouse == 'start') {
+  /**
+   * 
+   * @param mouse 
+   */
+  checkHeightsInterval(mode: string) {
+    if (mode == 'start') {
       this.checkHeightsAndSetQuestionNumberInterval = setInterval(() => {
         this.checkHeightOfAllPreviewQuestions();
+        console.log('hello');
         this.setQuestionNumber();
-      }, 50)
+      }, 70)
     }
-    if (mouse == 'stop') {
-      clearInterval(this.checkHeightsAndSetQuestionNumberInterval)
+    if (mode == 'stop') {
+      clearInterval(this.checkHeightsAndSetQuestionNumberInterval);
+      console.log('stop');
     }
   }
 
@@ -627,7 +474,7 @@ export class QuestionsComponent implements OnInit {
         contentHeight += Number(height);
       }
       let outerHeight = this.getHeight(`test_dinA4${pageIndex}`);
-      let paperHeight = outerHeight - (outerHeight * 0.23);
+      let paperHeight = outerHeight - (outerHeight * 0.18);
       question.style.maxHeight = ` ${paperHeight - contentHeight}px `
     }
   }
@@ -778,7 +625,6 @@ export class QuestionsComponent implements OnInit {
     }
 
     if (this.filters.length == 0) {
-      console.log(this.data.loadedQuestions, 'nofilter');
       for (let i = 0; i < this.data.loadedQuestions.length; i++) {
         this.hide(`questionListView${i}`, 'd_none');
         this.stopLoop(10)
@@ -802,12 +648,9 @@ export class QuestionsComponent implements OnInit {
       this.filters.push('difficulty')
     }
     this.searchForNameTypeId('');
-    console.log(this.filters);
   }
 
   setSubjectFilter(subject: any, index: number) {
-    console.log(subject);
-
     for (let i = 0; i < this.filters.length; i++) {
       if (this.filters[i] == 'subject') {
         this.filters.splice(i, 1)
@@ -823,7 +666,6 @@ export class QuestionsComponent implements OnInit {
       this.selectedSubjectButton = index;
     }
     this.searchForNameTypeId('');
-    console.log(this.filters);
   }
 
   setClassFilter(slectedClass: any, index: number) {
@@ -842,7 +684,6 @@ export class QuestionsComponent implements OnInit {
       this.selectedClassButton = index;
     }
     this.searchForNameTypeId('');
-    console.log(this.filters);
   }
 
   setKindOfQuestionFilter(slectedKind: any) {
@@ -858,8 +699,6 @@ export class QuestionsComponent implements OnInit {
       this.filters.push('kind');
     }
     this.searchForNameTypeId('');
-    console.log(this.data.loadedQuestions);
-    console.log(this.filters);
   }
 
   setFilter(filter: string, i: number) {
@@ -875,7 +714,6 @@ export class QuestionsComponent implements OnInit {
     if (filter == 'kind') {
       return this.data.loadedQuestions[i].kindOf == this.filteredKind;
     }
-    console.log('false');
     return false
   }
 
@@ -974,9 +812,9 @@ export class QuestionsComponent implements OnInit {
 
 
 
-function html2canvas(nativeElement: any) {
-  throw new Error('Function not implemented.');
-}
+// function html2canvas(nativeElement: any) {
+//   throw new Error('Function not implemented.');
+// }
  // showFile() {
   //   console.log(this.file);
   // }
@@ -1066,3 +904,150 @@ function html2canvas(nativeElement: any) {
 //       this.checkHeightOfAllPreviewQuestions();
 //     }, 5);
 //   }
+
+
+
+
+
+
+
+
+
+
+// private startDrawing(event: MouseEvent) {
+  //   this.isDrawing = true;
+  //   this.ctx.lineWidth = 0.1;
+  //   this.ctx.strokeStyle = 'red'
+  //   this.ctx.beginPath();
+  //   this.ctx.moveTo(event.offsetX, event.offsetY);
+  // }
+
+  // private stopDrawing() {
+  //   this.isDrawing = false;
+  // }
+
+  // private draw(event: MouseEvent) {
+  //   if (!this.isDrawing) {
+  //     return;
+  //   }
+
+  //   this.ctx.lineTo(event.offsetX, event.offsetY);
+  //   this.ctx.stroke();
+  // }
+
+
+  // openEditTools(): void {
+  //   const sampleImage = document.getElementById('dem');
+  //   this.showMarkerArea(sampleImage);
+  // }
+
+  // showMarkerArea(target: any) {
+  //   const markerArea = new markerjs2.MarkerArea(target);
+  //   markerArea.addEventListener("render", (event) => (target.src = event.dataUrl));
+  //   markerArea.show();
+  //   markerArea.settings.defaultColor = 'black';
+  //   markerArea.uiStyleSettings.toolbarOverflowBlockStyleColorsClassName = "bg-white";
+  //   markerArea.availableMarkerTypes = markerArea.ALL_MARKER_TYPES;
+  //   markerArea.settings.defaultStrokeWidth = 1;
+
+  //   this.setToolbarStyleing();
+  // }
+
+  // setToolbarStyleing() {
+  //   Array.from(document.getElementsByClassName('__markerjs2__0_toolbar')).forEach((ele) => {
+  //     ele.id = 'toolbar';
+  //   });
+
+  // //   Array.from(document.getElementsByClassName('__markerjs2__0_toolbox')).forEach((ele) => {
+  // //     ele.id = 'toolbox';
+  // //   });
+
+  //   // toolBar sytle
+  //   let bar = document.getElementById('toolbar');
+  //   bar.style.position = 'sticky';
+  //   bar.style.top = '0';
+  //   bar.style.zIndex = '5';
+  //   bar.style.borderTopLeftRadius = '0px';
+  //   bar.style.borderTopRightRadius = '0px';
+
+
+  //   bar.addEventListener('click', (event) => {
+  //     Array.from(document.getElementsByClassName('__markerjs2__0_toolbox-button-row')).forEach((ele) => {
+  //       ele.id = 'buttonRow';
+  //       console.log(ele);
+  //     });
+
+  //     let row = document.getElementById('buttonRow');
+  //     row.style.flexDirection = 'column';
+  //     row.style.width = '40px';
+  //   })
+
+
+  //   // toolBox
+  //   let box = document.getElementById('toolbox');
+  //   box.style.position = 'fixed';
+  //   box.style.top = '100px';
+  //   box.style.display = 'flex';
+  //   box.style.flexDirection = 'column';
+  //   box.style.width = '100px';
+  //   box.style.borderRadius = '0';
+
+
+
+  //   box.addEventListener('click', (event) => {
+  //     Array.from(document.getElementsByClassName('__markerjs2__0_toolbox-panel-row')).forEach((ele) => {
+  //       ele.id = 'panelRow';
+  //     });
+
+  //     let panel = document.getElementById('panelRow');
+  //     panel.style.position = 'fixed';
+  //     panel.style.top = '40px';
+  //   })
+  // }
+
+  // this.ctx = this.canvas.nativeElement.getContext('2d');
+
+  // this.canvas.nativeElement.addEventListener('mousedown', (event) => {
+  //   this.startDrawing(event);
+  // });
+  // this.canvas.nativeElement.addEventListener('mouseup', () => {
+  //   this.stopDrawing();
+  // });
+  // this.canvas.nativeElement.addEventListener('mouseout', () => {
+  //   this.stopDrawing();
+  // });
+  // this.canvas.nativeElement.addEventListener('mousemove', (event) => {
+  //   this.draw(event);
+  // });
+  // // this.canvas = this.canvasRef.nativeElement;
+  // // this.ctx = this.canvas.getContext('2d');
+
+  // // this.setCanvasBackground();
+  // onDraw(point: { x: number, y: number }) {
+  //   console.log(point.x, point.y);
+  //   this.ctx.fillStyle = 'black';
+  //   console.log(this.ctx.fillStyle);
+  //   this.ctx.fillRect(point.x, point.y, 1,1);
+  // }
+
+  // private setCanvasBackground() {
+  //   this.ctx.fillStyle = "white";
+  //   this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+  // }
+
+
+
+  // saveHtmlAsPNG() {
+  //   let node = document.getElementById('myDiv');
+  //   htmlToImage.toPng(node)
+  //     .then(function (dataUrl) {
+  //       var img = new Image();
+  //       img.src = dataUrl;
+  //       img.style.width = '100vw'
+  //       document.body.appendChild(img);
+  //       window.open(img.src)
+  //     })
+  //     .catch(function (error) {
+  //       console.error('oops, something went wrong!', error);
+  //     });
+  // }
