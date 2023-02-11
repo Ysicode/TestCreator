@@ -91,6 +91,8 @@ export class QuestionsComponent implements OnInit {
   constructor(private firestore: Firestore, public service: overlaysService, public data: dataTransferService) { }
   @HostListener("click", ["$event"])
 
+
+
   login(password: string) {
     if (password == 'superPin1984!') {
       this.logedIn = true;
@@ -103,10 +105,11 @@ export class QuestionsComponent implements OnInit {
   }
 
 
-  ngOnInit(): void {
-    this.data.loadtestHead();
-    this.data.loadSubjectsAndClasses();
-    this.data.loadQuestions();
+  async ngOnInit(): Promise<void> {
+    await this.data.loadtestHead();
+    await this.data.loadSubjectsAndClasses();
+    await this.data.loadQuestions();
+    await this.getCurrentTestFromLocalStorage();
   }
 
   getTotalQuestionNumber() {
@@ -118,7 +121,22 @@ export class QuestionsComponent implements OnInit {
     }
   }
 
-  
+  addCurrentTestToLocalStorage() {
+    localStorage.setItem("currentTest", JSON.stringify(this.test));
+  }
+
+  async getCurrentTestFromLocalStorage() {
+    if (!localStorage.getItem('currentTest')) return
+    console.log('getLocalStorage');
+    let loadedTestFromStorage = localStorage.getItem('currentTest');
+    this.test = JSON.parse(loadedTestFromStorage);
+    setTimeout(() => {
+      this.renderSquaresAndLinesOfQuestionsInTest();
+      this.setQuestionNumber();
+    }, 300)
+  }
+
+
 
   //
   // Functions all questions list view
@@ -315,7 +333,7 @@ export class QuestionsComponent implements OnInit {
   }
 
   deleteEmptyPages(i: number) {
-    if (this.pageIsEmpty(i)) {
+    if (this.pageIsEmpty(i) && i != 0) {
       this.test.pages.pop();
     }
   }
@@ -394,7 +412,7 @@ export class QuestionsComponent implements OnInit {
 
     function doDrag(e: { clientY: number; }) {
       // console.log('startheight', startHeight, 'e<Client', e.clientY, 'startY', startY);
-      
+
       let height = ((startHeight + e.clientY - startY) * 102.5) / page;
       question.style.height = height + '%';
       let questionHeight = Number(question.style.height.replace('%', ''));
@@ -414,18 +432,18 @@ export class QuestionsComponent implements OnInit {
   }
 
   /**
-   * 
-   * @param mouse 
+   * this function is used to set an interval to multiple call 2 functions while resizing a question
+   * @param mouse - is a string parameter to either start or stop the interval
    */
   checkHeightsInterval(mode: string) {
-    if (mode == 'start') {
+    if (mode === 'start') {
       this.checkHeightsAndSetQuestionNumberInterval = setInterval(() => {
         this.checkHeightOfAllPreviewQuestions();
         console.log('hello');
         this.setQuestionNumber();
       }, 70)
     }
-    if (mode == 'stop') {
+    if (mode === 'stop') {
       clearInterval(this.checkHeightsAndSetQuestionNumberInterval);
       console.log('stop');
     }
