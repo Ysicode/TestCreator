@@ -284,7 +284,6 @@ body {
     display: none;
 }
 
-
 .keyword_textarea {
     font-family: "Montserrat", sans-serif;
     outline: none;
@@ -352,7 +351,7 @@ style for rendered subjects
 .totalQuestionsNumber_wrapper {
     width: 100%;
     color: grey;
-    font-size: calc(100vw * 0.030);
+    font-size: calc(100vw * 0.03);
     margin-bottom: 7px;
 }
 
@@ -698,8 +697,6 @@ Answer styles
     background: #c7d1cf;
     border-top-left-radius: 40px;
     border-bottom-left-radius: 40px;
-
- 
 }
 
 .shot_search_btn {
@@ -735,11 +732,11 @@ Answer styles
     align-items: center;
     justify-content: space-between;
     input:-webkit-autofill,
-input:-webkit-autofill,
-input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 1000px #c7d1cf inset !important;
-  -webkit-text-fill-color: black !important;
-}
+    input:-webkit-autofill,
+    input:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0 1000px #c7d1cf inset !important;
+        -webkit-text-fill-color: black !important;
+    }
 }
 
 .add_question_btn {
@@ -790,7 +787,6 @@ input:-webkit-autofill {
     background: black;
     background: linear-gradient(to right, #4babc3, #5fc1d8);
 }
-
 
 /*
 Styles für die Vorschau sektion
@@ -1382,8 +1378,6 @@ Styles für die Vorschau sektion
     }
 
     .page_number_wrapper {
-      
-
         .page_number {
             font-size: 16.5px;
         }

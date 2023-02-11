@@ -603,7 +603,6 @@
                 <div class="add_question_btn_wrapper">
                     <button class="add_question_btn" (click)="toggleSolutions()">{{!sampleSolution ? 'Lösung' :
                         'Aufgaben'}}</button>
-                        <button (click)="addCurrentTestToLocalStorage()"></button>
                     <div class="menu_burger" matTooltip="Menü" matTooltipPosition="above">
                         <span class="burger_top">
                         </span>
@@ -643,3 +642,7 @@
     <app-edit-testhead *ngIf="editTesthead" (closeEditTestHeadOverlay)="editTesthead = false;">
 
     </app-edit-testhead>
+
+    <app-spinner *ngIf="service.loading">
+
+    </app-spinner>

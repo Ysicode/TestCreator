@@ -127,15 +127,28 @@ export class QuestionsComponent implements OnInit {
 
   async getCurrentTestFromLocalStorage() {
     if (!localStorage.getItem('currentTest')) return
-    console.log('getLocalStorage');
+    this.service.loading = true;
     let loadedTestFromStorage = localStorage.getItem('currentTest');
     this.test = JSON.parse(loadedTestFromStorage);
     setTimeout(() => {
-      this.renderSquaresAndLinesOfQuestionsInTest();
       this.setQuestionNumber();
-    }, 300)
+      this.renderSquaresAndLinesOfQuestionsInTest();
+      this.styleAddedQuestionsInListViewAfterLoadingTestData();
+      this.service.loading = false;
+    }, 1000);
   }
 
+  styleAddedQuestionsInListViewAfterLoadingTestData() {
+    for (let a = 0; a < this.data.loadedQuestions.length; a++) {
+      for (let i = 0; i < this.test.pages.length; i++) {
+        for (let j = 0; j < this.test.pages[i][0].length; j++) {
+          if (this.test.pages[i][0][j].id == this.data.loadedQuestions[a]['id']) {
+            this.styleAddButton(a, 'add_styling', this.data.loadedQuestions[a]['schwierigkeit']);
+          }
+        }
+      }
+    }
+  }
 
 
   //
@@ -175,6 +188,7 @@ export class QuestionsComponent implements OnInit {
     }
     this.checkHeightOfAllPreviewQuestions();
     this.setQuestionNumber();
+    this.addCurrentTestToLocalStorage();
   }
 
   getDefaultHeightsOfEachAddedQuestions() {
@@ -204,7 +218,8 @@ export class QuestionsComponent implements OnInit {
     }
     setTimeout(() => {
       this.setQuestionNumber();
-    }, 50);
+      this.addCurrentTestToLocalStorage();
+    }, 200);
   }
 
   /**
@@ -368,16 +383,21 @@ export class QuestionsComponent implements OnInit {
    * the numbers are ordered 1 to ...
    */
   async setQuestionNumber() {
-    await this.stopLoop(10);
-    this.question_number = 0;
-    for (let i = 0; i < this.test.pages.length; i++) {
-      for (let j = 0; j < this.test.pages[i][0].length; j++) {
-        this.question_number++;
-        this.stopLoop(5);
-        let questionNumber = this.element(`question_number${i}${j}`)
-        questionNumber.innerHTML = `${this.question_number}`;
-      }
-    }
+   Array.from(document.getElementsByClassName('test_number')).forEach((number, index) => {
+      number.innerHTML = (index + 1).toString();
+   });
+   
+    // await this.stopLoop(10);
+    // this.question_number = 0;
+    // for (let i = 0; i < this.test.pages.length; i++) {
+    //   for (let j = 0; j < this.test.pages[i][0].length; j++) {
+    //     this.question_number++;
+    //     this.stopLoop(5);
+    //     let questionNumber = this.element(`question_number${i}${j}`)
+    //     questionNumber.innerHTML = `${this.question_number}`;
+    //     questionNumber.classList.add('test_number_opacity_zero');
+    //   }
+    // }
   }
 
   getCurrentQuestion(pageIndex: number, pagePosition: number) {
@@ -429,6 +449,7 @@ export class QuestionsComponent implements OnInit {
       document.documentElement.removeEventListener('mouseup', stopDrag, false);
     }
     this.test.pages[pageIndex][0][pagePosition]['questionHeight'] = question.style.height;
+    this.addCurrentTestToLocalStorage();
   }
 
   /**
@@ -477,7 +498,9 @@ export class QuestionsComponent implements OnInit {
       document.documentElement.removeEventListener('mouseup', stopDrag, false);
     }
     this.test.pages[pageIndex][0][pagePosition]['frage']['blocks'][questionPosition]['width'] = image.style.width;
+    this.addCurrentTestToLocalStorage();
   }
+
 
   checkMaxHeightOfLastQuestionOfPageIndex(pageIndex: number, pagePosition: number, question: any) {
     if (this.test.pages[pageIndex][0].length - 1 == pagePosition) {
@@ -537,12 +560,14 @@ export class QuestionsComponent implements OnInit {
     this.hide(`whitespace_squares${this.currentEditQuestion}`, 'd_none');
     this.show(`whitespace_lines${this.currentEditQuestion}`, 'd_none');
     this.getSquaresAndLines(pageIndex, pagePosition);
+    this.addCurrentTestToLocalStorage();
   }
 
   showWhite(pageIndex: number, pagePosition: number) {
     this.test.pages[pageIndex][0][pagePosition]['whitespace'] = 'white';
     this.show(`whitespace_squares${this.currentEditQuestion}`, 'd_none');
     this.show(`whitespace_lines${this.currentEditQuestion}`, 'd_none');
+    this.addCurrentTestToLocalStorage();
   }
 
   showLines(pageIndex: number, pagePosition: number) {
@@ -550,14 +575,18 @@ export class QuestionsComponent implements OnInit {
     this.hide(`whitespace_lines${this.currentEditQuestion}`, 'd_none');
     this.show(`whitespace_squares${this.currentEditQuestion}`, 'd_none');
     this.getSquaresAndLines(pageIndex, pagePosition);
+    this.addCurrentTestToLocalStorage();
   }
 
   toggleSolutions() {
+    this.service.loading = true;
     this.sampleSolution = !this.sampleSolution;
     this.checkHeightOfAllPreviewQuestions();
     setTimeout(() => {
       this.renderSquaresAndLinesOfQuestionsInTest();
-    }, 50);
+      this.setQuestionNumber();
+      this.service.loading = false;
+    }, 500);
   }
 
   async renderSquaresAndLinesOfQuestionsInTest() {
