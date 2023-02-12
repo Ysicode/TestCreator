@@ -1,0 +1,16 @@
+
+    <div class="overlay_wrapper" *ngIf="deleteQuestionOverlay">
+        <div class="d_flex_column">
+            <h2>Aufgabe löschen?</h2>
+            <p>Nach dem löschen kann die Aufgabe nicht wiederhergestellt werden!</p>
+            <div class="d_flex">
+                <button class="close btn" (click)="closeDeleteQuestionOverlay()">Abbrechen</button>
+                <button class="delete btn" (click)="deleteQuestion()">Aufgabe Löschen</button>
+            </div>
+        </div>
+    </div>
+
+    <app-spinner style="z-index: 9999999999;" *ngIf="loading">
+    </app-spinner>
+
+

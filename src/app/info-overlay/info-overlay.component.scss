@@ -1,0 +1,35 @@
+.overlay_wrapper {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    bottom: 0;
+    overflow: hidden;
+    right: 0;
+    z-index: 9999999;
+    left: 0;
+    background: #f2f3f4;
+}
+
+.close {
+    background: none;
+    color: #424949;
+}
+
+.delete {
+    background: linear-gradient(to right, #f8bdbd, #feadad);
+    color: #ff2323;
+}
+
+.btn {
+    border-radius: 30px;
+    font-size: 17px;
+    padding: 10px 30px 10px 30px;
+    margin: 15px;
+    border: none;
+    &:hover {
+        cursor: pointer;
+        opacity: 0.8;
+    }
+}

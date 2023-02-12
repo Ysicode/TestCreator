@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { collection, collectionData, doc, Firestore, setDoc, updateDoc } from '@angular/fire/firestore';
 import { NgForm } from '@angular/forms';
+import { Observable } from 'rxjs';
 import { AlertService } from '../services/alert.service';
 
 @Component({

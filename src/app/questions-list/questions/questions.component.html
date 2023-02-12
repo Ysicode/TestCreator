@@ -219,9 +219,11 @@
                             <div class="question_edit_btn_wrapper">
                                 <button class="question_edit_btn">Edit</button>
                                 <button class="question_edit_btn" (click)="data.log(questionData.id)">ds</button>
-                                <button class="question_edit_btn"
-                                    (click)="data.deletedata(questionData.id)">Delete</button>
+                                <button class="question_edit_btn" (click)="infoOverlay = true">Delete</button>
                             </div>
+                    
+                            <app-info-overlay *ngIf="infoOverlay" (closeInfoOverlay)="infoOverlay = false" [questionID]="questionData.id" [deleteQuestionOverlay]="true"> 
+                            </app-info-overlay>
                         </div>
                     </div>
                 </div>
@@ -379,7 +381,7 @@
                                     }}</b></p>
                         </div>
                         <div class="edit_testhead_wrapper">
-                            <button (click)="toggleEditTestHead()" class="edit_testhead_btn">Testkopf
+                            <button (click)="openEditTestHeadComponent()" class="edit_testhead_btn">Testkopf
                                 bearbeiten</button>
                         </div>
                     </div>
@@ -640,9 +642,7 @@
     </div>
 
     <app-edit-testhead *ngIf="editTesthead" (closeEditTestHeadOverlay)="editTesthead = false;">
-
     </app-edit-testhead>
 
     <app-spinner *ngIf="service.loading">
-
     </app-spinner>

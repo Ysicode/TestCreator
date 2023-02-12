@@ -20,6 +20,7 @@ import { EditTestheadComponent } from './edit-testhead/edit-testhead.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SpinnerComponent } from './sharedComps/spinner/spinner.component';
 import { MatIconModule } from '@angular/material/icon';
+import { InfoOverlayComponent } from './info-overlay/info-overlay.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { MatIconModule } from '@angular/material/icon';
     EditorComponent,
     HeaderComponent,
     EditTestheadComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    InfoOverlayComponent
   ],
   imports: [
     BrowserModule,

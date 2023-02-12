@@ -1,8 +1,9 @@
 import { makeBindingParser } from '@angular/compiler';
-import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, OnInit, Output, ViewChild } from '@angular/core';
 import { collection, collectionData, doc, Firestore } from '@angular/fire/firestore';
 import { NgForm } from '@angular/forms';
 import { deleteDoc } from '@firebase/firestore';
+import { ArrowType } from 'markerjs2';
 import { Observable } from 'rxjs';
 import { EditComponent } from 'src/app/add/edit/edit.component';
 import { dataTransferService } from 'src/app/services/dataTransfer.service';
@@ -13,8 +14,7 @@ import { overlaysService } from 'src/app/services/overlays.service';
   selector: 'app-questions',
   templateUrl: './questions.component.html',
   styleUrls: ['./questions.component.scss'],
-  providers: [overlaysService, dataTransferService],
-
+  providers: [overlaysService, dataTransferService]
 })
 
 export class QuestionsComponent implements OnInit {
@@ -31,11 +31,11 @@ export class QuestionsComponent implements OnInit {
   currentAnswer: any;
   currentId: string;
   public totalQuestionsNumber: number = 0;
-
+  public infoOverlay: boolean = false;
 
   // variables for the new question window
-  editMode = false;
-  overlay = false;
+  editMode: boolean = false;
+  overlay: boolean = false;
 
   //multi used variables
   currentTestPoints: number = 0;
@@ -65,8 +65,6 @@ export class QuestionsComponent implements OnInit {
   wrongPassword: boolean = false;
   logedIn: Boolean = false;
   file: any;
-
-  question_number = 0;
   sampleSolution = false;
 
   // Filter And Search variables
@@ -836,17 +834,21 @@ export class QuestionsComponent implements OnInit {
 
 
 
-  toggleEditTestHead() {
+  openEditTestHeadComponent() {
     this.editTesthead = true;
+  }
+
+  log(info: any) {
+console.log(info)
   }
 
   stopLoop = (time: any) => {
     return new Promise((resolve) => setTimeout(resolve, time))
   }
 
-  closeEditTestHead() {
-    this.editTesthead = false;
-  }
+  // closeEditTestHead() {
+  //   this.editTesthead = false;
+  // }
 
   printTest() {
     window.print();
