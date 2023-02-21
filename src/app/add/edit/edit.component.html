@@ -64,15 +64,15 @@
                 <div class="section_separator margin_top_bottom plus_margin_top"></div>
               
                 <div class="d_flex subject_btn_wrapper"> 
-                    <button class="subject_btn addNew_btn" (click)="selectKind('standard'); multipleChoiceEditor = false" [class.selectedButton]="selectedKind == 'standard'">
+                    <button class="subject_btn" (click)="selectKind('standard'); multipleChoiceEditor = false" [class.selectedButton]="selectedKind == 'standard'">
                         Standard 
                     </button>
-                    <button class="subject_btn addNew_btn" (click)="selectKind('multipleChoice'); multipleChoiceEditor = true" [class.selectedButton]="selectedKind == 'multipleChoice'">
+                    <button class="subject_btn" (click)="selectKind('multipleChoice'); multipleChoiceEditor = true" [class.selectedButton]="selectedKind == 'multipleChoice'">
                         Multiple Choice 
                     </button>
-                    <button class="subject_btn addNew_btn" (click)="selectKind('unteraufgaben'); multipleChoiceEditor = false" [class.selectedButton]="selectedKind == 'unteraufgaben'">
+                    <!-- <button class="subject_btn" (click)="selectKind('unteraufgaben'); multipleChoiceEditor = false" [class.selectedButton]="selectedKind == 'unteraufgaben'">
                         Unteraufgaben
-                    </button>
+                    </button> -->
                 </div>            
             </div>
         </div>

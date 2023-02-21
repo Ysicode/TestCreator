@@ -1,10 +1,11 @@
 <div class="header d_flex_space">
     <div class="d_flex">
+        <img class="logo_icon" src="assets/testcreator.png" alt="">
         <h1 class="logo d_flex margin_zero">TestCreator</h1>
     </div>
-   
+
     <div class="d_flex">
         <img crossorigin="anonymous" class="user_photo" src="assets/simon_weiss.jpg" alt="">
-        <p class="username margin_zero">Simon</p>
+        <p *ngIf="data.loaded" class="username margin_zero">{{data.currentUserData.username}}</p>
     </div>
 </div>

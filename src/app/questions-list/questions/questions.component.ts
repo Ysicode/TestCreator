@@ -1,10 +1,6 @@
-import { makeBindingParser } from '@angular/compiler';
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, OnInit, Output, ViewChild } from '@angular/core';
-import { collection, collectionData, doc, Firestore } from '@angular/fire/firestore';
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Firestore } from '@angular/fire/firestore';
 import { NgForm } from '@angular/forms';
-import { deleteDoc } from '@firebase/firestore';
-import { ArrowType } from 'markerjs2';
-import { Observable } from 'rxjs';
 import { EditComponent } from 'src/app/add/edit/edit.component';
 import { dataTransferService } from 'src/app/services/dataTransfer.service';
 import { overlaysService } from 'src/app/services/overlays.service';
@@ -104,10 +100,16 @@ export class QuestionsComponent implements OnInit {
 
 
   async ngOnInit(): Promise<void> {
-    await this.data.loadtestHead();
+    await this.data.loadSubUserData();
     await this.data.loadSubjectsAndClasses();
     await this.data.loadQuestions();
+    // await this.data.loadtestHead();
     await this.getCurrentTestFromLocalStorage();
+    setTimeout(() => {
+      console.log('question End', this.data.loaded);
+      console.log('question', this.data.currentUserData)
+    }, 800);
+   
   }
 
   getTotalQuestionNumber() {
@@ -121,6 +123,7 @@ export class QuestionsComponent implements OnInit {
 
   addCurrentTestToLocalStorage() {
     localStorage.setItem("currentTest", JSON.stringify(this.test));
+    localStorage.setItem("addedQuestions", JSON.stringify(this.addedToTest));
   }
 
   async getCurrentTestFromLocalStorage() {
@@ -128,8 +131,13 @@ export class QuestionsComponent implements OnInit {
     this.service.loading = true;
     let loadedTestFromStorage = localStorage.getItem('currentTest');
     this.test = JSON.parse(loadedTestFromStorage);
+
+    let loadedAddedQuestions = localStorage.getItem('addedQuestions');
+    this.addedToTest = JSON.parse(loadedAddedQuestions);
+
     setTimeout(() => {
       this.setQuestionNumber();
+      this.setTestInfo();
       this.renderSquaresAndLinesOfQuestionsInTest();
       this.styleAddedQuestionsInListViewAfterLoadingTestData();
       this.service.loading = false;
@@ -268,6 +276,7 @@ export class QuestionsComponent implements OnInit {
    * This function is used to update the test information like totaltime, total questions and total points
    */
   setTestInfo() {
+    console.log('hello')
     this.currentTestPoints = 0;
     this.currentTestTime = 0;
     for (let i = 0; i < this.addedToTest.length; i++) {

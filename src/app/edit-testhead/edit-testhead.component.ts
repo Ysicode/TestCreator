@@ -3,12 +3,13 @@ import { collection, collectionData, doc, Firestore, setDoc, updateDoc } from '@
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { AlertService } from '../services/alert.service';
+import { dataTransferService } from '../services/dataTransfer.service';
 
 @Component({
   selector: 'app-edit-testhead',
   templateUrl: './edit-testhead.component.html',
   styleUrls: ['./edit-testhead.component.scss'],
-  providers: [AlertService],
+  providers: [AlertService, dataTransferService],
 })
 export class EditTestheadComponent implements OnInit {
   @ViewChild('editTestHeadForm') inputfields: NgForm;
@@ -17,13 +18,10 @@ export class EditTestheadComponent implements OnInit {
   currentTestHead: any;
 
 
-  constructor(private firestore: Firestore, public alertService: AlertService) { }
+  constructor(private firestore: Firestore, public alertService: AlertService, public data: dataTransferService) { }
 
   ngOnInit(): void {
     this.loadtestHead();
-    setTimeout(() => {
-      this.setForm();
-    }, 50);
   }
 
   closeEditTestHead() {
@@ -32,31 +30,38 @@ export class EditTestheadComponent implements OnInit {
   }
 
   async loadtestHead() {
-    const testHead: any = collection(this.firestore, '/users/JonasWeiss/testHead');
-    this.testHeadFromFirestore$ = collectionData(testHead, { idField: 'id' });
-    this.testHeadFromFirestore$.subscribe((data: any) => {
-      this.currentTestHead = data;
-    });
+    // const testHead: any = collection(this.firestore, '/users/JonasWeiss/testHead');
+    // this.testHeadFromFirestore$ = collectionData(testHead, { idField: 'id' });
+    // this.testHeadFromFirestore$.subscribe((data: any) => {
+    //   this.currentTestHead = data;
+    //   console.log(this.currentTestHead);
+    // });
+    this.data.loadSubUserData().then(() => {
+      this.setForm();
+    })
   }
 
   addData(data: any) {
-    const coll: any = doc(this.firestore, '/users/JonasWeiss/testHead/' + this.currentTestHead[0].id);
+    const coll: any = doc(this.firestore, '/users/JonasWeiss/subusers/' + this.data.currentUserID);
     updateDoc(coll, {
-      schoolname: data.schoolname,
-      testname: data.testname,
-      totaltime: data.totaltime,
-      slogan: 'Viel Erfolg'
+      testhead: {
+        schoolname: data.schoolname,
+        testname: data.testname,
+        totaltime: data.totaltime,
+        slogan: 'Viel Erfolg'
+      }
     }).then(() => {
       window.scrollTo(0, 0);
       this.closeEditTestHead();
+      this.data.loadSubUserData();
     })
   }
 
   setForm() {
     this.inputfields.setValue({
-      schoolname: this.currentTestHead[0].schoolname,
-      testname: this.currentTestHead[0].testname,
-      totaltime: this.currentTestHead[0].totaltime,
+      schoolname: this.data.currentUserData.testhead.schoolname,
+      testname: this.data.currentUserData.testhead.testname,
+      totaltime: this.data.currentUserData.testhead.totaltime,
     })
   }
 

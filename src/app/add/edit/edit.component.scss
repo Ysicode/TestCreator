@@ -54,7 +54,7 @@
 }
 
 .addNew_btn {
-    background: linear-gradient(to right, #c2c2c2, #c7c7c7) !important;
+    background: #a6a5a5 !important;
 }
 
 .addNew_container {
@@ -62,7 +62,7 @@
 }
 
 .subject_btn {
-    background: linear-gradient(to right, #4babc3, #5fc1d8);
+    background: #339AF0;
     color: #424949;
     border-radius: 30px;
     font-size: 17px;
@@ -86,7 +86,7 @@
 }
 
 .question_add_btn {
-    background: linear-gradient(to right, #c2c2c2, #c8d4d1);
+    background: #a6a5a5;
     border: none;
     border-radius: 50px;
     padding: 7px;
@@ -112,15 +112,15 @@
 }
 
 .dificulty_leicht_btn {
-   background: linear-gradient(to right, #bdbdbd, #dbd5d5);
+   background: #FCC419;
 }
 
 .dificulty_mittel_btn {
-    background: linear-gradient(to right, #4babc3, #5fc1d8);
+    background: #339AF0;
 }
 
 .dificulty_schwer_btn {
-    background: linear-gradient(to right, rgb(248 190 86), #f5d619);
+    background: #FA5252;
 }
 
 .inputfield {
@@ -178,7 +178,7 @@
     width: 100%;
     border-radius: 10px;
     height: 15px;
-    background: linear-gradient(to right, #4babc3, #5fc1d8);
+    background: #339AF0;
     outline: none;
     opacity: 1;
     -webkit-transition: 0.2s;
@@ -195,7 +195,7 @@
     width: 25px;
     border-radius: 20px;
     height: 25px;
-    background: #c7c7c7;
+    background: #a6a5a5;
     cursor: pointer;
 }
 
@@ -203,7 +203,7 @@
     width: 25px;
     border-radius: 20px;
     height: 25px;
-    background: #c7c7c7;
+    background: #a6a5a5;
     cursor: pointer;
 }
 
@@ -219,7 +219,7 @@
 }
 
 .important {
-    color: #da5838;
+    color: #FA5252;
 }
 
 .keyword_textarea {

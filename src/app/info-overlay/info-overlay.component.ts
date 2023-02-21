@@ -16,11 +16,9 @@ export class InfoOverlayComponent implements OnInit {
   @Output() closeInfoOverlay = new EventEmitter<boolean>();
 
   loading: boolean = false;
-
-  @Input() deleteQuestionOverlay: boolean = false;
+  @Input() deleteQuestionOverlay: boolean;
 
   ngOnInit(): void {
-
   }
 
   closeDeleteQuestionOverlay() {
@@ -31,14 +29,15 @@ export class InfoOverlayComponent implements OnInit {
   deleteQuestion() {
     this.loading = true;
     this.dataService.deletedata(this.questionID);
-
     setTimeout(() => {
-      console.log('end');
-      
       this.closeInfoOverlay.emit();
-      this.loading = false;
       this.deleteQuestionOverlay = false;
+      this.loading = false;
     }, 2000);
+  }
+
+  logData() {
+    console.log(this.dataService.loaded)
   }
 
 

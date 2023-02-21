@@ -31,7 +31,7 @@ body {
 }
 
 .subject_btn {
-    background: linear-gradient(to right, #4babc3, #5fc1d8);
+    background: #4ea7f0;
     color: #424949;
     border-radius: 30px;
     font-size: 17px;
@@ -73,7 +73,7 @@ body {
 }
 
 .question_add_btn {
-    background: linear-gradient(to right, #c2c2c2, #c8d4d1);
+    background: #a6a5a5;
     border: none;
     border-radius: 50px;
     padding: 7px;
@@ -142,7 +142,7 @@ body {
 }
 
 .subject_btn {
-    background: linear-gradient(to right, #4babc3, #5fc1d8);
+    background: #4ea7f0;
     color: #424949;
     border-radius: 30px;
     font-size: 17px;
@@ -170,15 +170,15 @@ body {
 }
 
 .dificulty_leicht_btn {
-    background: linear-gradient(to right, #bdbdbd, #dbd5d5);
+    background: #FCC419 ;
 }
 
 .dificulty_mittel_btn {
-    background: linear-gradient(to right, #4babc3, #5fc1d8);
+    background: #339AF0;
 }
 
 .dificulty_schwer_btn {
-    background: linear-gradient(to right, rgb(248 190 86), #f5d619);
+    background:#FA5252;
 }
 
 .inputfield {
@@ -236,7 +236,7 @@ body {
     width: 100%;
     border-radius: 10px;
     height: 15px;
-    background: linear-gradient(to right, #4babc3, #5fc1d8);
+    background: #339AF0;
     outline: none;
     opacity: 1;
     -webkit-transition: 0.2s;
@@ -277,7 +277,7 @@ body {
 }
 
 .important {
-    color: #da5838;
+    color: #FA5252;
 }
 
 .d_none {
@@ -366,7 +366,7 @@ style for rendered subjects
     margin-top: 100px;
     width: 100vw;
     max-width: 100%;
-    background: #c5c9c8;
+    background: #e1e1e1;
     position: sticky;
     margin-bottom: 15px;
     top: 0;
@@ -384,7 +384,7 @@ style for rendered subjects
 }
 
 .preview_btn {
-    background: linear-gradient(to right, #4babc3, #5fc1d8);
+    background: #339AF0;
     color: #424949;
     border-radius: 50px;
     font-size: 14px;
@@ -443,18 +443,18 @@ style for rendered subjects
 }
 
 .question_added_leicht {
-    border-right: 5px solid #9f9f9e;
-    border-left: 5px solid #9f9f9e;
+    border-right: 5px solid #FCC419;
+    border-left: 5px solid #FCC419;
 }
 
 .question_added_mittel {
-    border-right: 5px solid #5fc1d8;
-    border-left: 5px solid #5fc1d8;
+    border-right: 5px solid #339AF0;
+    border-left: 5px solid #339AF0;
 }
 
 .question_added_schwer {
-    border-right: 5px solid #f5af19;
-    border-left: 5px solid #f5af19;
+    border-right: 5px solid #FA5252;
+    border-left: 5px solid #FA5252;
 }
 
 .question_container {
@@ -476,7 +476,7 @@ style for rendered subjects
 }
 
 .question_info_btn {
-    border-bottom: 1px solid #aaaaaa;
+    border-bottom: 1px solid #a6a5a5;
     margin-right: 15px;
 }
 
@@ -491,7 +491,7 @@ style for rendered subjects
 }
 
 .question_add_btn {
-    background: linear-gradient(to right, #c2c2c2, #c8d4d1);
+    background: #a6a5a5;
     border: none;
     border-radius: 50px;
     padding: 7px;
@@ -513,7 +513,7 @@ style for rendered subjects
 }
 
 .added_difficulty_leicht {
-    border: 3px solid #9f9f9e;
+    border: 3px solid #FCC419;
 }
 
 .added_difficulty_mittel {
@@ -521,7 +521,7 @@ style for rendered subjects
 }
 
 .added_difficulty_schwer {
-    border: 3px solid #f5af19;
+    border: 3px solid #FA5252;
 }
 
 .ordered_list_number {
@@ -618,15 +618,15 @@ Answer styles
 }
 
 .answer_btn_leicht {
-    color: #9f9f9e;
+    color: #FCC419;
 }
 
 .answer_btn_mittel {
-    color: #5fc1d8;
+    color: #339AF0;
 }
 
 .answer_btn_schwer {
-    color: #f5af19;
+    color: #FA5252;
 }
 
 .answer_wrapper {
@@ -694,7 +694,7 @@ Answer styles
     border: none;
     width: 90%;
     height: 100%;
-    background: #c7d1cf;
+    background: #a6a5a5;
     border-top-left-radius: 40px;
     border-bottom-left-radius: 40px;
 }
@@ -708,7 +708,7 @@ Answer styles
     height: 65%;
     border-bottom-right-radius: 20px;
     border-top-right-radius: 20px;
-    background: #c7d1cf;
+    background: #a6a5a5;
     border-left: 1px solid grey;
 
     .search_close_icon {
@@ -717,14 +717,14 @@ Answer styles
         background: #e7eceb;
         padding: 10%;
         &:hover {
-            background: rgba(255, 255, 255, 0.2);
+            opacity: 0.8;
         }
     }
 }
 
 .add_question_btn_wrapper {
     position: relative;
-    background: linear-gradient(to right, #c2c2c2, #c8d4d1);
+    background: #a6a5a5;
     width: 320px;
     height: 40px;
     border-radius: 50px;
@@ -734,7 +734,7 @@ Answer styles
     input:-webkit-autofill,
     input:-webkit-autofill,
     input:-webkit-autofill {
-        -webkit-box-shadow: 0 0 0 1000px #c7d1cf inset !important;
+        -webkit-box-shadow: 0 0 0 1000px #a6a5a5 inset !important;
         -webkit-text-fill-color: black !important;
     }
 }
@@ -777,7 +777,7 @@ Answer styles
     margin-bottom: 2px;
     height: 3px;
     background: black;
-    background: linear-gradient(to right, #4babc3, #5fc1d8);
+    background: #339AF0;
 }
 
 .burger_bottom {
@@ -785,7 +785,7 @@ Answer styles
     margin-top: 2px;
     height: 3px;
     background: black;
-    background: linear-gradient(to right, #4babc3, #5fc1d8);
+    background: #339AF0;
 }
 
 /*
@@ -856,13 +856,13 @@ Styles für die Vorschau sektion
     width: 100%;
     height: 2.5vw;
     max-height: 25px;
-    color: #4babc3;
+    color: #4ea7f0;
     font-size: calc(100vw * 0.016);
     border: none;
-    border-bottom: 1px solid #5fc1d8;
+    border-bottom: 1px solid #4ea7f0;
     background: white;
     &:hover {
-        background: rgb(94 191 215 / 60%);
+        background: #53b2ff4a;
         cursor: pointer;
     }
 }
@@ -985,13 +985,13 @@ Styles für die Vorschau sektion
         right: 0;
         border: none;
         object-fit: cover;
-        border-right: 1px solid #da5838;
-        border-top: 1px solid #da5838;
+        border-right: 1px solid #FA5252;
+        border-top: 1px solid #FA5252;
         background: #f9d1c9;
         &:hover {
             cursor: pointer;
-            border-right: 1.5px solid #da5838;
-            border-top: 1.5px solid #da5838;
+            border-right: 1.5px solid #FA5252;
+            border-top: 1.5px solid #FA5252;
         }
     }
 
@@ -1021,7 +1021,7 @@ Styles für die Vorschau sektion
     margin-right: 5px;
 
     &:hover {
-        border: 2px solid #5fc1d8;
+        border: 2px solid #4ea7f0;
     }
 
     .whitespace_btn_icon {
@@ -1097,7 +1097,7 @@ Styles für die Vorschau sektion
         border-radius: 10px;
         height: 15px;
         box-shadow: 0px 0px 59px 0px #bcbbbb;
-        background: linear-gradient(to right, #4babc3, #5fc1d8);
+        background: #4ea7f0;
         outline: none;
         opacity: 1;
         transition: opacity 0.2s;
@@ -1145,7 +1145,7 @@ Styles für die Vorschau sektion
     left: 0;
     height: 5px;
     width: 100%;
-    background: #5fc1d8;
+    background: #339AF0;
     &:hover {
         cursor: row-resize;
         height: 10px;
@@ -1179,7 +1179,7 @@ Styles für die Vorschau sektion
         position: absolute;
         right: 0;
         width: 5px;
-        background: #5fc1d8;
+        background: #4ea7f0;
         height: 100%;
 
         &:hover {
@@ -1198,7 +1198,7 @@ Styles für die Vorschau sektion
     cursor: col-resize;
     position: absolute;
     left: 0;
-    background: #5fc1d8;
+    background: #4ea7f0;
     width: 2px;
     max-width: 25px;
     top: 0;

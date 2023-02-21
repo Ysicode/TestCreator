@@ -25,10 +25,10 @@ import { InfoOverlayComponent } from './info-overlay/info-overlay.component';
 @NgModule({
   declarations: [
     AppComponent,
+    HeaderComponent,
     QuestionsComponent,
     EditComponent,
     EditorComponent,
-    HeaderComponent,
     EditTestheadComponent,
     SpinnerComponent,
     InfoOverlayComponent
@@ -49,7 +49,7 @@ import { InfoOverlayComponent } from './info-overlay/info-overlay.component';
     provideStorage(() => getStorage())
   ],
   providers: [
-    ScreenTrackingService,UserTrackingService
+    ScreenTrackingService,UserTrackingService,
   ],
   bootstrap: [AppComponent]
 })
