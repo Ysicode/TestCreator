@@ -1,0 +1,14 @@
+<form>
+    <div stopPropagation  class="login d_flex_column" style="z-index: 9999999;">
+        <div class="d_flex">
+            <img class="logo_icon" src="assets/testcreator.png" alt="">
+            <h1 class="logo d_flex margin_zero">TestCreator</h1>
+        </div>
+        <p>Login</p>
+    
+        <input  [ngStyle]="{'border-color': (schoolFound) ? 'green' : 'red'}" #school type="text" placeholder="Schule" (input)="checkIfSchoolExists(school.value)">
+        <input id="email" #email type="email" placeholder="Email" disabled="true">
+        <input #password type="password" placeholder="Passwort" disabled="true">
+        <button class="subject_btn" (click)="login(email.value, password.value)">Anmelden</button>
+    </div>
+</form>

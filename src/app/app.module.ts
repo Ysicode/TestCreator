@@ -21,6 +21,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { SpinnerComponent } from './sharedComps/spinner/spinner.component';
 import { MatIconModule } from '@angular/material/icon';
 import { InfoOverlayComponent } from './info-overlay/info-overlay.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { InfoOverlayComponent } from './info-overlay/info-overlay.component';
     EditorComponent,
     EditTestheadComponent,
     SpinnerComponent,
-    InfoOverlayComponent
+    InfoOverlayComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

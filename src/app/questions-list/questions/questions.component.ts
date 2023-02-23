@@ -1,6 +1,6 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { Firestore } from '@angular/fire/firestore';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { EditComponent } from 'src/app/add/edit/edit.component';
 import { dataTransferService } from 'src/app/services/dataTransfer.service';
 import { overlaysService } from 'src/app/services/overlays.service';
@@ -58,7 +58,11 @@ export class QuestionsComponent implements OnInit {
   squareWhitspace = false;
 
   //help variables
-  wrongPassword: boolean = false;
+  // @ViewChild('email') emailInput: ElementRef;
+  // wrongEmailAdress: boolean = false;
+  // @ViewChild('password') passwordInput: ElementRef;
+  // wrongPassword: boolean = false;
+  // schoolFound: boolean = false;
   logedIn: Boolean = false;
   file: any;
   sampleSolution = false;
@@ -82,34 +86,25 @@ export class QuestionsComponent implements OnInit {
   filteredBearbeitungszeit: any = null;
   filteredPunktzahl: any = null
 
-  constructor(private firestore: Firestore, public service: overlaysService, public data: dataTransferService) { }
+  constructor(private router: Router, public service: overlaysService, public data: dataTransferService) { }
   @HostListener("click", ["$event"])
 
-
-
-  login(password: string) {
-    if (password == 'superPin1984!') {
-      this.logedIn = true;
-    } else {
-      this.wrongPassword = true;
-      setTimeout(() => {
-        this.wrongPassword = false;
-      }, 1000);
-    }
+  async ngOnInit(): Promise<void> {
+    this.loadData();
   }
 
-
-  async ngOnInit(): Promise<void> {
-    await this.data.loadSubUserData();
-    await this.data.loadSubjectsAndClasses();
-    await this.data.loadQuestions();
-    // await this.data.loadtestHead();
-    await this.getCurrentTestFromLocalStorage();
-    setTimeout(() => {
-      console.log('question End', this.data.loaded);
-      console.log('question', this.data.currentUserData)
-    }, 800);
-   
+  async loadData() {
+   await this.data.getUserDataFromLocalStorage();
+  
+    if (!this.logedIn) {
+      await this.data.loadSubUserData();
+      await this.data.loadSubjectsAndClasses();
+      await this.data.loadQuestions();
+      await this.getCurrentTestFromLocalStorage();
+      setTimeout(() => {
+        this.logedIn = true;
+      }, 1000);
+    }    
   }
 
   getTotalQuestionNumber() {
@@ -131,7 +126,7 @@ export class QuestionsComponent implements OnInit {
     this.service.loading = true;
     let loadedTestFromStorage = localStorage.getItem('currentTest');
     this.test = JSON.parse(loadedTestFromStorage);
-
+ 
     let loadedAddedQuestions = localStorage.getItem('addedQuestions');
     this.addedToTest = JSON.parse(loadedAddedQuestions);
 
@@ -276,7 +271,6 @@ export class QuestionsComponent implements OnInit {
    * This function is used to update the test information like totaltime, total questions and total points
    */
   setTestInfo() {
-    console.log('hello')
     this.currentTestPoints = 0;
     this.currentTestTime = 0;
     for (let i = 0; i < this.addedToTest.length; i++) {
@@ -390,10 +384,10 @@ export class QuestionsComponent implements OnInit {
    * the numbers are ordered 1 to ...
    */
   async setQuestionNumber() {
-   Array.from(document.getElementsByClassName('test_number')).forEach((number, index) => {
+    Array.from(document.getElementsByClassName('test_number')).forEach((number, index) => {
       number.innerHTML = (index + 1).toString();
-   });
-   
+    });
+
     // await this.stopLoop(10);
     // this.question_number = 0;
     // for (let i = 0; i < this.test.pages.length; i++) {
@@ -467,13 +461,11 @@ export class QuestionsComponent implements OnInit {
     if (mode === 'start') {
       this.checkHeightsAndSetQuestionNumberInterval = setInterval(() => {
         this.checkHeightOfAllPreviewQuestions();
-        console.log('hello');
         this.setQuestionNumber();
       }, 70)
     }
     if (mode === 'stop') {
       clearInterval(this.checkHeightsAndSetQuestionNumberInterval);
-      console.log('stop');
     }
   }
 
@@ -848,7 +840,7 @@ export class QuestionsComponent implements OnInit {
   }
 
   log(info: any) {
-console.log(info)
+    console.log(info)
   }
 
   stopLoop = (time: any) => {

@@ -10,7 +10,9 @@ import { dataTransferService } from '../services/dataTransfer.service';
 export class HeaderComponent implements OnInit {
   constructor(public data: dataTransferService) { }
   ngOnInit(): void {
+    this.data.getUserDataFromLocalStorage();
     this.data.loadSubUserData();
+
   }
 
 }

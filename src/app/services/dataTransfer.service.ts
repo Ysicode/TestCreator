@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
-import { collection, collectionData, deleteDoc, doc, Firestore, getDocs, onSnapshot, query, setDoc, updateDoc, where } from "@angular/fire/firestore";
+import { collection, collectionData, collectionGroup, deleteDoc, doc, Firestore, getDocs, onSnapshot, query, setDoc, updateDoc, where } from "@angular/fire/firestore";
+import { Router } from "@angular/router";
 import { getDoc } from "@firebase/firestore";
 import { Observable } from "rxjs";
 
@@ -20,15 +21,87 @@ export class dataTransferService {
     currentUserData$: Observable<any>;
     currentUserData: any;
 
+    testschool: any;
 
     //Athentication
     currentPassword: string = '54321';
-    currentEmailAdress: string = 'valentin@gmail.com';
+    currentEmailAdress: string = 'jonas@gmail.com';
 
     // loaded = false;
     public loaded: boolean = false;
 
-    constructor(private firestore: Firestore) { }
+    constructor(private firestore: Firestore, private router: Router) { }
+
+    //At Login this function checks if the school exists
+    async checkIfSchoolExists(input: any) {
+        // input.toLowerCase();
+        let schoolId = input.replace(/\s/g, '')
+        const docRef = doc(this.firestore, "users", schoolId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            console.log("Document data:", docSnap.data(), 'ID', docSnap.id);
+            this.currentSchool = docSnap.id;
+            return true;
+        } else {
+            return false
+        }
+    }
+
+    // this function checks if a user with this password and email adress exists
+    async checkIfUserExists(password: string, email: string) {
+        let login_successfull = false;
+        const coll: any = collection(this.firestore, 'users', this.currentSchool, 'subusers');
+        try {
+            const q = query(coll, where("password", "==", password), where("email", "==", email)) //Collection abfrage nach password und Username
+            const querySnapshot = await getDocs(q);
+            if (querySnapshot.empty) {
+                console.log("2222Error getting cached document:");
+                login_successfull = false;
+            }
+            querySnapshot.forEach((doc) => {
+                // doc.data() is never undefined for query doc snapshots
+                console.log('BINGO', doc.id, " => ", doc.data());
+                this.currentUserID = doc.id;
+                this.currentUserData = doc.data();
+                this.currentPassword = password;
+                this.currentEmailAdress = email;
+                login_successfull = true;
+                this.saveUserDataToLocalStorage();
+            });
+        } catch (e) {
+            console.log("Error getting cached document:", e);
+        }
+        return login_successfull
+    }
+
+    //saves user to local storage
+    saveUserDataToLocalStorage() {
+        const now = new Date();
+        const expiration = new Date(now.getTime() + 24 * 60 * 60 * 1000); // 24 hours from now
+        localStorage.setItem('session', JSON.stringify({
+            sessionId: this.currentUserID,
+            school: this.currentSchool,
+            expiration
+        }));
+    }
+
+    getUserDataFromLocalStorage() {
+        const data = localStorage.getItem('session');
+        if (!data) {
+          this.router.navigate(['']);
+          return null
+        }
+    
+        const { sessionId, school, expiration } = JSON.parse(data);
+        const now = new Date();
+        if (now.getTime() > new Date(expiration).getTime()) {
+          localStorage.removeItem('session');
+          return null;
+        }
+    
+        this.currentSchool = school;
+        this.currentUserID = sessionId;
+    }
 
     /**
       * this function is used to load all subject and classes from firebase
@@ -69,6 +142,12 @@ export class dataTransferService {
         setDoc(doc(coll), {
             password: sub_user_password, //Variable - wird später geändert durch den Admin beim anlegen von neuen unterusern
             username: sub_user_name, //Variable - wird später geändert durch den Admin beim anlegen von neuen unterusern
+            testhead: {
+                schoolname: 'Schulname',
+                testname: 'Testname',
+                slogan: 'Viel Erfolg',
+                totaltime: 0
+            }
         });
     }
 
@@ -90,30 +169,19 @@ export class dataTransferService {
 
     //LOAD SUBUSERDATA
     async loadSubUserData() {
-        const coll: any = collection(this.firestore, 'users', this.currentSchool, 'subusers');
-        const q = query(coll, where("password", "==", this.currentPassword), where("email", "==", this.currentEmailAdress)); //Collection abfrage nach password und Username
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            console.log('BINGO', doc.id, " => ", doc.data());
-            this.currentUserID = doc.id;
-            this.currentUserData = doc.data();
-        });
-
         const docRef = doc(this.firestore, 'users', this.currentSchool, 'subusers', this.currentUserID); //ID und Schule müssen später variable sein
-        // const subUserData = await getDoc(docRef);
-        // this.currentUserData = subUserData.data();
-        // this.currentUserID = subUserData.id;
-
+        const subUserData = await getDoc(docRef);
+        this.currentUserData = subUserData.data();
 
         onSnapshot(docRef, (doc: any) => { // Snapshot detect changes made to the doc. So wenn sie ändert in echtzeit
             this.currentUserData = doc.data();
-            this.currentUserID = doc.id;
+            // this.currentUserID = doc.id;
         });
+        setTimeout(() => {
+            this.loaded = true;
+        }, 500);
 
-        this.loaded = true;
     }
-
 
 
 

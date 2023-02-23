@@ -1,18 +1,13 @@
 
-<div *ngIf="logedIn" class="login d_flex_column" style="z-index: 9999999;">
-    <p *ngIf="!wrongPassword">LOGIN</p>
-    <p *ngIf="wrongPassword">Falsches Password</p>
-    <input #pin type="password" placeholder="login Pin">
-    <button class="subject_btn" (click)="login(pin.value)">Anmelden</button>
-</div>
 
-<app-edit class="add_question_overlay" *ngIf="overlay" (closeAddQuestionOverlay)="overlay = false">
-
-</app-edit>
+<!-- Header Component-->
+<app-header *ngIf="logedIn"></app-header>
+<!-- Edit Component -->
+<app-edit class="add_question_overlay" *ngIf="overlay" (closeAddQuestionOverlay)="overlay = false"></app-edit>
 
 <app-spinner *ngIf="service.loading"></app-spinner>
 
-<div *ngIf="data.loaded"  [class.d_none]="overlay" class="questions_wrapper ">
+<div *ngIf="data.loaded && logedIn"  [class.d_none]="overlay" class="questions_wrapper ">
     <div class="questions_container">
         <div class="headline_test_infos d_flex">
             <div class="headline_test_infos_inside_container">
@@ -605,6 +600,7 @@
             </div>
 
             <div class="add_question_container d_flex" [class.d_none]="!preview">
+                <button (click)="data.checkIfSchoolExists('Weiss')">Add new User</button>
                 <div class="add_question_btn_wrapper">
                     <button class="add_question_btn" (click)="toggleSolutions()">{{!sampleSolution ? 'Lösung' :
                         'Aufgaben'}}</button>
