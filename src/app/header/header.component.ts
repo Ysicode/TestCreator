@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { dataTransferService } from '../services/dataTransfer.service';
 
 @Component({
@@ -8,11 +9,21 @@ import { dataTransferService } from '../services/dataTransfer.service';
   providers: [dataTransferService]
 })
 export class HeaderComponent implements OnInit {
-  constructor(public data: dataTransferService) { }
-  ngOnInit(): void {
-    this.data.getUserDataFromLocalStorage();
-    this.data.loadSubUserData();
 
+  constructor(public data: dataTransferService, private router: Router) { }
+
+  ngOnInit(): void {
+    this.loadData();
+  }
+
+  loadData() {
+    if (this.data.getUserDataFromLocalStorage()) {
+      this.data.loadSubUserData();
+      console.log('ready');
+    } else {
+      console.log('not ready');
+      this.router.navigate(['login']);
+    }
   }
 
 }

@@ -9,7 +9,7 @@ import { dataTransferService } from '../services/dataTransfer.service';
   providers: [dataTransferService]
 })
 export class LoginComponent implements OnInit {
-  
+
   @ViewChild('email') emailInput: ElementRef;
   @ViewChild('password') passwordInput: ElementRef;
 
@@ -23,6 +23,13 @@ export class LoginComponent implements OnInit {
   constructor(public data: dataTransferService, private router: Router) { }
 
   ngOnInit(): void {
+    this.checkIfUserDataAlreadyInLocalStorage();
+  }
+
+  checkIfUserDataAlreadyInLocalStorage() {
+    if (this.data.getUserDataFromLocalStorage()) {
+      this.router.navigate(['dashboard']);
+    }
   }
 
   async checkIfSchoolExists(schule: string) {

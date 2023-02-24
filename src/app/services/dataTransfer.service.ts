@@ -24,8 +24,8 @@ export class dataTransferService {
     testschool: any;
 
     //Athentication
-    currentPassword: string = '54321';
-    currentEmailAdress: string = 'jonas@gmail.com';
+    // currentPassword: string = '54321';
+    // currentEmailAdress: string = 'jonas@gmail.com';
 
     // loaded = false;
     public loaded: boolean = false;
@@ -63,8 +63,6 @@ export class dataTransferService {
                 console.log('BINGO', doc.id, " => ", doc.data());
                 this.currentUserID = doc.id;
                 this.currentUserData = doc.data();
-                this.currentPassword = password;
-                this.currentEmailAdress = email;
                 login_successfull = true;
                 this.saveUserDataToLocalStorage();
             });
@@ -84,23 +82,29 @@ export class dataTransferService {
             expiration
         }));
     }
-
+    // gets userData from local storage
     getUserDataFromLocalStorage() {
         const data = localStorage.getItem('session');
         if (!data) {
-          this.router.navigate(['']);
-          return null
+            this.router.navigate(['login']);
+            return null
         }
-    
+
         const { sessionId, school, expiration } = JSON.parse(data);
         const now = new Date();
         if (now.getTime() > new Date(expiration).getTime()) {
-          localStorage.removeItem('session');
-          return null;
+            localStorage.removeItem('session');
+            return null;
         }
-    
+
         this.currentSchool = school;
         this.currentUserID = sessionId;
+        return true;
+    }
+
+    logoutUser() {
+        localStorage.clear();
+        this.router.navigate(['login']);
     }
 
     /**

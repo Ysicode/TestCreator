@@ -1,6 +1,5 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
 import { EditComponent } from 'src/app/add/edit/edit.component';
 import { dataTransferService } from 'src/app/services/dataTransfer.service';
 import { overlaysService } from 'src/app/services/overlays.service';
@@ -86,24 +85,24 @@ export class QuestionsComponent implements OnInit {
   filteredBearbeitungszeit: any = null;
   filteredPunktzahl: any = null
 
-  constructor(private router: Router, public service: overlaysService, public data: dataTransferService) { }
-  @HostListener("click", ["$event"])
+  constructor(public service: overlaysService, public data: dataTransferService) { }
+  // @HostListener("click", ["$event"]) //Lädt die Seite jedesmal neu wenn geclickt wird Braucht man aktuell nicht
 
   async ngOnInit(): Promise<void> {
     this.loadData();
   }
 
   async loadData() {
-   await this.data.getUserDataFromLocalStorage();
-  
-    if (!this.logedIn) {
+    this.service.loading = true;
+    if (this.data.getUserDataFromLocalStorage()) {
       await this.data.loadSubUserData();
       await this.data.loadSubjectsAndClasses();
       await this.data.loadQuestions();
       await this.getCurrentTestFromLocalStorage();
       setTimeout(() => {
         this.logedIn = true;
-      }, 1000);
+        this.service.loading = false;
+      }, 50);
     }    
   }
 

@@ -7,6 +7,29 @@
     z-index: 99999999;
 }
 
+.mat-spinner {
+    width: 30px !important;
+    height: 30px !important;
+}
+
+.mat-spinner::ng-deep svg {
+    width: 30px !important;
+    height: 30px !important;
+}
+
 .mat-spinner::ng-deep circle {
     stroke: #1d202b;
+
+}
+
+.logo_icon {
+    transform: rotate(-15deg);
+    margin-right: -5px;
+    width: 35px;
+    height: 35px;
+}
+
+.logo {
+    font-size: 30px;
+    font-weight: 900;
 }

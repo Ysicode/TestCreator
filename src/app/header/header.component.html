@@ -5,7 +5,13 @@
     </div>
 
     <div class="d_flex">
-        <img crossorigin="anonymous" class="user_photo" src="assets/simon_weiss.jpg" alt="">
-        <p *ngIf="data.loaded" class="username margin_zero">{{data.currentUserData.username}}</p>
+  
+        <!-- <img crossorigin="anonymous" class="user_photo" src="assets/simon_weiss.jpg" alt=""> -->
+        <div class="wrapper_username d_flex">
+            <p *ngIf="data.loaded" class="username margin_zero">{{ data.currentUserData.username }}</p>
+            <div class="d_flex wrapper_logout">
+                <img class="logout_icon" src="assets/logout.png" alt="" *ngIf="data.getUserDataFromLocalStorage()" (click)="data.logoutUser()">
+            </div>
+        </div>
     </div>
 </div>

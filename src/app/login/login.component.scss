@@ -4,6 +4,60 @@
     right: 0;
     left: 0;
     bottom: 0;
-    background: white;
+    background: #e1e1e1;
     z-index: 999;
 }
+
+.logo_icon {
+    transform: rotate(-15deg);
+    margin-right: -5px;
+    width: 35px;
+    height: 35px;
+}
+
+.logo {
+    font-size: 30px;
+    font-weight: 900;
+}
+
+.login {
+
+    .btn_is_blue {
+            background: #339AF0;
+            color: #424949;
+            border-radius: 30px;
+            font-size: 17px;
+            padding: 10px 30px 10px 30px;
+            margin: 15px;
+            border: none;
+            &:hover {
+                cursor: pointer;
+                opacity: 0.8;
+            }
+    }
+
+    input {
+        outline: none;
+        border: none;
+        text-align: center;
+        width: 300px;
+        font-size: 17px;
+        background: #ffff;
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 50px;
+    }
+
+    .enabled {
+        opacity: 1 !important;
+    }
+
+    .disabled {
+        opacity: 0.3;
+    }
+
+    .school_found {
+        border: 2px solid rgb(80, 173, 108);
+    }
+}
+

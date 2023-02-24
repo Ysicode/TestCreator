@@ -600,7 +600,6 @@
             </div>
 
             <div class="add_question_container d_flex" [class.d_none]="!preview">
-                <button (click)="data.checkIfSchoolExists('Weiss')">Add new User</button>
                 <div class="add_question_btn_wrapper">
                     <button class="add_question_btn" (click)="toggleSolutions()">{{!sampleSolution ? 'Lösung' :
                         'Aufgaben'}}</button>
@@ -642,6 +641,3 @@
 
     <app-edit-testhead *ngIf="editTesthead" (closeEditTestHeadOverlay)="editTesthead = false;">
     </app-edit-testhead>
-
-    <app-spinner *ngIf="service.loading">
-    </app-spinner>

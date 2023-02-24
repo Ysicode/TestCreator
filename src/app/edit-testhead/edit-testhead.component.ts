@@ -36,9 +36,11 @@ export class EditTestheadComponent implements OnInit {
     //   this.currentTestHead = data;
     //   console.log(this.currentTestHead);
     // });
-    this.data.loadSubUserData().then(() => {
-      this.setForm();
-    })
+    if (this.data.getUserDataFromLocalStorage()) {
+      this.data.loadSubUserData().then(() => {
+        this.setForm();
+      })
+    }
   }
 
   addData(data: any) {
