@@ -9,7 +9,8 @@ import { dataTransferService } from '../services/dataTransfer.service';
   providers: [dataTransferService]
 })
 export class HeaderComponent implements OnInit {
-
+  infoOverlay: boolean = false;
+  currentTestFromLocalStorage = [];
   constructor(public data: dataTransferService, private router: Router) { }
 
   ngOnInit(): void {
@@ -19,10 +20,18 @@ export class HeaderComponent implements OnInit {
   loadData() {
     if (this.data.getUserDataFromLocalStorage()) {
       this.data.loadSubUserData();
-      console.log('ready');
     } else {
-      console.log('not ready');
       this.router.navigate(['login']);
+    }
+  }
+
+  checkLengthOfCurrentTest() {
+    let loadedAddedQuestions = localStorage.getItem('addedQuestions');
+    this.currentTestFromLocalStorage = JSON.parse(loadedAddedQuestions);
+    if (this.currentTestFromLocalStorage.length == 0) {
+      return
+    } else {
+      this.infoOverlay = true;
     }
   }
 

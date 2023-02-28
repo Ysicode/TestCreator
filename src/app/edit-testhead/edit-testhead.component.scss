@@ -50,13 +50,12 @@
 }
 
 .save_btn {
-    background: linear-gradient(to right, #c2c2c2, #c7c7c7);
+    border: 2px solid #339af0 !important;
     color: #424949;
     border-radius: 30px;
     font-size: 17px;
     padding: 10px 30px 10px 30px;
     margin: 15px;
-    border: none;
 
     &:hover {
         opacity: 0.8;
@@ -90,7 +89,8 @@
     max-width: 500px;
     border-radius: 10px;
     height: 15px;
-    background: #339AF0;
+    background: #f2f3f4;
+    border: 1px solid grey;
     outline: none;
     opacity: 1;
     -webkit-transition: 0.2s;
@@ -108,7 +108,7 @@
     width: 25px;
     border-radius: 20px;
     height: 25px;
-    background: #c7c7c7;
+    background: grey;
     cursor: pointer;
 }
 
@@ -116,6 +116,6 @@
     width: 25px;
     border-radius: 20px;
     height: 25px;
-    background: #c7c7c7;
+    background: grey;
     cursor: pointer;
 }

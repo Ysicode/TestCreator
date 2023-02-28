@@ -7,7 +7,7 @@
 
 <app-spinner *ngIf="service.loading"></app-spinner>
 
-<div *ngIf="data.loaded && logedIn"  [class.d_none]="overlay" class="questions_wrapper ">
+<div *ngIf="data.loaded && logedIn"  [class.d_none]="overlay" class="questions_wrapper d_flex">
     <div class="questions_container">
         <div class="headline_test_infos d_flex">
             <div class="headline_test_infos_inside_container">
@@ -45,7 +45,7 @@
             </div>
             <div *ngIf="totalQuestionsNumber == 0" class="question_wrapper_listview d_flex_column">
                 <div class="question">
-                    Keine passende Aufgabe gefunden
+                    Keine passende Aufgabe gefunden!
                 </div>
 
             </div>
@@ -255,12 +255,12 @@
                     <div class="d_flex_column">
                         <h2>Nach Schwierigkeit filtern</h2>
                         <div class="subject_btn_wrapper d_flex">
-                            <button (click)="setDifficultyFilter('Leicht')" class="subject_btn dificulty_leicht_btn"
-                                [class.selectedButton]="filteredDifficulty == 'Leicht'">Leicht</button>
-                            <button (click)="setDifficultyFilter('Mittel')" class="subject_btn dificulty_mittel_btn"
-                                [class.selectedButton]="filteredDifficulty == 'Mittel'">Mittel</button>
-                            <button (click)="setDifficultyFilter('Schwer')" class="subject_btn dificulty_schwer_btn"
-                                [class.selectedButton]="filteredDifficulty == 'Schwer'">Schwer</button>
+                            <button (click)="setDifficultyFilter('Leicht')" class="subject_btn"
+                                [class.selectedButton_leicht]="filteredDifficulty == 'Leicht'">Leicht</button>
+                            <button (click)="setDifficultyFilter('Mittel')" class="subject_btn"
+                                [class.selectedButton_mittel]="filteredDifficulty == 'Mittel'">Mittel</button>
+                            <button (click)="setDifficultyFilter('Schwer')" class="subject_btn"
+                                [class.selectedButton_schwer]="filteredDifficulty == 'Schwer'">Schwer</button>
                         </div>
                     </div>
                     <div class="section_separator margin_top_bottom"></div>
@@ -270,25 +270,25 @@
                         <div class="d_flex subject_btn_wrapper">
 
                             <button (click)="setKindOfQuestionFilter('standard')"
-                                class="subject_btn dificulty_mittel_btn"
+                                class="subject_btn"
                                 [class.selectedButton]="filteredKind == 'standard'">Standard</button>
 
 
                             <button (click)="setKindOfQuestionFilter('multipleChoice')"
-                                class="subject_btn dificulty_mittel_btn"
+                                class="subject_btn"
                                 [class.selectedButton]="filteredKind == 'multipleChoice'">Multiple Choice</button>
 
 
-                            <button (click)="setKindOfQuestionFilter('unteraufgaben')"
-                                class="subject_btn dificulty_mittel_btn"
-                                [class.selectedButton]="filteredKind == 'unteraufgaben'">Unteraufgaben</button>
+                            <!-- <button (click)="setKindOfQuestionFilter('unteraufgaben')"
+                                class="subject_btn"
+                                [class.selectedButton]="filteredKind == 'unteraufgaben'">Unteraufgaben</button> -->
 
                         </div>
                     </div>
                     <div class="section_separator margin_top_bottom"></div>
 
                     <div class="subject_btn_wrapper d_flex">
-                        <button type="button" class="subject_btn cancel_btn"
+                        <button type="button" class="subject_btn cancel_btn border_none"
                             (click)="openFilter = false">Abbrechen</button>
                         <button class="subject_btn addNew_btn" (click)="openFilter = false">
                             Filter anwenden</button>
@@ -324,7 +324,7 @@
                         <img  (click)="openSearch()" style="width: 60%;" src="assets/search.png" alt="">
                     </div>
                     <button class="add_question_btn" (click)="openFilter = true">
-                        Filtern</button>
+                        Filtern <span *ngIf="filters.length != 0" class="filter_number">{{ filters.length }}</span></button>
                 </div>
             </div>
             <!--  -->
@@ -603,14 +603,19 @@
                 <div class="add_question_btn_wrapper">
                     <button class="add_question_btn" (click)="toggleSolutions()">{{!sampleSolution ? 'Lösung' :
                         'Aufgaben'}}</button>
-                    <div class="menu_burger" matTooltip="Menü" matTooltipPosition="above">
+
+                        <div class="menu_burger" matTooltip="Export" matTooltipPosition="above">
+                            <!-- <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="manage_search"></mat-icon> -->
+                            <img (click)="printTest()" style="width: 60%;" src="assets/export_icon.png" alt="">
+                        </div>
+                    <!-- <div class="menu_burger" matTooltip="Menü" matTooltipPosition="above">
                         <span class="burger_top">
                         </span>
                         <span class="burger_bottom">
                         </span>
-                    </div>
+                    </div> -->
 
-                    <button (click)="printTest()" class="add_question_btn">Speichern</button>
+                    <button class="add_question_btn">Speichern</button>
                 </div>
             </div>
 

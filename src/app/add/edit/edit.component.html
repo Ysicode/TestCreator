@@ -14,7 +14,7 @@
                             (click)="choiceSubject(button, i)">{{ button }}</button>
                     </div>
                 </div>
-                <div class="addNew_container">
+                <!-- <div class="addNew_container">
                     <button *ngIf="!newSubject" class="subject_btn addNew_btn"
                         (click)="showInputForNewSubject('subject')">
                         + Neues Fach anlegen
@@ -30,9 +30,9 @@
                             </div>
                         </form>
                     </div>
-                </div>
+                </div> -->
             </div>
-            <div class="section_separator margin_top_bottom"></div>
+            <div class="section_separator"></div>
         </div>
 
         <div class="subject_wrapper">
@@ -45,7 +45,7 @@
                             (click)="choiceClass(button, i)">{{ button }}</button>
                     </div>
                 </div>
-                <div class="addNew_container">
+                <!-- <div class="addNew_container">
                     <button *ngIf="!newClass" class="subject_btn addNew_btn" (click)="showInputForNewSubject('class')">
                         + Neue Klasse anlegen
                     </button>
@@ -60,8 +60,8 @@
                             </div>
                         </form>
                     </div>
-                </div>
-                <div class="section_separator margin_top_bottom plus_margin_top"></div>
+                </div> -->
+                <div class="section_separator margin_top_bottom"></div>
               
                 <div class="d_flex subject_btn_wrapper"> 
                     <button class="subject_btn" (click)="selectKind('standard'); multipleChoiceEditor = false" [class.selectedButton]="selectedKind == 'standard'">
@@ -109,23 +109,23 @@
         <div class="section_separator margin_top_bottom"></div>
 
 
-        <div class="d_flex rangbar_wrapper section" style="width: 100%;">
+        <div class="d_flex rangbar_wrapper section margin_top_zero" style="width: 100%;">
             <div class="d_flex_column">
                 <h2 id="difficulty">Schwierigkeit</h2>
                 <div class="d_flex subject_btn_wrapper">
                     <div>
-                        <button class="subject_btn dificulty_leicht_btn"
-                            [class.selectedButton]="currentDifficulty == 'Leicht'"
+                        <button class="subject_btn"
+                            [class.selectedButton_leicht]="currentDifficulty == 'Leicht'"
                             (click)="selectDifficulty('Leicht')">Leicht</button>
                     </div>
                     <div>
-                        <button class="subject_btn dificulty_mittel_btn"
-                            [class.selectedButton]="currentDifficulty == 'Mittel'"
+                        <button class="subject_btn"
+                            [class.selectedButton_mittel]="currentDifficulty == 'Mittel'"
                             (click)="selectDifficulty('Mittel')">Mittel</button>
                     </div>
                     <div>
-                        <button class="subject_btn dificulty_schwer_btn"
-                            [class.selectedButton]="currentDifficulty == 'Schwer'"
+                        <button class="subject_btn"
+                            [class.selectedButton_schwer]="currentDifficulty == 'Schwer'"
                             (click)="selectDifficulty('Schwer')">Schwer</button>
                     </div>
                 </div>
@@ -134,7 +134,7 @@
 
         <form class="questionForm" #questionForm="ngForm" (ngSubmit)="addData(questionForm.value)">
             <div class="d_flex_column">
-                <div class="d_flex section">
+                <div class="d_flex section margin_top_zero">
                     <div class="d_flex_column rangbar_wrapper">
                         <h2>Max. Punktzahl?</h2>
                         <div class="subject_btn_wrapper d_flex_column" *ngIf="loaded">
@@ -159,7 +159,7 @@
                 <div class="section_separator margin_top_bottom"></div>
 
 
-                <div class="d_flex_column section noBorderBottom">
+                <div class="d_flex_column section noBorderBottom margin_top_zero">
                     <h2 class="keyword_headline">Keywords für eine spätere Suche und genaue Filterung der Aufgaben!</h2>
                     <p class="keywords_subline"><b class="important">Wichtig! </b>Keywords müssen durch Komma getrennt
                         werden</p>
@@ -171,9 +171,9 @@
 
 
                 <div class="d_flex save_btn_wrapper">
-                    <button type="button" class="subject_btn cancel_btn"
+                    <button type="button" class="subject_btn cancel_btn border--none"
                         (click)="closeEditComponent()">Abbrechen</button>
-                    <button class="subject_btn addNew_btn" type="submit">
+                    <button class="subject_btn add_question_btn" type="submit">
                         {{editMode ? 'Änderungen Speichern' : 'Frage Speichern'}}</button>
 
                     <button type="button" (click)="closeEditComponent()"

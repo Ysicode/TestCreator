@@ -4,14 +4,18 @@
         <h1 class="logo d_flex margin_zero">TestCreator</h1>
     </div>
 
-    <div class="d_flex">
-  
+    <nav class="navbar d_flex">
+
         <!-- <img crossorigin="anonymous" class="user_photo" src="assets/simon_weiss.jpg" alt=""> -->
-        <div class="wrapper_username d_flex">
-            <p *ngIf="data.loaded" class="username margin_zero">{{ data.currentUserData.username }}</p>
+        <button class="navlink margin_zero">Ablage</button>
+        <button (click)="checkLengthOfCurrentTest()" class="navlink margin_zero">Neuer Test</button>
+        <button class="navlink margin_zero">Account</button>
             <div class="d_flex wrapper_logout">
-                <img class="logout_icon" src="assets/logout.png" alt="" *ngIf="data.getUserDataFromLocalStorage()" (click)="data.logoutUser()">
+                <img class="logout_icon" src="assets/logout.png" alt="" *ngIf="data.getUserDataFromLocalStorage()"
+                    (click)="data.logoutUser()">
             </div>
-        </div>
-    </div>
+    </nav>
 </div>
+
+<app-info-overlay *ngIf="infoOverlay" (closeInfoOverlay)="infoOverlay = false" [newTestOverlay]="true"> 
+</app-info-overlay>

@@ -7,6 +7,7 @@ import { overlaysService } from 'src/app/services/overlays.service';
 
 @Component({
   selector: 'app-questions',
+  host: { class: 'd_flex' },
   templateUrl: './questions.component.html',
   styleUrls: ['./questions.component.scss'],
   providers: [overlaysService, dataTransferService]
@@ -92,6 +93,10 @@ export class QuestionsComponent implements OnInit {
     this.loadData();
   }
 
+  deleteCurrentTets() {
+    this.getCurrentTestFromLocalStorage();
+  }
+
   async loadData() {
     this.service.loading = true;
     if (this.data.getUserDataFromLocalStorage()) {
@@ -103,7 +108,7 @@ export class QuestionsComponent implements OnInit {
         this.logedIn = true;
         this.service.loading = false;
       }, 50);
-    }    
+    }
   }
 
   getTotalQuestionNumber() {
@@ -125,7 +130,7 @@ export class QuestionsComponent implements OnInit {
     this.service.loading = true;
     let loadedTestFromStorage = localStorage.getItem('currentTest');
     this.test = JSON.parse(loadedTestFromStorage);
- 
+
     let loadedAddedQuestions = localStorage.getItem('addedQuestions');
     this.addedToTest = JSON.parse(loadedAddedQuestions);
 

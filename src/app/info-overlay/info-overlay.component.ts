@@ -17,6 +17,8 @@ export class InfoOverlayComponent implements OnInit {
 
   loading: boolean = false;
   @Input() deleteQuestionOverlay: boolean;
+  @Input() newTestOverlay: boolean;
+
 
   ngOnInit(): void {
   }
@@ -38,6 +40,16 @@ export class InfoOverlayComponent implements OnInit {
 
   logData() {
     console.log(this.dataService.loaded)
+  }
+
+  deleteTest() {
+    localStorage.removeItem('addedQuestions');
+    localStorage.removeItem('currentTest');
+    location.reload();
+    setTimeout(() => {
+      this.closeInfoOverlay.emit();
+      this.newTestOverlay = false;
+    }, 1000);    
   }
 
 

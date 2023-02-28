@@ -19,7 +19,7 @@
 
 .delete {
     background: linear-gradient(to right, #f8bdbd, #feadad);
-    color: #FA5252;
+    color: #fa5252;
 }
 
 .btn {
@@ -32,4 +32,8 @@
         cursor: pointer;
         opacity: 0.8;
     }
+}
+
+.overlay_information {
+    text-align: center;
 }

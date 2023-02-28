@@ -94,16 +94,18 @@ export class dataTransferService {
         const now = new Date();
         if (now.getTime() > new Date(expiration).getTime()) {
             localStorage.removeItem('session');
+            this.router.navigate(['login']);
             return null;
         }
 
         this.currentSchool = school;
         this.currentUserID = sessionId;
+        this.saveUserDataToLocalStorage();
         return true;
     }
 
     logoutUser() {
-        localStorage.clear();
+        localStorage.removeItem('session');
         this.router.navigate(['login']);
     }
 

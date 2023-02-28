@@ -53,22 +53,26 @@
     flex-wrap: wrap;
 }
 
-.addNew_btn {
-    background: #a6a5a5 !important;
+.add_question_btn {
+    border: 2px solid #339AF0 !important;
 }
 
 .addNew_container {
     margin-top: 30px;
 }
 
+.border--none {
+    border: none !important;
+}
+
 .subject_btn {
-    background: #339AF0;
+    background: #f2f3f4;
+    border: 1px solid grey;
     color: #424949;
     border-radius: 30px;
-    font-size: 17px;
+    font-size: 15px;
     padding: 10px 30px 10px 30px;
     margin: 15px;
-    border: none;
     &:hover {
         cursor: pointer;
         opacity: 0.8;
@@ -86,8 +90,8 @@
 }
 
 .question_add_btn {
-    background: #a6a5a5;
-    border: none;
+    background: #e1e1e1;
+    border: 1px solid grey;
     border-radius: 50px;
     padding: 7px;
     &:hover {
@@ -108,20 +112,32 @@
 }
 
 .selectedButton {
-    border: 2px solid #2c3e50;
+    border: 2px solid #339AF0;
 }
 
-.dificulty_leicht_btn {
-   background: #FCC419;
+.selectedButton_leicht {
+    border: 2px solid #FCC419;
 }
 
-.dificulty_mittel_btn {
-    background: #339AF0;
+.selectedButton_mittel {
+    border: 2px solid #339AF0;
 }
 
-.dificulty_schwer_btn {
-    background: #FA5252;
+.selectedButton_schwer {
+    border: 2px solid #FA5252;
 }
+
+// .dificulty_leicht_btn {
+//    background: #FCC419;
+// }
+
+// .dificulty_mittel_btn {
+//     background: #339AF0;
+// }
+
+// .dificulty_schwer_btn {
+//     background: #FA5252;
+// }
 
 .inputfield {
     outline: none;
@@ -178,7 +194,8 @@
     width: 100%;
     border-radius: 10px;
     height: 15px;
-    background: #339AF0;
+    background: #f2f3f4;
+    border: 1px solid grey;
     outline: none;
     opacity: 1;
     -webkit-transition: 0.2s;
@@ -195,7 +212,7 @@
     width: 25px;
     border-radius: 20px;
     height: 25px;
-    background: #a6a5a5;
+    background: grey;
     cursor: pointer;
 }
 
@@ -203,7 +220,7 @@
     width: 25px;
     border-radius: 20px;
     height: 25px;
-    background: #a6a5a5;
+    background: grey;
     cursor: pointer;
 }
 
@@ -246,6 +263,10 @@
 .margin_top_bottom {
     margin-top: 75px;
     margin-bottom: 75px;
+}
+
+.margin_top_zero {
+    margin-top: 0px;
 }
 
 .plus_margin_top {

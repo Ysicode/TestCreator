@@ -31,13 +31,13 @@ body {
 }
 
 .subject_btn {
-    background: #4ea7f0;
+    background: #f2f3f4;
+    border: 1px solid grey;
     color: #424949;
     border-radius: 30px;
-    font-size: 17px;
+    font-size: 15px;
     padding: 10px 30px 10px 30px;
     margin: 15px;
-    border: none;
     &:hover {
         cursor: pointer;
         opacity: 0.8;
@@ -124,25 +124,15 @@ body {
 }
 
 .addNew_btn {
-    background: linear-gradient(to right, #c2c2c2, #c7c7c7) !important;
+    border: 2px solid #339af0 !important;
+}
+
+.border_none {
+    border: none;
 }
 
 .addNew_container {
     margin-top: 30px;
-}
-
-.subject_btn {
-    background: #4ea7f0;
-    color: #424949;
-    border-radius: 30px;
-    font-size: 17px;
-    padding: 10px 30px 10px 30px;
-    margin: 15px;
-    border: none;
-    &:hover {
-        cursor: pointer;
-        opacity: 0.8;
-    }
 }
 
 .cancel_btn {
@@ -156,19 +146,31 @@ body {
 }
 
 .selectedButton {
-    border: 2px solid #2c3e50;
+    border: 2px solid #339af0;
+}
+
+.selectedButton_leicht {
+    border: 2px solid #fcc419;
+}
+
+.selectedButton_mittel {
+    border: 2px solid #339af0;
+}
+
+.selectedButton_schwer {
+    border: 2px solid #fa5252;
 }
 
 .dificulty_leicht_btn {
-    background: #FCC419 ;
+    background: #fcc419;
 }
 
 .dificulty_mittel_btn {
-    background: #339AF0;
+    background: #339af0;
 }
 
 .dificulty_schwer_btn {
-    background:#FA5252;
+    background: #fa5252;
 }
 
 .inputfield {
@@ -226,7 +228,7 @@ body {
     width: 100%;
     border-radius: 10px;
     height: 15px;
-    background: #339AF0;
+    background: #339af0;
     outline: none;
     opacity: 1;
     -webkit-transition: 0.2s;
@@ -267,7 +269,7 @@ body {
 }
 
 .important {
-    color: #FA5252;
+    color: #fa5252;
 }
 
 .d_none {
@@ -374,13 +376,13 @@ style for rendered subjects
 }
 
 .preview_btn {
-    background: #339AF0;
+    background: #e1e1e1;
+    border: 2px solid #339af0;
     color: #424949;
     border-radius: 50px;
     font-size: 14px;
     padding: 10px 30px 10px 30px;
     margin-left: 40px;
-    border: none;
     &:hover {
         cursor: pointer;
         opacity: 0.8;
@@ -433,18 +435,18 @@ style for rendered subjects
 }
 
 .question_added_leicht {
-    border-right: 5px solid #FCC419;
-    border-left: 5px solid #FCC419;
+    border-right: 5px solid #fcc419;
+    border-left: 5px solid #fcc419;
 }
 
 .question_added_mittel {
-    border-right: 5px solid #339AF0;
-    border-left: 5px solid #339AF0;
+    border-right: 5px solid #339af0;
+    border-left: 5px solid #339af0;
 }
 
 .question_added_schwer {
-    border-right: 5px solid #FA5252;
-    border-left: 5px solid #FA5252;
+    border-right: 5px solid #fa5252;
+    border-left: 5px solid #fa5252;
 }
 
 .question_container {
@@ -481,8 +483,8 @@ style for rendered subjects
 }
 
 .question_add_btn {
-    background: #a6a5a5;
-    border: none;
+    background: #e1e1e1;
+    border: 1px solid grey;
     border-radius: 50px;
     padding: 7px;
     &:hover {
@@ -503,7 +505,7 @@ style for rendered subjects
 }
 
 .added_difficulty_leicht {
-    border: 3px solid #FCC419;
+    border: 3px solid #fcc419;
 }
 
 .added_difficulty_mittel {
@@ -511,7 +513,7 @@ style for rendered subjects
 }
 
 .added_difficulty_schwer {
-    border: 3px solid #FA5252;
+    border: 3px solid #fa5252;
 }
 
 .ordered_list_number {
@@ -608,19 +610,19 @@ Answer styles
 }
 
 .answer_btn_leicht {
-    color: #FCC419;
+    color: #fcc419;
 }
 
 .answer_btn_mittel {
-    color: #339AF0;
+    color: #339af0;
 }
 
 .answer_btn_schwer {
-    color: #FA5252;
+    color: #fa5252;
 }
 
 .answer_wrapper {
-    border-top: 1px dotted black;
+    border-top: 1px solid lightgrey;
     padding-top: 2%;
     width: 100%;
 }
@@ -680,11 +682,12 @@ Answer styles
 
 .search {
     padding-left: 10%;
+    font-size: 14px;
     outline: none;
     border: none;
     width: 90%;
     height: 100%;
-    background: #a6a5a5;
+    background: #e1e1e1;
     border-top-left-radius: 40px;
     border-bottom-left-radius: 40px;
 }
@@ -698,13 +701,13 @@ Answer styles
     height: 65%;
     border-bottom-right-radius: 20px;
     border-top-right-radius: 20px;
-    background: #a6a5a5;
+    background: #e1e1e1;
     border-left: 1px solid grey;
 
     .search_close_icon {
         border-radius: 40px;
         height: 80%;
-        background: #e7eceb;
+        background: white;
         padding: 10%;
         &:hover {
             opacity: 0.8;
@@ -713,10 +716,12 @@ Answer styles
 }
 
 .add_question_btn_wrapper {
+    box-shadow: 0 24px 24px -18px rgb(69 104 129 / 33%), 0 9px 45px 0 rgb(114 119 160 / 12%);
     position: relative;
-    background: #a6a5a5;
+    background: #e1e1e1;
+    border: 1px solid grey;
     width: 320px;
-    height: 40px;
+    height: 35px;
     border-radius: 50px;
     display: flex;
     align-items: center;
@@ -730,6 +735,10 @@ Answer styles
 }
 
 .add_question_btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: #424949;
     height: 100%;
     width: 50%;
@@ -740,9 +749,23 @@ Answer styles
     border: none;
     &:hover {
         cursor: pointer;
-        background: #ffffff33;
+        background: #f3f1f1;
+    }
+
+    .filter_number {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        right: 10px;
+        background: white;
+        border: 1px solid grey;
+        border-radius: 50%;
+        height: 20px;
+        width: 20px;
     }
 }
+
 
 .menu_burger {
     width: 60px;
@@ -750,7 +773,8 @@ Answer styles
     margin-right: 10px;
     display: flex;
     border-radius: 50px;
-    background: #e1e1e1;
+    background: white;
+    border: 1px solid grey;
     height: 40px;
     align-items: center;
     justify-content: center;
@@ -758,7 +782,7 @@ Answer styles
 
     &:hover {
         cursor: pointer;
-        background: #e7e7e7;
+        background: #f3f1f1;
     }
 }
 
@@ -767,7 +791,7 @@ Answer styles
     margin-bottom: 2px;
     height: 3px;
     background: black;
-    background: #339AF0;
+    background: #339af0;
 }
 
 .burger_bottom {
@@ -775,7 +799,7 @@ Answer styles
     margin-top: 2px;
     height: 3px;
     background: black;
-    background: #339AF0;
+    background: #339af0;
 }
 
 /*
@@ -975,13 +999,13 @@ Styles für die Vorschau sektion
         right: 0;
         border: none;
         object-fit: cover;
-        border-right: 1px solid #FA5252;
-        border-top: 1px solid #FA5252;
+        border-right: 1px solid #fa5252;
+        border-top: 1px solid #fa5252;
         background: #f9d1c9;
         &:hover {
             cursor: pointer;
-            border-right: 1.5px solid #FA5252;
-            border-top: 1.5px solid #FA5252;
+            border-right: 1.5px solid #fa5252;
+            border-top: 1.5px solid #fa5252;
         }
     }
 
@@ -1135,7 +1159,7 @@ Styles für die Vorschau sektion
     left: 0;
     height: 5px;
     width: 100%;
-    background: #339AF0;
+    background: #339af0;
     &:hover {
         cursor: row-resize;
         height: 10px;
