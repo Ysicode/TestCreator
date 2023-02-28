@@ -28,10 +28,10 @@ export class HeaderComponent implements OnInit {
   checkLengthOfCurrentTest() {
     let loadedAddedQuestions = localStorage.getItem('addedQuestions');
     this.currentTestFromLocalStorage = JSON.parse(loadedAddedQuestions);
-    if (this.currentTestFromLocalStorage.length == 0) {
-      return
-    } else {
-      this.infoOverlay = true;
+    if (this.currentTestFromLocalStorage) {
+      if (this.currentTestFromLocalStorage.length != 0) {
+        this.infoOverlay = true;
+      }
     }
   }
 

@@ -21,19 +21,18 @@
 }
 
 .login {
-
     .btn_is_blue {
-            background: #339AF0;
-            color: #424949;
-            border-radius: 30px;
-            font-size: 17px;
-            padding: 10px 30px 10px 30px;
-            margin: 15px;
-            border: none;
-            &:hover {
-                cursor: pointer;
-                opacity: 0.8;
-            }
+        background: #e1e1e1;
+        border: 2px solid #339af0;
+        color: #424949;
+        border-radius: 30px;
+        font-size: 17px;
+        padding: 10px 30px 10px 30px;
+        margin: 15px;
+        &:hover {
+            cursor: pointer;
+            opacity: 0.8;
+        }
     }
 
     input {
@@ -60,4 +59,3 @@
         border: 2px solid rgb(80, 173, 108);
     }
 }
-
