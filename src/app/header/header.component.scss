@@ -29,11 +29,7 @@
 }
 
 .navbar {
-   
     margin-right: 25px;
-
-   
-
     .navlink {
         font-size: 14px;
         background: #e1e1e1;
@@ -63,6 +59,12 @@
             height: 20px;
         }
     }
+}
+
+.is_active {
+    text-decoration: underline;
+    text-decoration-color: #339AF0;
+    text-decoration-thickness: 2px;
 }
 
 .margin_zero {

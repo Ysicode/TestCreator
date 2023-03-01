@@ -1,26 +1,27 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { AlertService } from '../services/alert.service';
 import { dataTransferService } from '../services/dataTransfer.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  providers: [dataTransferService]
+  providers: [dataTransferService, AlertService]
 })
 export class LoginComponent implements OnInit {
 
   @ViewChild('email') emailInput: ElementRef;
   @ViewChild('password') passwordInput: ElementRef;
-
+  @ViewChild('loginBtn') loginBtn: ElementRef;
   wrongEmailAdress: boolean = false;
   wrongPassword: boolean = false;
   schoolFound: boolean = false;
+  allInputsFilled: boolean = false;
   logedIn: Boolean = false;
   loading: Boolean = false;
 
-
-  constructor(public data: dataTransferService, private router: Router) { }
+  constructor(public data: dataTransferService, private router: Router, public alertService: AlertService) { }
 
   ngOnInit(): void {
     this.checkIfUserDataAlreadyInLocalStorage();
@@ -46,14 +47,33 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  checkIfAllInputsFilled(email: string, password: string) {
+    if (email.length != 0 && password.length != 0) {
+      this.allInputsFilled = true;
+      this.loginBtn.nativeElement.disabled = false;
+      return
+    }
+    this.allInputsFilled = false;
+    this.loginBtn.nativeElement.disabled = true;
+  }
+
   async login(email: string, password: string) {
     if (await this.data.checkIfUserExists(password, email)) {
       this.router.navigate(['/dashboard']);
-      console.log('Du wirst jetzt weitergeleitet');
     } else {
-      console.log('Falsches Passwort oder Falsche Email Adresse');
+      this.alertService.alert = true;
+      let alert = document.getElementById('alert');
+      alert.innerHTML = this.alertService.showAlert('Falsches Passwort oder Falsche Email Adresse');
+      setTimeout(() => {
+        this.alertService.alert = false;
+      }, 4000);
     }
+  }
 
+  removeAlertInformation() {
+    if (this.alertService.alert) {
+      this.alertService.alert = false; 
+    }
   }
 
 }

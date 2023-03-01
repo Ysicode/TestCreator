@@ -7,9 +7,10 @@
     <nav class="navbar d_flex">
 
         <!-- <img crossorigin="anonymous" class="user_photo" src="assets/simon_weiss.jpg" alt=""> -->
-        <button class="navlink margin_zero">Ablage</button>
+        <button routerLink="/dashboard" class="navlink margin_zero is_active">Creator</button>
         <button (click)="checkLengthOfCurrentTest()" class="navlink margin_zero">Neuer Test</button>
-        <button class="navlink margin_zero">Account</button>
+        <button routerLink="/ablage" class="navlink margin_zero">Ablage</button>
+        <button routerLink="/account" class="navlink margin_zero">Account</button>
             <div class="d_flex wrapper_logout">
                 <img class="logout_icon" src="assets/logout.png" alt="" *ngIf="data.getUserDataFromLocalStorage()"
                     (click)="data.logoutUser()">

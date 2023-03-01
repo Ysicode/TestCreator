@@ -94,7 +94,7 @@ export class QuestionsComponent implements OnInit {
   }
 
   deleteCurrentTets() {
-    this.getCurrentTestFromLocalStorage();
+    this.addedToTest = [];
   }
 
   async loadData() {

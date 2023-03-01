@@ -104,6 +104,7 @@ h3 {
 
 .alert {
     position: fixed;
+    z-index: 99999999;
     font-size: 15px;
     right: 30;
     right: 30px;
@@ -112,8 +113,16 @@ h3 {
     height: fit-content;
     min-height: 100px;
     background: white;
+    padding: 10px;
     box-shadow: 0 24px 24px -18px rgb(69 104 129 / 33%), 0 9px 45px 0 rgb(114 119 160 / 12%);
-    border-left: 3px solid red;
+}
+
+.alert_border_red {
+    border-left: 3px solid #FA5252;
+}
+
+.alert_border_green {
+    border-left: 3px solid #52fa8a;
 }
 
 .d_none {

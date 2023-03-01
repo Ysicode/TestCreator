@@ -55,7 +55,6 @@ export class dataTransferService {
             const q = query(coll, where("password", "==", password), where("email", "==", email)) //Collection abfrage nach password und Username
             const querySnapshot = await getDocs(q);
             if (querySnapshot.empty) {
-                console.log("2222Error getting cached document:");
                 login_successfull = false;
             }
             querySnapshot.forEach((doc) => {
@@ -143,23 +142,28 @@ export class dataTransferService {
 
 
     // ADD SUBUSER
-    async addNewSubUser(sub_user_password: string, sub_user_name: string) {
+    async addNewSubUser(sub_user_email: string, sub_user_password: string, sub_user_firstname: string, sub_user_lastname: string) {
         const coll: any = collection(this.firestore, 'users', this.currentSchool, 'subusers');
         setDoc(doc(coll), {
+            email: sub_user_email,
             password: sub_user_password, //Variable - wird später geändert durch den Admin beim anlegen von neuen unterusern
-            username: sub_user_name, //Variable - wird später geändert durch den Admin beim anlegen von neuen unterusern
+            firstname: sub_user_firstname,
+            lastname:  sub_user_lastname,
+            usertype: 'user',  //Variable - wird später geändert durch den Admin beim anlegen von neuen unterusern
             testhead: {
                 schoolname: 'Schulname',
                 testname: 'Testname',
                 slogan: 'Viel Erfolg',
                 totaltime: 0
-            }
+            },
+            classes: [],
+            subjects: []
         });
     }
 
 
     // UPDATE SUBUSER
-    async updateSubUserData(password, username) {
+    async updateSubUserData(password: string, username: string) {
         const docRef = doc(this.firestore, 'users', this.currentSchool, 'subusers', this.currentUserID); //ID und Schule müssen später variable sein
         updateDoc((docRef), {
             password: password, //Variable - wird später geändert durch den Admin beim anlegen von neuen unterusern
