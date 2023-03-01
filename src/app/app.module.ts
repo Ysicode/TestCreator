@@ -22,6 +22,8 @@ import { SpinnerComponent } from './sharedComps/spinner/spinner.component';
 import { MatIconModule } from '@angular/material/icon';
 import { InfoOverlayComponent } from './info-overlay/info-overlay.component';
 import { LoginComponent } from './login/login.component';
+import { StoredDocsComponent } from './stored-docs/stored-docs.component';
+import { AccountComponent } from './account/account.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,9 @@ import { LoginComponent } from './login/login.component';
     EditTestheadComponent,
     SpinnerComponent,
     InfoOverlayComponent,
-    LoginComponent
+    LoginComponent,
+    StoredDocsComponent,
+    AccountComponent
   ],
   imports: [
     BrowserModule,
