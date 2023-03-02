@@ -2,12 +2,12 @@
     <div (click)="$event.stopPropagation()" class="inputs_wrapper d_flex_column">
         <form #editTestHeadForm="ngForm" class="form_wrapper d_flex_column" (ngSubmit)="addData(editTestHeadForm.value)">
             <div class="input_wrapper">
-                <input #schoolname class="inputfield" type="text" maxlength="70" name="schoolname" ngModel (keyup)="checkLengthOfInput($event)">
+                <input placeholder="Schulname" #schoolname class="inputfield" type="text" maxlength="70" name="schoolname" ngModel (keyup)="checkLengthOfInput($event)">
                 <p class="input_maxlength">Noch {{70 - schoolname.value.length}} Zeichen</p>
                 
             </div>
            <div class="input_wrapper">
-            <input #testname class="inputfield" type="text" maxlength="70" name="testname" ngModel (keyup)="checkLengthOfInput($event)"l>
+            <input placeholder="Testname" #testname class="inputfield" type="text" maxlength="70" name="testname" ngModel (keyup)="checkLengthOfInput($event)"l>
             <p class="input_maxlength">Noch {{70 - testname.value.length}} Zeichen</p>
            </div>
           

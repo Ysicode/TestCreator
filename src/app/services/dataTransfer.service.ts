@@ -9,25 +9,20 @@ import { Observable } from "rxjs";
 
 export class dataTransferService {
     loadedUserdata = [];
+    loadedSubUserData = [];
     loadedQuestions = [];
+
     subjectsAndClassesFromFirestore$: Observable<any>;
     questionsFromFirestore$: Observable<any>;
     testHeadFromFirestore$: Observable<any>;
     subUsersFromFirestore$: Observable<any>;
-    subusers = [];
+   
     currentTestHead: any;
     currentUserID: any;
     currentSchool: string = 'JonasWeiss';
     currentUserData$: Observable<any>;
     currentUserData: any;
 
-    testschool: any;
-
-    //Athentication
-    // currentPassword: string = '54321';
-    // currentEmailAdress: string = 'jonas@gmail.com';
-
-    // loaded = false;
     public loaded: boolean = false;
 
     constructor(private firestore: Firestore, private router: Router) { }
@@ -139,6 +134,19 @@ export class dataTransferService {
         });
     }
 
+     //LOAD ALL SubUsers
+     async loadSubUsers() {
+        //gets all questions
+        const coll: any = collection(this.firestore, 'users', this.currentSchool, 'subusers');
+        this.subUsersFromFirestore$ = collectionData(coll, { idField: 'id' })
+        this.subUsersFromFirestore$.subscribe((data) => {
+            this.loadedSubUserData = data;
+            // this.loadedSubUserData.sort((x, y) => {
+            //     return x.frage.time - y.frage.time 
+            // })
+        });
+    }
+
 
 
     // ADD SUBUSER
@@ -148,7 +156,7 @@ export class dataTransferService {
             email: sub_user_email,
             password: sub_user_password, //Variable - wird später geändert durch den Admin beim anlegen von neuen unterusern
             firstname: sub_user_firstname,
-            lastname:  sub_user_lastname,
+            lastname: sub_user_lastname,
             usertype: 'user',  //Variable - wird später geändert durch den Admin beim anlegen von neuen unterusern
             testhead: {
                 schoolname: 'Schulname',
@@ -174,6 +182,26 @@ export class dataTransferService {
             this.currentUserData = doc.data();
             this.currentUserID = doc.id;
         });
+    }
+
+    // UPDATE SUBUSER CLASSES AND SUBJECTS ON CLICK IN ACCOUNT
+    updateSubUserSubjectsAndClasses() {
+        const coll: any = doc(this.firestore, 'users', this.currentSchool, 'subusers', this.currentUserID);
+        updateDoc(coll, {
+            classes: this.currentUserData['classes'],
+            subjects: this.currentUserData['subjects']
+        })
+    }
+
+    /**
+    * This function is used to update firestore with the new data from an input field
+    */
+    updateUserSubjectsAndClasses() {
+        const coll: any = doc(this.firestore, 'users', this.currentSchool, 'subjects', this.loadedUserdata[0]['id']);
+        updateDoc(coll, {
+            classes: this.loadedUserdata[0]['classes'],
+            subjects: this.loadedUserdata[0]['subjects']
+        })
     }
 
 
@@ -208,7 +236,7 @@ export class dataTransferService {
     * @param id is the firebase id of the question to delete it
     */
     deletedata(id: string) {
-        const coll: any = doc(this.firestore, 'users', this.currentSchool, 'fragen' + id);
+        const coll: any = doc(this.firestore, 'users', this.currentSchool, 'fragen', id);
         deleteDoc(coll);
     }
 

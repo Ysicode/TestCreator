@@ -11,18 +11,20 @@ import { getDownloadURL, getStorage, ref, uploadBytes } from '@angular/fire/stor
 import { Storage } from '@angular/fire/storage';
 import { overlaysService } from 'src/app/services/overlays.service';
 import { AlertService } from 'src/app/services/alert.service';
+import { dataTransferService } from 'src/app/services/dataTransfer.service';
 
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss'],
-  providers: [overlaysService, AlertService],
+  providers: [overlaysService, AlertService, dataTransferService],
 })
 export class EditComponent implements OnInit, AfterViewInit {
   dataFromFirestore$: Observable<any>;
   loadedUserdata = [];
   loadedQuestions = [];
   loaded: Boolean = false;
+  loading: Boolean = false;
   currentQuestion: any;
   currentAnswer: any;
   currentId: string;
@@ -57,11 +59,27 @@ export class EditComponent implements OnInit, AfterViewInit {
 
   Checklist = require('@editorjs/checklist');
   Marker = require('@editorjs/marker');
-  constructor(private firestore: Firestore, private storage: Storage, public service: overlaysService, public alertService: AlertService) { }
+  constructor(private firestore: Firestore, public alertService: AlertService, public data: dataTransferService) { }
 
   ngOnInit(): void {
-    this.loadSubjectsAndClasses();
-    this.service.windowScrollTop();
+    this.loadData();
+    window.scrollTo(0, 0);
+  }
+
+  async loadData() {
+    await this.loadDataFromLocalStorage();
+    await this.data.loadSubUserData();
+    setTimeout(() => {
+      console.log(this.data.currentUserData);
+      this.loaded = true;
+    }, 100);
+  }
+
+  async loadDataFromLocalStorage() {
+    const data = localStorage.getItem('session');
+    const { school, sessionId } = JSON.parse(data);
+    this.data.currentSchool = school;
+    this.data.currentUserID = sessionId;
   }
 
   ngAfterViewInit(): void {
@@ -76,7 +94,7 @@ export class EditComponent implements OnInit, AfterViewInit {
 
   closeEditComponent() {
     this.closeAddQuestionOverlay.emit();
-    this.service.windowScrollTop();
+    window.scrollTo(0, 0);
     this.clearForm();
     this.currentDifficulty = '';
   }
@@ -264,7 +282,7 @@ export class EditComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       if (!this.editMode && this.checkAlert()) {
         console.log(this.checkAlert());
-        this.service.loading = true;
+        this.loading = true;
         const coll: any = collection(this.firestore, '/users/JonasWeiss/fragen');
         setDoc(doc(coll), {
           fach: this.currentSubjectChoice,
@@ -277,7 +295,7 @@ export class EditComponent implements OnInit, AfterViewInit {
           kindOf: this.selectedKind,
           keywords: question.keywords.split(',')
         }).then(() => {
-          this.service.loading = false;
+          this.loading = false;
           this.closeEditComponent();
           this.multiChoiceEditor.clear();
         }).then(() => {

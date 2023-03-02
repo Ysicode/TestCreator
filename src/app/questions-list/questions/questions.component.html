@@ -1,5 +1,3 @@
-
-
 <!-- Header Component-->
 <app-header *ngIf="logedIn"></app-header>
 <!-- Edit Component -->
@@ -7,12 +5,12 @@
 
 <app-spinner *ngIf="service.loading"></app-spinner>
 
-<div *ngIf="data.loaded && logedIn"  [class.d_none]="overlay" class="questions_wrapper d_flex">
+<div *ngIf="data.loaded && logedIn" [class.d_none]="overlay" class="questions_wrapper d_flex">
     <div class="questions_container">
         <div class="headline_test_infos d_flex">
             <div class="headline_test_infos_inside_container">
                 <div class="headline_infos d_flex_end_end">
-                    
+
                     <div class="test_infos_wrapper d_flex">
                         <div class="test_info_item">
                             <p class="margin_zero">{{ currentTestTime }} Min</p>
@@ -60,7 +58,7 @@
                                 [class.dificulty_schwer_btn]="questionData.schwierigkeit == 'Schwer'">
                                 <p class="margin_zero">{{ questionData.schwierigkeit }}</p>
                             </div>
-                         
+
                             <div class="question_info_btn">
                                 {{ questionData.fach }}
                             </div>
@@ -86,7 +84,7 @@
                             </button>
                             <button id="{{ 'remove_btn' + i }}"
                                 (click)="removeFromTest(questionData.id, questionData.schwierigkeit)"
-                                class="question_add_btn d_none d_flex"><img class="remove_icon" 
+                                class="question_add_btn d_none d_flex"><img class="remove_icon"
                                     src="assets/plus_icon.png" alt="">
                             </button>
                         </div>
@@ -147,7 +145,7 @@
                                 [class.answer_btn_mittel]="questionData.schwierigkeit == 'Mittel'"
                                 [class.answer_btn_leicht]="questionData.schwierigkeit == 'Leicht'"
                                 class="answer_btn d_flex"><img
-                                    [class.question_arrow_turned]="currentId == questionData.id" class="question_arrow" 
+                                    [class.question_arrow_turned]="currentId == questionData.id" class="question_arrow"
                                     src="assets/arrow_slim.png">
                                 Antwort
                             </button>
@@ -166,7 +164,7 @@
                                         <div class="element_margin_text d_flex_start"
                                             *ngFor="let item of question['data']['items'] let k = index">
                                             <div class="checkfield d_flex" [class.checked]="item['checked'] == true">
-                                                <img class="checkbox_icon" *ngIf="item['checked'] == true" 
+                                                <img class="checkbox_icon" *ngIf="item['checked'] == true"
                                                     src="assets/plus_icon.png" alt="">
                                             </div>
                                             <p class="checkbox_item" [innerHTML]="item['text']"></p>
@@ -219,8 +217,9 @@
                                 <button class="question_edit_btn" (click)="data.log(questionData.id)">ds</button>
                                 <button class="question_edit_btn" (click)="infoOverlay = true">Delete</button>
                             </div>
-                    
-                            <app-info-overlay *ngIf="infoOverlay" (closeInfoOverlay)="infoOverlay = false" [questionID]="questionData.id" [deleteQuestionOverlay]="true"> 
+
+                            <app-info-overlay *ngIf="infoOverlay" (closeInfoOverlay)="infoOverlay = false"
+                                [questionID]="questionData.id" [deleteQuestionOverlay]="true">
                             </app-info-overlay>
                         </div>
                     </div>
@@ -233,7 +232,12 @@
                     <div class="d_flex_column">
                         <h2>Nach Fach filtern</h2>
                         <div class="subject_btn_wrapper d_flex">
-                            <button *ngFor="let subject of data.loadedUserdata[0].subjects ; let i = index"
+                            <div *ngIf="data.currentUserData.subjects == 0" class="d_flex_column">
+                                <p >{{ 'Es wurde noch kein Fach ausgewählt!' }}</p>
+                                <button routerLink="/account" class="subject_btn">Schulfach auswählen</button>
+                            </div>
+                            
+                            <button *ngFor="let subject of data.currentUserData.subjects; let i = index"
                                 (click)="setSubjectFilter(subject, i)" class="subject_btn"
                                 [class.selectedButton]="i == selectedSubjectButton">{{ subject }}</button>
                         </div>
@@ -244,6 +248,11 @@
                     <div class="d_flex_column">
                         <h2>Nach Klasse filtern</h2>
                         <div class="subject_btn_wrapper d_flex">
+                            <div *ngIf="data.currentUserData.classes == 0" class="d_flex_column">
+                                <p >{{ 'Es wurde noch keine Klasse ausgewählt!'}}</p>
+                                <button routerLink="/account" class="subject_btn">Klasse auswählen</button>
+                            </div>
+
                             <button *ngFor="let class of data.loadedUserdata[0].classes; let i = index"
                                 (click)="setClassFilter(class, i)" class="subject_btn"
                                 [class.selectedButton]="i == selectedClassButton">{{class}}</button>
@@ -269,13 +278,11 @@
                         <h2>Nach Art filtern</h2>
                         <div class="d_flex subject_btn_wrapper">
 
-                            <button (click)="setKindOfQuestionFilter('standard')"
-                                class="subject_btn"
+                            <button (click)="setKindOfQuestionFilter('standard')" class="subject_btn"
                                 [class.selectedButton]="filteredKind == 'standard'">Standard</button>
 
 
-                            <button (click)="setKindOfQuestionFilter('multipleChoice')"
-                                class="subject_btn"
+                            <button (click)="setKindOfQuestionFilter('multipleChoice')" class="subject_btn"
                                 [class.selectedButton]="filteredKind == 'multipleChoice'">Multiple Choice</button>
 
 
@@ -296,7 +303,7 @@
 
                 </div>
                 <button type="button" (click)="openFilter = false"
-                    class="question_add_btn d_flex close_overlay_window_btn"><img class="remove_icon" 
+                    class="question_add_btn d_flex close_overlay_window_btn"><img class="remove_icon"
                         src="assets/plus_icon.png">
                 </button>
 
@@ -311,7 +318,7 @@
                     <input class="search" #search id="search" type="search" placeholder="Suche"
                         value="{{currentSearch}}" (keyup)="onKeyUpSearchInput($event)"
                         (keyup.enter)="closeSearch(search.value)">
-                    <button class="shot_search_btn d_flex" (click)="closeSearch(search.value)"><img 
+                    <button class="shot_search_btn d_flex" (click)="closeSearch(search.value)"><img
                             class="search_close_icon" src="assets/search.png" alt=""></button>
                 </div>
 
@@ -321,10 +328,11 @@
 
                     <div class="menu_burger">
                         <!-- <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="manage_search"></mat-icon> -->
-                        <img  (click)="openSearch()" style="width: 60%;" src="assets/search.png" alt="">
+                        <img (click)="openSearch()" style="width: 60%;" src="assets/search.png" alt="">
                     </div>
                     <button class="add_question_btn" (click)="openFilter = true">
-                        Filtern <span *ngIf="filters.length != 0" class="filter_number">{{ filters.length }}</span></button>
+                        Filtern <span *ngIf="filters.length != 0" class="filter_number">{{ filters.length
+                            }}</span></button>
                 </div>
             </div>
             <!--  -->
@@ -334,8 +342,8 @@
         <!--  -->
         <!-- TEST PREVIEW -->
         <!--  -->
-        <div *ngIf="data.loaded" id="test_print" class="test_print" [class.opacity0]="!preview" style="position: relative;"
-            (mouseup)="checkHeightsInterval('stop')">
+        <div *ngIf="data.loaded" id="test_print" class="test_print" [class.opacity0]="!preview"
+            style="position: relative;" (mouseup)="checkHeightsInterval('stop')">
             <!-- <div id="myDiv" style="position: absolute; top: 0; right: 0; left: 0; bottom: 0; z-index: 999;
             background-color: #ff00000d;"  contenteditable="true">
                     <button (click)="saveHtmlAsPNG()">save</button>
@@ -401,20 +409,20 @@
                         <div id="questionContent{{j}}{{i}}" class="question_test">
                             <div class="question_head_container">
                                 <div class="question_info d_flex_start">
-                                    <div class="question_test_number d_flex" >
+                                    <div class="question_test_number d_flex">
                                         {{!sampleSolution ? 'Aufgabe' : 'Lösung'}} <p class="test_number"
                                             id="question_number{{ j }}{{ i }}"></p>
                                     </div>
 
                                 </div>
-                                <div class="question_add d_flex" >
+                                <div class="question_add d_flex">
                                     <div class="question_test_points">
                                         /{{ data['punktzahl'] }}
                                     </div>
                                 </div>
                                 <button id="{{ 'remove_btn' + i }}"
                                     (click)="removeFromTest(data['id'], data['schwierigkeit']); deleteEmptyPages(j)"
-                                    class="remove_from_test_btn show_onHover d_flex"><img class="remove_icon" 
+                                    class="remove_from_test_btn show_onHover d_flex"><img class="remove_icon"
                                         src="assets/x_icon.png" alt=""></button>
                             </div>
 
@@ -422,11 +430,11 @@
                             <ng-container *ngIf="!sampleSolution">
                                 <div *ngFor="let question of data['frage']['blocks'] let k = index">
 
-                                    <div class="preview_question_container" [innerHTML]="question['data']['text'] " >
+                                    <div class="preview_question_container" [innerHTML]="question['data']['text'] ">
                                         <!-- Text -->
                                     </div>
 
-                                    <div *ngIf="question['type'] == 'checklist'" class="margin_left " >
+                                    <div *ngIf="question['type'] == 'checklist'" class="margin_left ">
                                         <!-- Checklists -->
                                         <div class="element_margin_text d_flex_start"
                                             *ngFor="let item of question['data']['items']">
@@ -440,10 +448,12 @@
                                         <!-- Images -->
                                         <div class="img_wrapper d_flex_start">
                                             <div id="img_edit_wrapper{{ j }}{{ i }}{{ k }}"
-                                                (mouseover)="resizeImage(j, i, k)" (mousedown)="checkHeightsInterval('start')" (mouseup)="checkHeightsInterval('stop')" class="img_edit_wrapper d_flex"
+                                                (mouseover)="resizeImage(j, i, k)"
+                                                (mousedown)="checkHeightsInterval('start')"
+                                                (mouseup)="checkHeightsInterval('stop')" class="img_edit_wrapper d_flex"
                                                 [ngStyle]="{'width': question['width'] ? question['width'] : '30%'}">
                                                 <img id="questionImage{{ j }}{{ i }}{{ k }}"
-                                                    class="preview_question_img" 
+                                                    class="preview_question_img"
                                                     src="{{ question['data']['file']['url'] }}" alt="">
                                                 <div (click)="service.onEvent($event)"
                                                     id="resizeImage{{ j }}{{ i }}{{ k }}"
@@ -455,7 +465,7 @@
                                     </div>
 
                                     <div class="preview_question_container"
-                                        *ngFor="let items of question['data']['items'] let i = index" >
+                                        *ngFor="let items of question['data']['items'] let i = index">
                                         <!-- Lists -->
                                         <div class="margin_left element_margin_text"
                                             *ngIf="question['data']['style'] == 'ordered'">
@@ -497,12 +507,12 @@
                                         <!-- Text -->
                                     </div>
 
-                                    <div *ngIf="question['type'] == 'checklist'" class="margin_left " >
+                                    <div *ngIf="question['type'] == 'checklist'" class="margin_left ">
                                         <!-- Checklists -->
                                         <div class="element_margin_text d_flex_start"
                                             *ngFor="let item of question['data']['items'] let k = index">
                                             <div class="checkfield d_flex" [class.checked]="item['checked'] == true">
-                                                <img class="checkbox_icon" *ngIf="item['checked'] == true" 
+                                                <img class="checkbox_icon" *ngIf="item['checked'] == true"
                                                     src="assets/plus_icon.png" alt="">
                                             </div>
                                             <p class="checkbox_item" [innerHTML]="item['text']"></p>
@@ -514,7 +524,7 @@
                                         <div class="img_wrapper d_flex_start">
                                             <div id="img_edit_wrapper{{j}}{{i}}{{k}}" class="img_edit_wrapper d_flex"
                                                 [ngStyle]="{'width': question['width'] ? question['width'] : '30%'}">
-                                                <img id="questionImage{{ j }}{{ i }}{{k}}" class="preview_question_img" 
+                                                <img id="questionImage{{ j }}{{ i }}{{k}}" class="preview_question_img"
                                                     src="{{ question['data']['file']['url'] }}" alt="">
                                                 <div (click)="service.onEvent($event)" id="resizeImage{{j}}{{i}}{{k}}"
                                                     class="resize_image d_flex show_onHover">
@@ -525,7 +535,7 @@
                                     </div>
 
                                     <div class="preview_question_container"
-                                        *ngFor="let items of question['data']['items'] let i = index" >
+                                        *ngFor="let items of question['data']['items'] let i = index">
                                         <!-- Lists -->
                                         <div class="margin_left element_margin_text"
                                             *ngIf="question['data']['style'] == 'ordered'">
@@ -535,7 +545,7 @@
                                             </ol>
                                         </div>
                                         <div class="margin_left element_margin_text"
-                                            *ngIf="question['data']['style'] == 'unordered'" >
+                                            *ngIf="question['data']['style'] == 'unordered'">
                                             <ul class="preview_unordered_list">
                                                 <li [innerHTML]="items"></li>
                                             </ul>
@@ -543,7 +553,7 @@
                                     </div>
 
                                     <div class="preview_question_container element_margin_text"
-                                        *ngIf="question['data']['table']" >
+                                        *ngIf="question['data']['table']">
                                         <!-- tables -->
                                         <div [class.bold]="i == 0 && question['data']['withHeadings'] == true "
                                             class="d_flex_start tableRow"
@@ -567,16 +577,16 @@
                                     <button class="whitespace_btn d_flex"
                                         (click)="showWhite(j, i); checkHeightsInterval('stop')"></button>
                                     <button class="whitespace_btn d_flex"
-                                        (click)="showLines(j, i); checkHeightsInterval('stop')"><img 
+                                        (click)="showLines(j, i); checkHeightsInterval('stop')"><img
                                             class="whitespace_btn_icon" src="assets/lines.png" alt=""></button>
                                     <button class="whitespace_btn d_flex"
-                                        (click)="showSquare(j, i); checkHeightsInterval('stop')"><img 
+                                        (click)="showSquare(j, i); checkHeightsInterval('stop')"><img
                                             class="whitespace_btn_icon" src="assets/square.png" alt=""></button>
                                 </div>
                             </div>
 
-                            <div (click)="service.onEvent($event)"
-                                (mouseover)="resizeQuestion(j, i)" (mousedown)="checkHeightsInterval('start')" (mouseup)="checkHeightsInterval('stop')"
+                            <div (click)="service.onEvent($event)" (mouseover)="resizeQuestion(j, i)"
+                                (mousedown)="checkHeightsInterval('start')" (mouseup)="checkHeightsInterval('stop')"
                                 (mousemove)="getSquaresAndLines(j, i)" id="resize{{j}}{{i}}"
                                 class="height_info_wrapper d_flex show_onHover">
                                 <span class="resize_line"></span>
@@ -594,7 +604,7 @@
                         </div>
                     </div>
 
-                    
+
                 </div>
 
             </div>
@@ -604,10 +614,10 @@
                     <button class="add_question_btn" (click)="toggleSolutions()">{{!sampleSolution ? 'Lösung' :
                         'Aufgaben'}}</button>
 
-                        <div class="menu_burger" matTooltip="Export" matTooltipPosition="above">
-                            <!-- <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="manage_search"></mat-icon> -->
-                            <img (click)="printTest()" style="width: 60%;" src="assets/export_icon.png" alt="">
-                        </div>
+                    <div class="menu_burger" matTooltip="Export" matTooltipPosition="above">
+                        <!-- <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="manage_search"></mat-icon> -->
+                        <img (click)="printTest()" style="width: 60%;" src="assets/export_icon.png" alt="">
+                    </div>
                     <!-- <div class="menu_burger" matTooltip="Menü" matTooltipPosition="above">
                         <span class="burger_top">
                         </span>

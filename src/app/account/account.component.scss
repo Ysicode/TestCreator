@@ -1,0 +1,128 @@
+.subject_btn {
+    background: #f2f3f4;
+    border: 1px solid grey;
+    color: #424949;
+    border-radius: 30px;
+    font-size: 15px;
+    padding: 10px 30px 10px 30px;
+    margin: 15px;
+    &:hover {
+        cursor: pointer;
+        opacity: 0.8;
+    }
+}
+
+.add_new_btn {
+    background: none;
+    margin-top: 50px;
+}
+
+.add_btn {
+    border: 2px solid #339af0;
+    background: none;
+}
+
+.cancel_btn {
+    background: none !important;
+    border: none;
+}
+
+.subject_btn_wrapper {
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.section {
+    margin-top: 75px;
+    padding-bottom: 75px;
+}
+
+.section_separator {
+    max-width: 500px;
+    width: 70%;
+    height: 2px;
+    background-color: #0000003b;
+}
+
+.subject_wrapper {
+    width: 100%;
+}
+
+.selectedButton {
+    border: 2px solid #339af0;
+}
+
+.add_new_wrapper {
+    margin-top: 50px;
+}
+
+.inputfield {
+    outline: none;
+    border: none;
+    text-align: center;
+    width: 90%;
+    font-size: 17px;
+    background: white;
+    border-radius: 50px;
+    padding: 10px;
+}
+
+.user_wrapper {
+    width: 100%;
+    .user_row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        flex-direction: column;
+        background: #f2f3f4;
+        gap: 7px;
+        width: 80%;
+        padding: 10px 30px 10px 30px;
+        color: #424949;
+        border-radius: 20px;
+        margin: 6px;
+
+        .user_name {
+            .firstname, 
+            .lastname {
+                margin: 0px 5px 0px 5px;
+            }
+        }
+
+        .user_type {
+            margin-left: 20px;
+            border-radius: 20px;
+            background: #339af0;
+
+            .usertype {
+                font-size: 13px;
+                padding: 3px 10px 3px 10px;
+                margin: 0px;
+            }
+        }
+
+        .user_details {
+            .email,
+            .password_wrapper,
+            .id {
+                margin: 0px 20px 0px 5px;
+                font-size: 13px;
+            }
+
+            .password {
+                margin-right: 5px;
+            }
+
+            .hidden_password {
+                background: #424949;
+                width: 5px;
+                height: 5px;
+                border-radius: 50%;
+                margin: 0px 3px;
+                margin-top: 2.5px;
+            }
+
+         
+        }
+    }
+}

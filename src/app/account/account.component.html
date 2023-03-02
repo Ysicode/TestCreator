@@ -1,6 +1,120 @@
 <app-header></app-header>
-<div class="main_wrapper d_flex">
-    <div class="">
-        account works
+
+<app-spinner *ngIf="loading"></app-spinner>
+<div *ngIf="loaded" class="main_wrapper d_flex_column">
+    <div class="subject_wrapper d_flex_column">
+        <div class="d_flex_column section">
+            <h2 id="choice_Subject">Meine Schulfächer</h2>
+            <div class="subject_btn_wrapper d_flex">
+                <p *ngIf="data.loadedUserdata[0].subjects == 0">{{ 'Es wurden noch keine Fächer angelegt!' }}</p>
+                <div *ngFor="let subject of data.loadedUserdata[0].subjects; let i = index">
+                    <button class="subject_btn" [class.selectedButton]="findSelectedSubjects(subject)"
+                        (click)="choiceSubject(subject)">{{ subject }}</button>
+                </div>
+            </div>
+            <div *ngIf="data.currentUserData.usertype === 'admin'" class="addNew_container">
+                <button *ngIf="!newSubject" class="subject_btn add_new_btn" (click)="showAddNewInput('subject')">
+                    + Neues Fach anlegen
+                </button>
+                <div *ngIf="newSubject" class="d_flex add_new_wrapper">
+                    <form class="d_flex_column" action="">
+                        <input class="inputfield" id="subjectInput" #subjectInput type="text" value=""
+                            placeholder="Schulfach">
+                        <div class="d_flex">
+                            <button class="subject_btn cancel_btn" (click)="newSubject = false">Abbrechen</button>
+                            <button class="subject_btn add_btn" (click)="addNewSubject(subjectInput.value)">Fach
+                                anlegen</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="section_separator"></div>
     </div>
+
+
+    <div class="subject_wrapper d_flex_column">
+        <div class="d_flex_column section">
+            <h2 id="choice_class">Meine Klassen </h2>
+            <div class="subject_btn_wrapper d_flex" *ngIf="loaded">
+                <div *ngIf="data.currentUserData.classes == 0" class="d_flex_column">
+                    <p>{{ 'Es wurde noch keine Klasse ausgewählt!'}}</p>
+                    <button routerLink="/account" class="subject_btn">Klasse auswählen</button>
+                </div>
+                <div *ngFor="let schoolclass of data.loadedUserdata[0].classes; let i = index">
+                    <button class="subject_btn" [class.selectedButton]="findSelectedClasses(schoolclass)"
+                        (click)="choiceClass(schoolclass)">{{ schoolclass }}</button>
+                </div>
+            </div>
+
+
+
+            <div *ngIf="data.currentUserData.usertype === 'admin'" class="addNew_container">
+                <button *ngIf="!newClass" class="subject_btn add_new_btn" (click)="showAddNewInput('class')">
+                    + Neue Klasse anlegen
+                </button>
+                <div *ngIf="newClass" class="d_flex add_new_wrapper">
+                    <form class="d_flex_column" action="">
+                        <input class="inputfield" id="classInput" #classInput type="text" value="" placeholder="Klasse">
+                        <div class="d_flex">
+                            <button class="subject_btn cancel_btn" (click)="newClass = false">Abbrechen</button>
+                            <button class="subject_btn add_btn" (click)="addNewClass(classInput.value)">Klasse
+                                anlegen</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+        <div class="section_separator"></div>
+    </div>
+
+    <div class="subject_wrapper d_flex_column">
+        <div class="d_flex_column section" style="width: 100%;">
+            <h2 id="choice_class">Kollegium</h2>
+
+            <div class="user_wrapper d_flex_column">
+                <div *ngFor="let user of data.loadedSubUserData; let i = index" class="user_row">
+                    <div class="d_flex">
+                        <div class="user_name d_flex_start">
+                            <p class="firstname">{{ user.firstname }}</p>
+                            <p class="lastname">{{ user.lastname }}</p>
+                        </div>
+    
+                        <div *ngIf="user.usertype === 'admin'" class="user_type">
+                            <p class="usertype">{{ user.usertype }}</p>
+                        </div>
+                    </div>
+
+                    <div *ngIf="user.id == data.currentUserID" class="d_flex">
+                        <div class="user_details d_flex_start">
+                            <p class="email">Email: {{ user.email }}</p>
+                            <div class="d_flex password_wrapper">
+                                <p class="password">Passwort:</p>
+                                <ng-container >
+                                    <span class="hidden_password" *ngFor="let letter of user.password.split('')"></span>
+                                </ng-container>
+                                <p *ngIf="" class="">{{ user.password }}</p>
+                            </div>
+                            <p class="id">Id: {{ user.id }}</p>
+                           
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+
+        </div>
+        <div class="section_separator"></div>
+    </div>
+
+    <!-- <div *ngIf="data.currentUserData.usertype === 'user'" class="addNew_container">
+                user
+            </div> -->
+
+</div>
+
+<div [class.d_none]="!alertService.alert" class="alert alert_border_red d_flex" id="alert">
+
 </div>

@@ -1,36 +1,22 @@
 <div class="overlay_bg d_flex">
-    <app-spinner *ngIf="service.loading">
+    <app-spinner *ngIf="loading">
 
     </app-spinner>
 
     <div class="main_wrapper d_flex_column ">
         <div class="subject_wrapper d_flex_column">
             <div class="d_flex_column section">
-                <h2 id="choice_Subject">Für welches Fach soll die Aufgabe angelegt werden?</h2>
+                <h2 id="choice_Subject">Für welches Schulfach soll die Aufgabe angelegt werden?</h2>
                 <div (click)="setForm()" class="subject_btn_wrapper d_flex" *ngIf="loaded">
-                    <p *ngIf="loadedUserdata[0].subjects == 0">{{ 'Du hast noch kein Fach angelegt!' }}</p>
-                    <div *ngFor="let button of loadedUserdata[0].subjects ; let i = index">
+                    <div *ngIf="data.currentUserData.subjects == 0" class="d_flex_column">
+                        <p >{{ 'Es wurde noch kein Fach ausgewählt!' }}</p>
+                        <button routerLink="/account" class="subject_btn">Schulfach auswählen</button>
+                    </div>
+                    <div *ngFor="let button of data.currentUserData.subjects; let i = index">
                         <button class="subject_btn" [class.selectedButton]="i == selectedSubjectButton"
                             (click)="choiceSubject(button, i)">{{ button }}</button>
                     </div>
                 </div>
-                <!-- <div class="addNew_container">
-                    <button *ngIf="!newSubject" class="subject_btn addNew_btn"
-                        (click)="showInputForNewSubject('subject')">
-                        + Neues Fach anlegen
-                    </button>
-                    <div *ngIf="newSubject" class="d_flex">
-                        <form class="d_flex_column" action="">
-                            <input class="inputfield" id="subjectInput" #subjectInput type="text" value=""
-                                placeholder="Name Fach">
-                            <div class="d_flex">
-                                <button class="subject_btn cancel_btn" (click)="newSubject = false">Abbrechen</button>
-                                <button class="subject_btn addNew_btn" (click)="addNewSubject(subjectInput.value)">Fach
-                                    anlegen</button>
-                            </div>
-                        </form>
-                    </div>
-                </div> -->
             </div>
             <div class="section_separator"></div>
         </div>
@@ -39,8 +25,11 @@
             <div class="d_flex_column section">
                 <h2 id="choice_class">Für welche Klasse soll die Aufgabe angelegt werden? </h2>
                 <div class="subject_btn_wrapper d_flex" *ngIf="loaded">
-                    <p *ngIf="loadedUserdata[0].classes == 0">{{ 'Du hast noch kein Fach angelegt!' }}</p>
-                    <div *ngFor="let button of loadedUserdata[0].classes; let i = index">
+                    <div *ngIf="data.currentUserData.classes == 0" class="d_flex_column">
+                        <p >{{ 'Es wurde noch keine Klasse ausgewählt!'}}</p>
+                        <button routerLink="/account" class="subject_btn">Klasse auswählen</button>
+                    </div>
+                    <div *ngFor="let button of data.currentUserData.classes; let i = index">
                         <button class="subject_btn" [class.selectedButton]="i == selectedClassButton"
                             (click)="choiceClass(button, i)">{{ button }}</button>
                     </div>
