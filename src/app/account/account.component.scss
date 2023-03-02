@@ -1,3 +1,6 @@
+.fixed {
+    position: fixed !important;
+}
 .subject_btn {
     background: #f2f3f4;
     border: 1px solid grey;
@@ -67,6 +70,10 @@
     padding: 10px;
 }
 
+.border_grey {
+    border: 1px solid grey;
+}
+
 .user_wrapper {
     width: 100%;
     .user_row {
@@ -81,9 +88,13 @@
         color: #424949;
         border-radius: 20px;
         margin: 6px;
+        &:hover {
+            opacity: 0.8;
+            cursor: pointer;
+        }
 
         .user_name {
-            .firstname, 
+            .firstname,
             .lastname {
                 margin: 0px 5px 0px 5px;
             }
@@ -95,7 +106,7 @@
             background: #339af0;
 
             .usertype {
-                font-size: 13px;
+                font-size: 10px;
                 padding: 3px 10px 3px 10px;
                 margin: 0px;
             }
@@ -121,8 +132,6 @@
                 margin: 0px 3px;
                 margin-top: 2.5px;
             }
-
-         
         }
     }
 }

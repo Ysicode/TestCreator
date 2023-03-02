@@ -4,7 +4,7 @@
 <div *ngIf="loaded" class="main_wrapper d_flex_column">
     <div class="subject_wrapper d_flex_column">
         <div class="d_flex_column section">
-            <h2 id="choice_Subject">Meine Schulfächer</h2>
+            <h2 >Meine Schulfächer</h2>
             <div class="subject_btn_wrapper d_flex">
                 <p *ngIf="data.loadedUserdata[0].subjects == 0">{{ 'Es wurden noch keine Fächer angelegt!' }}</p>
                 <div *ngFor="let subject of data.loadedUserdata[0].subjects; let i = index">
@@ -35,7 +35,7 @@
 
     <div class="subject_wrapper d_flex_column">
         <div class="d_flex_column section">
-            <h2 id="choice_class">Meine Klassen </h2>
+            <h2>Meine Klassen </h2>
             <div class="subject_btn_wrapper d_flex" *ngIf="loaded">
                 <div *ngIf="data.currentUserData.classes == 0" class="d_flex_column">
                     <p>{{ 'Es wurde noch keine Klasse ausgewählt!'}}</p>
@@ -71,39 +71,78 @@
 
     <div class="subject_wrapper d_flex_column">
         <div class="d_flex_column section" style="width: 100%;">
-            <h2 id="choice_class">Kollegium</h2>
+            <h2 >Kollegium</h2>
 
             <div class="user_wrapper d_flex_column">
-                <div *ngFor="let user of data.loadedSubUserData; let i = index" class="user_row">
-                    <div class="d_flex">
-                        <div class="user_name d_flex_start">
-                            <p class="firstname">{{ user.firstname }}</p>
-                            <p class="lastname">{{ user.lastname }}</p>
-                        </div>
-    
-                        <div *ngIf="user.usertype === 'admin'" class="user_type">
-                            <p class="usertype">{{ user.usertype }}</p>
-                        </div>
-                    </div>
-
-                    <div *ngIf="user.id == data.currentUserID" class="d_flex">
-                        <div class="user_details d_flex_start">
-                            <p class="email">Email: {{ user.email }}</p>
-                            <div class="d_flex password_wrapper">
-                                <p class="password">Passwort:</p>
-                                <ng-container >
-                                    <span class="hidden_password" *ngFor="let letter of user.password.split('')"></span>
-                                </ng-container>
-                                <p *ngIf="" class="">{{ user.password }}</p>
+                <ng-container *ngFor="let user of data.loadedSubUserData; let i = index">
+                    <div *ngIf="data.currentUserData.usertype === 'user'" class="user_row" [class.border_grey]="user.id === data.currentUserID">
+                        <div class="d_flex">
+                            <div class="user_name d_flex_start">
+                                <p class="firstname">{{ user.firstname }}</p>
+                                <p class="lastname">{{ user.lastname }}</p>
                             </div>
-                            <p class="id">Id: {{ user.id }}</p>
-                           
-                        </div>
-                    </div>
-                    
-                </div>
-            </div>
 
+                            <div *ngIf="user.usertype === 'admin'" class="user_type">
+                                <p class="usertype"> Admin </p>
+                            </div>
+                        </div>
+
+                        <ng-container *ngIf="user.id === data.currentUserID">
+                            <div class="d_flex">
+                                <div class="user_details d_flex_start">
+                                    <p class="email">Email: {{ user.email }}</p>
+                                    <div class="d_flex password_wrapper">
+                                        <p class="password">Passwort:</p>
+                                        <ng-container>
+                                            <span class="hidden_password"
+                                                *ngFor="let letter of user.password.split('')"></span>
+                                        </ng-container>
+                                        <p *ngIf="" class="">{{ user.password }}</p>
+                                    </div>
+                                    <p class="id">User: {{ user.id }}</p>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+
+                    <div *ngIf="data.currentUserData.usertype === 'admin'" class="user_row" [class.border_grey]="user.id === data.currentUserID">
+                       
+                            <div class="d_flex">
+                                <div class="user_name d_flex_start">
+                                    <p class="firstname">{{ user.firstname }}</p>
+                                    <p class="lastname">{{ user.lastname }}</p>
+                                </div>
+        
+                                <div *ngIf="user.usertype === 'admin'" class="user_type">
+                                    <p class="usertype"> Admin </p>
+                                </div>
+                            </div>
+        
+        
+                            <div class="d_flex">
+                                <div class="user_details d_flex_start">
+                                    <p class="email">Email: {{ user.email }}</p>
+                                    <div class="d_flex password_wrapper">
+                                        <p class="password">Passwort:</p>
+                                        <ng-container>
+                                            <span class="hidden_password" *ngFor="let letter of user.password.split('')"></span>
+                                        </ng-container>
+                                        <p *ngIf="" class="">{{ user.password }}</p>
+                                    </div>
+                                    <p class="id">User: {{ user.id }}</p>
+                                </div>
+                            </div>    
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+        <div class="section_separator"></div>
+    </div>
+
+    <div class="subject_wrapper d_flex_column">
+        <div class="d_flex_column section">
+            <h2>Schuldaten </h2>
+            
 
         </div>
         <div class="section_separator"></div>
