@@ -14,6 +14,9 @@ export class AccountComponent implements OnInit {
   loaded: Boolean = false;
   newSubject: Boolean = false;
   newClass: Boolean = false;
+  editUser: Boolean = false;
+  user = {};
+
   constructor(public data: dataTransferService, public alertService: AlertService) { }
 
   ngOnInit(): void {
@@ -26,7 +29,7 @@ export class AccountComponent implements OnInit {
     await this.data.loadSubjectsAndClasses();
     await this.data.loadSubUserData();
     await this.data.loadSubUsers();
-
+    await this.data.loadUSchoolData();
 
     setTimeout(() => {
       console.log(this.data.loadedSubUserData);
@@ -106,6 +109,18 @@ export class AccountComponent implements OnInit {
     } else {
       this.newClass = true;
     }
+  }
+
+  openEditUser(firstname: string, lastname: string, email: string, password: any, id: string) {
+    this.user = {
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
+      password: password,
+      id: id
+    }
+    this.editUser = true;
+    console.log(this.user)
   }
 
 

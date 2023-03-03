@@ -1,0 +1,48 @@
+<div (click)="closeEditUser()" class="inputs_container d_flex">
+    <div (click)="$event.stopPropagation()" class="inputs_wrapper d_flex_column">
+        <h2>Daten Ändern</h2>
+        <form #editUserForm="ngForm" class="form_wrapper d_flex_column" (ngSubmit)="data.editSubuserData(editUserForm.value); closeEditUser()">
+            <div class="input_wrapper d_flex_column">
+                <input placeholder="Vorname" #firstname class="inputfield" type="text" maxlength="30" name="firstname"
+                    ngModel (keyup)="checkLengthOfInput($event)">
+                <p class="input_maxlength">Noch {{30 - firstname.value.length}} Zeichen</p>
+            </div>
+
+            <div class="input_wrapper d_flex_column">
+                <input placeholder="Nachname" #lastname class="inputfield" type="text" maxlength="30" name="lastname"
+                    ngModel (keyup)="checkLengthOfInput($event)">
+                <p class="input_maxlength">Noch {{30 - lastname.value.length}} Zeichen</p>
+            </div>
+
+            <div class="input_wrapper d_flex_column">
+                <input placeholder="Email" #email class="inputfield" type="text" maxlength="50" name="email"
+                    ngModel (keyup)="checkEmailInputValue(email.value)">
+                <p id="email_adress" class="input_maxlength">Verifizierte Emailadresse</p>
+            </div>
+
+            <div class="input_wrapper d_flex_column">  
+                    <input placeholder="Passwort" #password class="inputfield" type="password" maxlength="30" name="password"
+                    ngModel (keyup)="checkPasswordValue(password.value)">
+                    <div class="d_flex">
+                        <p class="input_maxlength password_info">Min</p>
+                        <p id="password_length" class="input_maxlength password_info">8 Zeichen</p>
+                        <p id="password_number" class="input_maxlength password_info">1 Zahl</p>
+                        <p id="password_uppercase" class="input_maxlength password_info">1 Großbuchstabe</p>
+                    </div>
+            </div>
+
+
+
+
+
+
+            <div class="d_flex">
+                <button class="cancel_btn" (click)="closeEditUser()">Abbrechen</button>
+                <button class="save_btn" type="submit">Speichern</button>
+            </div>
+        </form>
+        <div [class.d_none]="!alertService.alert" class="alert alert_border_red d_flex" id="alert">
+
+        </div>
+    </div>
+</div>

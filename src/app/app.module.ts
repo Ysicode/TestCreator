@@ -24,6 +24,7 @@ import { InfoOverlayComponent } from './info-overlay/info-overlay.component';
 import { LoginComponent } from './login/login.component';
 import { StoredDocsComponent } from './stored-docs/stored-docs.component';
 import { AccountComponent } from './account/account.component';
+import { EditUserComponent } from './account/edit-user/edit-user.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { AccountComponent } from './account/account.component';
     InfoOverlayComponent,
     LoginComponent,
     StoredDocsComponent,
-    AccountComponent
+    AccountComponent,
+    EditUserComponent
   ],
   imports: [
     BrowserModule,

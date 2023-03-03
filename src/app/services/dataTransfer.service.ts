@@ -11,6 +11,7 @@ export class dataTransferService {
     loadedUserdata = [];
     loadedSubUserData = [];
     loadedQuestions = [];
+    loadedSchoolData: any;
 
     subjectsAndClassesFromFirestore$: Observable<any>;
     questionsFromFirestore$: Observable<any>;
@@ -169,6 +170,16 @@ export class dataTransferService {
         });
     }
 
+    editSubuserData(data: any) {
+        const coll: any = doc(this.firestore, 'users', this.currentSchool, 'subusers', this.currentUserID);
+        updateDoc(coll, {
+         firstname: data.firstname,
+         lastname: data.lastname,
+         password: data.password,
+         email: data.email
+        });
+      }
+
 
     // UPDATE SUBUSER
     async updateSubUserData(password: string, username: string) {
@@ -227,7 +238,8 @@ export class dataTransferService {
     async loadUSchoolData() {
         const docRef: any = doc(this.firestore, 'users', this.currentSchool); // muss variabel sein je nachdem welche Schule ausgewählt wird
         const schoolData = await getDoc(docRef);
-        console.log("Document data:", schoolData.data());
+        this.loadedSchoolData = schoolData.data();
+        console.log("Document data:", this.loadedSchoolData);
     }
 
 

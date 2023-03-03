@@ -1,6 +1,4 @@
-.fixed {
-    position: fixed !important;
-}
+
 .subject_btn {
     background: #f2f3f4;
     border: 1px solid grey;
@@ -122,6 +120,8 @@
 
             .password {
                 margin-right: 5px;
+                margin-top: 0px;
+                margin-bottom: 0px;
             }
 
             .hidden_password {
@@ -133,5 +133,13 @@
                 margin-top: 2.5px;
             }
         }
+    }
+}
+
+.schooldata_wrapper {
+    font-size: 15px;
+    margin-bottom: 100px;
+    p {
+        margin: 5px;
     }
 }
