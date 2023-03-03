@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { user } from '@angular/fire/auth';
 import { NgForm } from '@angular/forms';
 import { AlertService } from 'src/app/services/alert.service';
@@ -13,9 +13,15 @@ import { dataTransferService } from 'src/app/services/dataTransfer.service';
 export class EditUserComponent implements OnInit {
   @Input() userEdit: any;
   @ViewChild('editUserForm') inputfields: NgForm;
+  @ViewChild('email') email: ElementRef;
+  @ViewChild('password') password: ElementRef;
+  @ViewChild('submit_btn') submit_btn: ElementRef;
   @Output() closeEditUserOverlay = new EventEmitter<boolean>();
   testHeadFromFirestore$: any;
   currentTestHead: any;
+
+  validPassword: Boolean;
+  validEmailFormat: Boolean;
 
 
   constructor(public alertService: AlertService, public data: dataTransferService) { }
@@ -24,6 +30,10 @@ export class EditUserComponent implements OnInit {
     this.loadDataFromLocalStorage();
     setTimeout(() => {
       this.setForm();
+    }, 800);
+
+    setTimeout(() => {
+      this.checkInputValuesOnInit();
     }, 1000);
   }
 
@@ -45,7 +55,7 @@ export class EditUserComponent implements OnInit {
       lastname: this.userEdit.lastname,
       email: this.userEdit.email,
       password: this.userEdit.password
-    })
+    });
   }
 
   checkLengthOfInput(event: any) {
@@ -63,38 +73,73 @@ export class EditUserComponent implements OnInit {
     }
   }
 
+  checkInputValuesOnInit() {
+    this.checkEmailInputValue(this.email.nativeElement.value);
+    this.checkPasswordValue(this.password.nativeElement.value);
+
+  }
+
   checkEmailInputValue(inputvalue: any) {
-    console.log(inputvalue)
     let format_info = document.getElementById('email_adress');
     let mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (inputvalue.match(mailformat)) {
-      format_info.style.color = 'green'
+      format_info.style.color = 'green';
+      this.validEmailFormat = true;
     }
     else {
-      format_info.style.color = '#FA5252'
+      format_info.style.color = '#FA5252';
+      this.validEmailFormat = false;
     }
+    this.handleSubmitButton();
   }
 
   checkPasswordValue(inputvalue: any) {
     const passwordLengthInfo = document.getElementById('password_length');
     const numberInfo = document.getElementById('password_number');
     const uppercaseInfo = document.getElementById('password_uppercase');
-     if (inputvalue.length >= 8) {
+    let validlength: Boolean;
+    let validNumber: Boolean;
+    let validFormat: Boolean;
+
+    if (inputvalue.length >= 8) {
       passwordLengthInfo.style.color = 'rgb(80, 173, 108)';
+      validlength = true;
     } else {
       passwordLengthInfo.style.color = '#FA5252';
+      validlength = false;
     }
 
     if (inputvalue !== inputvalue.toLowerCase()) {
       uppercaseInfo.style.color = 'rgb(80, 173, 108)';
+      validFormat = true;
     } else {
       uppercaseInfo.style.color = '#FA5252';
+      validFormat = false;
     }
 
     if (/[0-9]/.test(inputvalue)) {
       numberInfo.style.color = 'rgb(80, 173, 108)';
+      validNumber = true;
     } else {
       numberInfo.style.color = '#FA5252';
+      validNumber = false;
+    }
+    if (validlength && validNumber && validFormat) {
+      this.validPassword = true;
+    } else {
+      this.validPassword = false;
+    }
+    this.handleSubmitButton();
+  }
+
+  handleSubmitButton() {
+    if (this.validEmailFormat && this.validPassword) {
+      this.submit_btn.nativeElement.disabled = false;
+      this.submit_btn.nativeElement.style.opacity = '1';
+    } else {
+      this.submit_btn.nativeElement.disabled = true;
+      this.submit_btn.nativeElement.style.opacity = '0.5';
+
     }
   }
 

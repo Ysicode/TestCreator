@@ -38,7 +38,7 @@
 
             <div class="d_flex">
                 <button class="cancel_btn" (click)="closeEditUser()">Abbrechen</button>
-                <button class="save_btn" type="submit">Speichern</button>
+                <button disabled #submit_btn class="save_btn" type="submit">Speichern</button>
             </div>
         </form>
         <div [class.d_none]="!alertService.alert" class="alert alert_border_red d_flex" id="alert">
