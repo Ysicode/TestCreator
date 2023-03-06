@@ -352,6 +352,12 @@
                 <div id="page_number">
                     <p style="margin-bottom: 0px;" class="page_number">{{j + 1}}/{{ test['pages'].length }}</p>
                 </div>
+                <button *ngIf="addedToTest.length != 0 && j == 0" (click)="infoOverlay = true;" class="new_test_btn show_onHover d_flex"><img class="remove_icon" src="assets/x_icon.png" alt="">
+                </button>
+                
+                <app-info-overlay *ngIf="infoOverlay" (closeInfoOverlay)="infoOverlay = false" [newTestOverlay]="true"> 
+                </app-info-overlay>
+
                 <div id="test_content{{j}}" class="test_content d_flex_column_start">
                     <div style="width: 100%; padding-bottom: 3%;">
 

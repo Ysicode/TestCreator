@@ -151,13 +151,13 @@ export class dataTransferService {
 
 
     // ADD SUBUSER
-    async addNewSubUser(sub_user_email: string, sub_user_password: string, sub_user_firstname: string, sub_user_lastname: string) {
+    async addNewSubUser(newUser: any) {
         const coll: any = collection(this.firestore, 'users', this.currentSchool, 'subusers');
         setDoc(doc(coll), {
-            email: sub_user_email,
-            password: sub_user_password, //Variable - wird später geändert durch den Admin beim anlegen von neuen unterusern
-            firstname: sub_user_firstname,
-            lastname: sub_user_lastname,
+            email: newUser.email,
+            password: newUser.password, //Variable - wird später geändert durch den Admin beim anlegen von neuen unterusern
+            firstname: newUser.firstname,
+            lastname: newUser.lastname,
             usertype: 'user',  //Variable - wird später geändert durch den Admin beim anlegen von neuen unterusern
             testhead: {
                 schoolname: 'Schulname',

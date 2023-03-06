@@ -9,8 +9,6 @@ import { dataTransferService } from '../services/dataTransfer.service';
   providers: [dataTransferService]
 })
 export class HeaderComponent implements OnInit {
-  infoOverlay: boolean = false;
-  currentTestFromLocalStorage = [];
   constructor(public data: dataTransferService, private router: Router) { }
 
   ngOnInit(): void {
@@ -24,15 +22,4 @@ export class HeaderComponent implements OnInit {
       this.router.navigate(['login']);
     }
   }
-
-  checkLengthOfCurrentTest() {
-    let loadedAddedQuestions = localStorage.getItem('addedQuestions');
-    this.currentTestFromLocalStorage = JSON.parse(loadedAddedQuestions);
-    if (this.currentTestFromLocalStorage) {
-      if (this.currentTestFromLocalStorage.length != 0) {
-        this.infoOverlay = true;
-      }
-    }
-  }
-
 }

@@ -15,6 +15,7 @@ export class AccountComponent implements OnInit {
   newSubject: Boolean = false;
   newClass: Boolean = false;
   editUser: Boolean = false;
+  addUser: Boolean = false;
   user = {};
 
   constructor(public data: dataTransferService, public alertService: AlertService) { }

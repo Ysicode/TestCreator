@@ -837,8 +837,6 @@ export class QuestionsComponent implements OnInit {
   }
 
 
-
-
   openEditTestHeadComponent() {
     this.editTesthead = true;
   }

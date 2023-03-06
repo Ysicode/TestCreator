@@ -8,7 +8,6 @@
 
         <!-- <img crossorigin="anonymous" class="user_photo" src="assets/simon_weiss.jpg" alt=""> -->
         <button routerLink="/dashboard" class="navlink margin_zero" [routerLinkActive]="'is_active'">Creator</button>
-        <button (click)="checkLengthOfCurrentTest()" class="navlink margin_zero">Neuer Test</button>
         <button routerLink="/ablage" class="navlink margin_zero" [routerLinkActive]="'is_active'">Ablage</button>
         <button routerLink="/account" class="navlink margin_zero" [routerLinkActive]="'is_active'">Account</button>
             <div class="d_flex wrapper_logout">
@@ -17,6 +16,3 @@
             </div>
     </nav>
 </div>
-
-<app-info-overlay *ngIf="infoOverlay" (closeInfoOverlay)="infoOverlay = false" [newTestOverlay]="true"> 
-</app-info-overlay>

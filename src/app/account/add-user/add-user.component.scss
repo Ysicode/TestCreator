@@ -83,16 +83,3 @@
         cursor: pointer;
     }
 }
-
-.delete_btn {
-    border-radius: 30px;
-    font-size: 10px;
-    padding: 10px 30px 10px 30px;
-    margin-top: 150px;
-    border: 1px solid #ffcaca;
-    color: #fa5252;
-    &:hover {
-        cursor: pointer;
-        opacity: 0.8;
-    }
-}

@@ -25,6 +25,7 @@ import { LoginComponent } from './login/login.component';
 import { StoredDocsComponent } from './stored-docs/stored-docs.component';
 import { AccountComponent } from './account/account.component';
 import { EditUserComponent } from './account/edit-user/edit-user.component';
+import { AddUserComponent } from './account/add-user/add-user.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { EditUserComponent } from './account/edit-user/edit-user.component';
     LoginComponent,
     StoredDocsComponent,
     AccountComponent,
-    EditUserComponent
+    EditUserComponent,
+    AddUserComponent
   ],
   imports: [
     BrowserModule,

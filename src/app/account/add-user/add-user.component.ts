@@ -1,62 +1,42 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { user } from '@angular/fire/auth';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { AlertService } from 'src/app/services/alert.service';
 import { dataTransferService } from 'src/app/services/dataTransfer.service';
 
 @Component({
-  selector: 'app-edit-user',
-  templateUrl: './edit-user.component.html',
-  styleUrls: ['./edit-user.component.scss'],
+  selector: 'app-add-user',
+  templateUrl: './add-user.component.html',
+  styleUrls: ['./add-user.component.scss'],
   providers: [AlertService, dataTransferService]
 })
-export class EditUserComponent implements OnInit {
-  @Input() userEdit: any;
-  @ViewChild('editUserForm') inputfields: NgForm;
+export class AddUserComponent implements AfterViewInit {
+
+  @ViewChild('addUserForm') inputfields: NgForm;
   @ViewChild('email') email: ElementRef;
   @ViewChild('password') password: ElementRef;
   @ViewChild('submit_btn') submit_btn: ElementRef;
-  @Output() closeEditUserOverlay = new EventEmitter<boolean>();
+  @Output() closeAddUserOverlay = new EventEmitter<boolean>();
 
   validPassword: Boolean;
   validEmailFormat: Boolean;
-
+  validLastname: Boolean;
+  validFirstname: Boolean;
 
   constructor(public alertService: AlertService, public data: dataTransferService) { }
 
-  ngOnInit(): void {
-    this.loadDataFromLocalStorage();
-    setTimeout(() => {
-      this.setForm();
-    }, 800);
-
-    setTimeout(() => {
-      this.checkInputValuesOnInit();
-    }, 1000);
+  ngAfterViewInit(): void {
+    this.checkEmailInputValue(this.email.nativeElement.value);
+    this.checkPasswordValue(this.password.nativeElement.value);
   }
+  
 
-  async loadDataFromLocalStorage() {
-    const data = localStorage.getItem('session');
-    const { school, sessionId } = JSON.parse(data);
-    this.data.currentSchool = school;
-    this.data.currentUserID = sessionId;
-  }
-
-  closeEditUser() {
-    this.closeEditUserOverlay.emit();
+  closeAddUser() {
+    this.closeAddUserOverlay.emit();
     this.alertService.alert = false;
   }
 
-  setForm() {
-    this.inputfields.setValue({
-      firstname: this.userEdit.firstname,
-      lastname: this.userEdit.lastname,
-      email: this.userEdit.email,
-      password: this.userEdit.password
-    });
-  }
-
-  checkLengthOfInput(event: any) {
+  checkLengthOfInput(event: any, inputfield: string) {
+    console.log(inputfield)
     let inputvalue = event.target.value;
     if (inputvalue.length == 30) {
       this.alertService.alert = true;
@@ -69,12 +49,21 @@ export class EditUserComponent implements OnInit {
       alert.innerHTML = '';
       this.alertService.alert = false;
     }
-  }
-
-  checkInputValuesOnInit() {
-    this.checkEmailInputValue(this.email.nativeElement.value);
-    this.checkPasswordValue(this.password.nativeElement.value);
-
+    if (inputfield === 'firstname') {
+      if (inputvalue.length >= 2) {
+        this.validFirstname = true;
+      } else {
+        this.validFirstname = false;
+      }
+    }
+    if (inputfield === 'lastname') {
+      if (inputvalue.length >= 2) {
+        this.validLastname = true;
+      } else {
+        this.validLastname = false;
+      }
+    }   
+    this.handleSubmitButton();
   }
 
   checkEmailInputValue(inputvalue: any) {
@@ -91,7 +80,7 @@ export class EditUserComponent implements OnInit {
     this.handleSubmitButton();
   }
 
-  checkPasswordValue(inputvalue: any) {
+  checkPasswordValue(inputvalue: string) {
     const passwordLengthInfo = document.getElementById('password_length');
     const numberInfo = document.getElementById('password_number');
     const uppercaseInfo = document.getElementById('password_uppercase');
@@ -131,7 +120,7 @@ export class EditUserComponent implements OnInit {
   }
 
   handleSubmitButton() {
-    if (this.validEmailFormat && this.validPassword) {
+    if (this.validEmailFormat && this.validPassword && this.validFirstname && this.validLastname) {
       this.submit_btn.nativeElement.disabled = false;
       this.submit_btn.nativeElement.style.opacity = '1';
     } else {
@@ -139,6 +128,5 @@ export class EditUserComponent implements OnInit {
       this.submit_btn.nativeElement.style.opacity = '0.5';
     }
   }
-
 
 }

@@ -162,15 +162,18 @@ body {
 }
 
 .dificulty_leicht_btn {
-    background: #fcc419;
+    color: #fcc419;
+    border: 1px solid #fcc419;
 }
 
 .dificulty_mittel_btn {
-    background: #339af0;
+    color: #339af0;
+    border: 1px solid #339af0;
 }
 
 .dificulty_schwer_btn {
-    background: #fa5252;
+    color: #fa5252;
+    border: 1px solid #fa5252;
 }
 
 .inputfield {
@@ -766,7 +769,6 @@ Answer styles
     }
 }
 
-
 .menu_burger {
     width: 60px;
     margin-left: 10px;
@@ -964,6 +966,14 @@ Styles für die Vorschau sektion
     width: 100%;
     margin-bottom: 2vw;
     font-size: calc(100vw * 0.016);
+
+    &:hover {
+        .new_test_btn {
+            &.show_onHover {
+                display: flex;
+            }
+        }
+    }
 }
 
 .page_number_wrapper {
@@ -974,6 +984,25 @@ Styles für die Vorschau sektion
         margin-top: 0px;
         margin-bottom: 0px;
         font-size: calc(100vw * 0.016);
+    }
+}
+
+.new_test_btn {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    right: 0;
+    background: #ffcaca;
+    border: none;
+    top: 0;
+    &:hover {
+        cursor: pointer;
+        border: 1.5px solid #fa5252;
+    }
+
+    .remove_icon {
+        width: 15px;
+        height: 15px;
     }
 }
 
@@ -994,24 +1023,23 @@ Styles für die Vorschau sektion
     .remove_from_test_btn {
         position: absolute;
         z-index: 10;
+        width: 25px;
+        height: 25px;
         background: none;
         top: 0;
         right: 0;
         border: none;
         object-fit: cover;
-        border-right: 1px solid #fa5252;
-        border-top: 1px solid #fa5252;
-        background: #f9d1c9;
+        background: #ffcaca;
         &:hover {
             cursor: pointer;
-            border-right: 1.5px solid #fa5252;
-            border-top: 1.5px solid #fa5252;
+            border: 1.5px solid #fa5252;
         }
-    }
 
-    .remove_icon {
-        width: 2.5vw;
-        max-width: 20px;
+        .remove_icon {
+            width: 15px;
+            height: 15px;
+        }
     }
 }
 

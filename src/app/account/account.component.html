@@ -119,7 +119,8 @@
                     </div>
 
                     <div *ngIf="data.currentUserData.usertype === 'admin' && user.id !== data.currentUserID"
-                        class="user_row" [class.border_grey]="user.id === data.currentUserID">
+                        class="user_row" [class.border_grey]="user.id === data.currentUserID"
+                        (click)="openEditUser(user.firstname, user.lastname, user.email, user.password, user.id)">
 
                         <div class="d_flex">
                             <div class="user_name d_flex_start">
@@ -149,6 +150,7 @@
                         </div>
                     </div>
                 </ng-container>
+                <button (click)="addUser = true" class="add_new_btn subject_btn">Profil anlegen</button>
             </div>
         </div>
         <div class="section_separator"></div>
@@ -178,3 +180,6 @@
 
 <app-edit-user *ngIf="editUser" [userEdit]="user" (closeEditUserOverlay)="editUser = false;">
 </app-edit-user>
+
+<app-add-user *ngIf="addUser" (closeAddUserOverlay)="addUser = false;">
+</app-add-user>
