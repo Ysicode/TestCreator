@@ -1,7 +1,8 @@
 <div (click)="closeEditUser()" class="inputs_container d_flex">
     <div (click)="$event.stopPropagation()" class="inputs_wrapper d_flex_column">
         <h2>Daten Ändern</h2>
-        <form #editUserForm="ngForm" class="form_wrapper d_flex_column" (ngSubmit)="data.editSubuserData(editUserForm.value); closeEditUser()">
+        <form #editUserForm="ngForm" class="form_wrapper d_flex_column"
+            (ngSubmit)="data.editSubuserData(editUserForm.value, newAdminIsChecked, userEdit.id); closeEditUser()">
             <div class="input_wrapper d_flex_column">
                 <input placeholder="Vorname" #firstname class="inputfield" type="text" maxlength="30" name="firstname"
                     ngModel (keyup)="checkLengthOfInput($event)">
@@ -15,20 +16,20 @@
             </div>
 
             <div class="input_wrapper d_flex_column">
-                <input placeholder="Email" #email class="inputfield" type="text" maxlength="50" name="email"
-                    ngModel (keyup)="checkEmailInputValue(email.value)">
+                <input placeholder="Email" #email class="inputfield" type="text" maxlength="50" name="email" ngModel
+                    (keyup)="checkEmailInputValue(email.value)">
                 <p id="email_adress" class="input_info">Verifizierte Emailadresse</p>
             </div>
 
-            <div class="input_wrapper d_flex_column">  
-                    <input placeholder="Passwort" #password class="inputfield" type="password" maxlength="30" name="password"
-                    ngModel (keyup)="checkPasswordValue(password.value)">
-                    <div class="d_flex">
-                        <p class="input_info password">Min</p>
-                        <p id="password_length" class="input_info password">8 Zeichen</p>
-                        <p id="password_number" class="input_info password">1 Zahl</p>
-                        <p id="password_uppercase" class="input_info password">1 Großbuchstabe</p>
-                    </div>
+            <div class="input_wrapper d_flex_column">
+                <input placeholder="Passwort" #password class="inputfield" type="password" maxlength="30"
+                    name="password" ngModel (keyup)="checkPasswordValue(password.value)">
+                <div class="d_flex">
+                    <p class="input_info password">Min</p>
+                    <p id="password_length" class="input_info password">8 Zeichen</p>
+                    <p id="password_number" class="input_info password">1 Zahl</p>
+                    <p id="password_uppercase" class="input_info password">1 Großbuchstabe</p>
+                </div>
             </div>
 
             <div class="d_flex">
@@ -36,11 +37,15 @@
                 <button disabled #submit_btn class="save_btn" type="submit">Speichern</button>
             </div>
         </form>
-
-        <button class="delete_btn" type="submit">Dieses Profil löschen</button>
-
-        <div [class.d_none]="!alertService.alert" class="alert alert_border_red d_flex" id="alert">
-
+        <div class="checkbox_wrapper d_flex">
+            <input class="checkbox" [checked]="newAdminIsChecked" type="checkbox" id="admin_checkbox" [(ngModel)]="newAdminIsChecked">
+            <label class="chackbox_label" for="admin_checkbox">Dieses Profil als Administrator festlegen</label>
         </div>
+        <button (click)="infoOverlay = true" class="delete_btn" type="submit">Dieses Profil löschen</button>
+
+        <div [class.d_none]="!alertService.alert" class="alert alert_border_red d_flex" id="alert"></div>
     </div>
 </div>
+
+<app-info-overlay *ngIf="infoOverlay" (closeInfoOverlay)="infoOverlay = false" [deleteSubuserOverlay]="true" [deleteSubuserId]="userEdit.id"> 
+</app-info-overlay>

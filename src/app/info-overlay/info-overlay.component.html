@@ -1,3 +1,5 @@
+
+<!-- DELETE QUESTION -->
 <div class="overlay_wrapper" *ngIf="deleteQuestionOverlay">
     <div class="d_flex_column">
         <h2>Aufgabe löschen?</h2>
@@ -9,6 +11,9 @@
     </div>
 </div>
 
+
+
+<!-- DELETE CURRENT TEST -->
 <div class="overlay_wrapper" *ngIf="newTestOverlay">
     <div class="d_flex_column">
         <h2>Aktuellen Test löschen?</h2>
@@ -16,8 +21,23 @@
             Es werden nur die Daten aus dem aktuellen Test gelöscht aber NICHT schon gespeicherte Tests.
         </p>
         <div class="d_flex">
-            <button class="close btn" (click)="closeDeleteQuestionOverlay()">Abbrechen</button>
+            <button class="close btn" (click)="closeNewTestOverlay()">Abbrechen</button>
             <button class="delete btn" (click)="deleteTest()">Test Löschen</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- DELETE SUBUSER -->
+<div class="overlay_wrapper" *ngIf="deleteSubuserOverlay">
+    <div class="d_flex_column">
+        <h2>Diesen Benutzer löschen?</h2>
+        <p class="overlay_information">Es werden alle persönlichen Daten des Benutzers gelöscht! <br>
+            Gepeicherte Aufgaben können weiterhin verwendet und durch den Admin bearbeitet werden.
+        </p>
+        <div class="d_flex">
+            <button class="close btn" (click)="closeDeleteSubuserOverlay()">Abbrechen</button>
+            <button class="delete btn" (click)="deleteSubuser()">Benutzer Löschen</button>
         </div>
     </div>
 </div>

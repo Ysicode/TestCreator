@@ -16,11 +16,13 @@ export class EditUserComponent implements OnInit {
   @ViewChild('email') email: ElementRef;
   @ViewChild('password') password: ElementRef;
   @ViewChild('submit_btn') submit_btn: ElementRef;
+  @ViewChild('admin_checkbox') checkbox: ElementRef;
   @Output() closeEditUserOverlay = new EventEmitter<boolean>();
 
+  newAdminIsChecked: Boolean = false;
   validPassword: Boolean;
   validEmailFormat: Boolean;
-
+  infoOverlay: Boolean;
 
   constructor(public alertService: AlertService, public data: dataTransferService) { }
 
@@ -54,6 +56,9 @@ export class EditUserComponent implements OnInit {
       email: this.userEdit.email,
       password: this.userEdit.password
     });
+    if (this.userEdit.usertype === 'admin') {
+      this.newAdminIsChecked = true; 
+    }
   }
 
   checkLengthOfInput(event: any) {
@@ -138,6 +143,12 @@ export class EditUserComponent implements OnInit {
       this.submit_btn.nativeElement.disabled = true;
       this.submit_btn.nativeElement.style.opacity = '0.5';
     }
+  }
+
+  checkinput() {
+    this.checkbox.nativeElement.checked = true;
+    console.log('hello');
+    console.log(this.checkbox.nativeElement.checked)
   }
 
 

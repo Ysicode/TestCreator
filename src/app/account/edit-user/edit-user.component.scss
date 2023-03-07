@@ -96,3 +96,20 @@
         opacity: 0.8;
     }
 }
+
+.checkbox_wrapper {
+    margin-top: 40px;
+
+    .checkbox {
+        width: 20px;
+        height: 20px;
+
+        &:checked {
+            background-color: red;
+        }
+    }
+
+    .chackbox_label {
+        font-size: 14px;
+    }
+}

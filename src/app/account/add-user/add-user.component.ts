@@ -36,7 +36,6 @@ export class AddUserComponent implements AfterViewInit {
   }
 
   checkLengthOfInput(event: any, inputfield: string) {
-    console.log(inputfield)
     let inputvalue = event.target.value;
     if (inputvalue.length == 30) {
       this.alertService.alert = true;

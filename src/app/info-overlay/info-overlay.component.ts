@@ -10,15 +10,17 @@ import { dataTransferService } from '../services/dataTransfer.service';
 
 export class InfoOverlayComponent implements OnInit {
 
-  constructor(public dataService: dataTransferService) { }
+  constructor(public data: dataTransferService) { }
+  
+  loading: boolean = false;
 
-  @Input() questionID: string;
   @Output() closeInfoOverlay = new EventEmitter<boolean>();
 
-  loading: boolean = false;
+  @Input() questionID: string;
   @Input() deleteQuestionOverlay: boolean;
   @Input() newTestOverlay: boolean;
-
+  @Input() deleteSubuserOverlay: Boolean;
+  @Input() deleteSubuserId: string;
 
   ngOnInit(): void {
   }
@@ -28,18 +30,24 @@ export class InfoOverlayComponent implements OnInit {
     this.deleteQuestionOverlay = false;
   }
 
+  closeNewTestOverlay() {
+    this.closeInfoOverlay.emit();
+    this.newTestOverlay = false;
+  }
+
+  closeDeleteSubuserOverlay() {
+    this.closeInfoOverlay.emit();
+    this.deleteSubuserOverlay = false;
+  }
+
   deleteQuestion() {
     this.loading = true;
-    this.dataService.deletedata(this.questionID);
+    this.data.deletedata(this.questionID);
     setTimeout(() => {
       this.closeInfoOverlay.emit();
       this.deleteQuestionOverlay = false;
       this.loading = false;
     }, 2000);
-  }
-
-  logData() {
-    console.log(this.dataService.loaded)
   }
 
   deleteTest() {
@@ -49,9 +57,15 @@ export class InfoOverlayComponent implements OnInit {
     setTimeout(() => {
       this.closeInfoOverlay.emit();
       this.newTestOverlay = false;
-    }, 1000);    
+    }, 1000);
   }
 
-
-
+  deleteSubuser() {
+    this.data.deleteSubuser(this.deleteSubuserId)
+    location.reload();
+    setTimeout(() => {
+      this.closeInfoOverlay.emit();
+      this.deleteSubuserOverlay = false;
+    }, 1000);
+  }
 }

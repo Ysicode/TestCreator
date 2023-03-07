@@ -17,7 +17,7 @@ export class dataTransferService {
     questionsFromFirestore$: Observable<any>;
     testHeadFromFirestore$: Observable<any>;
     subUsersFromFirestore$: Observable<any>;
-   
+
     currentTestHead: any;
     currentUserID: any;
     currentSchool: string = 'JonasWeiss';
@@ -135,8 +135,8 @@ export class dataTransferService {
         });
     }
 
-     //LOAD ALL SubUsers
-     async loadSubUsers() {
+    //LOAD ALL SubUsers
+    async loadSubUsers() {
         //gets all questions
         const coll: any = collection(this.firestore, 'users', this.currentSchool, 'subusers');
         this.subUsersFromFirestore$ = collectionData(coll, { idField: 'id' })
@@ -170,15 +170,31 @@ export class dataTransferService {
         });
     }
 
-    editSubuserData(data: any) {
-        const coll: any = doc(this.firestore, 'users', this.currentSchool, 'subusers', this.currentUserID);
+    editSubuserData(data: any, newAdminIsChecked: Boolean, userId: string) {
+        const coll: any = doc(this.firestore, 'users', this.currentSchool, 'subusers', userId);
         updateDoc(coll, {
-         firstname: data.firstname,
-         lastname: data.lastname,
-         password: data.password,
-         email: data.email
+            firstname: data.firstname,
+            lastname: data.lastname,
+            password: data.password,
+            email: data.email,
+            usertype: 'user'
         });
-      }
+
+        if (newAdminIsChecked) {
+            updateDoc(coll, {
+                usertype: 'admin'
+            });
+        }
+    }
+
+     /**
+    * This function is used to delete a question form firebase
+    * @param id is the firebase id of the question to delete it
+    */
+      deleteSubuser(userId: string) {
+        const coll: any = doc(this.firestore, 'users', this.currentSchool, 'subusers', userId);
+        deleteDoc(coll);
+    }
 
 
     // UPDATE SUBUSER
