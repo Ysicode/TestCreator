@@ -71,7 +71,7 @@
             <h2>Mein Account</h2>
             <div class="user_wrapper d_flex_column" style="margin-bottom: 50px;">
                 <ng-container *ngFor="let user of data.loadedSubUserData; let i = index">
-                    <div *ngIf="user.id === data.currentUserID" class="user_row border_grey" (click)="openEditUser(user.firstname, user.lastname, user.email, user.password, user.id, user.usertype)">
+                    <div *ngIf="user.id === data.currentUserID" class="user_row border_grey" (click)="openEditUser(user.firstname, user.lastname, user.email, user.password, user.id, user.usertype, data.currentUserData.usertype)">
                         <div class="d_flex">
                             <div class="user_name d_flex_start">
                                 <p class="firstname">{{ user.firstname }}</p>
@@ -120,7 +120,7 @@
 
                     <div *ngIf="data.currentUserData.usertype === 'admin' && user.id !== data.currentUserID"
                         class="user_row" [class.border_grey]="user.id === data.currentUserID"
-                        (click)="openEditUser(user.firstname, user.lastname, user.email, user.password, user.id, user.usertype)">
+                        (click)="openEditUser(user.firstname, user.lastname, user.email, user.password, user.id, user.usertype, data.currentUserData.usertype)">
 
                         <div class="d_flex">
                             <div class="user_name d_flex_start">

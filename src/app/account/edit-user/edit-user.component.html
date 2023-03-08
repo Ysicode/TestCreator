@@ -37,7 +37,7 @@
                 <button disabled #submit_btn class="save_btn" type="submit">Speichern</button>
             </div>
         </form>
-        <div class="checkbox_wrapper d_flex">
+        <div *ngIf="userEdit.currentUserType === 'admin'" class="checkbox_wrapper d_flex">
             <input class="checkbox" [checked]="newAdminIsChecked" type="checkbox" id="admin_checkbox" [(ngModel)]="newAdminIsChecked">
             <label class="chackbox_label" for="admin_checkbox">Dieses Profil als Administrator festlegen</label>
         </div>

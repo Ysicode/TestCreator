@@ -112,14 +112,15 @@ export class AccountComponent implements OnInit {
     }
   }
 
-  openEditUser(firstname: string, lastname: string, email: string, password: any, id: string, usertype: string) {
+  openEditUser(firstname: string, lastname: string, email: string, password: any, id: string, usertype: string, currentUserType: string) {
     this.user = {
       firstname: firstname,
       lastname: lastname,
       email: email,
       password: password,
       id: id,
-      usertype: usertype
+      usertype: usertype,
+      currentUserType: currentUserType
     }
     this.editUser = true;
   }
