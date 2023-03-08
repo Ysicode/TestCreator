@@ -468,6 +468,11 @@ style for rendered subjects
 .question_info {
     font-size: calc(100vw * 0.018);
     width: 100%;
+
+    img {
+        width: 17px;
+        margin-right: 15px;
+    }
 }
 
 .question_info_btn {

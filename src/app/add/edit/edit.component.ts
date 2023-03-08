@@ -293,7 +293,8 @@ export class EditComponent implements OnInit, AfterViewInit {
           punktzahl: Number(question.punktzahl),
           bearbeitungszeit: Number(question.bearbeitungszeit),
           kindOf: this.selectedKind,
-          keywords: question.keywords.split(',')
+          keywords: question.keywords.split(','),
+          creatorId: this.data.currentUserID
         }).then(() => {
           this.loading = false;
           this.closeEditComponent();
