@@ -27,11 +27,17 @@ export class QuestionsComponent implements OnInit {
   currentAnswer: any;
   currentId: string;
   public totalQuestionsNumber: number = 0;
-  public infoOverlay: boolean = false;
+  public deleteTestOverlay: boolean = false;
+  public deleteQuestionOverlay: boolean = false;
+
+
 
   // variables for the new question window
   editMode: boolean = false;
   overlay: boolean = false;
+
+  questionToEdit: any;
+  answerToEdit: any;
 
   //multi used variables
   currentTestPoints: number = 0;
@@ -72,6 +78,9 @@ export class QuestionsComponent implements OnInit {
   search = false;
   searchactive = false;
   currentSearch = '';
+
+
+
   //Filter Variables
 
   filters = []
@@ -109,6 +118,24 @@ export class QuestionsComponent implements OnInit {
         this.service.loading = false;
       }, 50);
     }
+  }
+
+  // Open Add Question overlay and deletes data when before edit question was clicked
+  showAddOverlay() {
+    this.questionToEdit = null;
+    this.answerToEdit = null;
+    setTimeout(() => {
+      this.overlay = true;
+    }, 500);
+  }
+
+  // Open Add Question overlay with the data of the Question to edit it. 
+  showEditOverlay(questionData: any, answerData: any) {
+    this.questionToEdit = questionData;
+    this.answerToEdit = answerData;
+    setTimeout(() => {
+      this.overlay = true;
+    }, 500);
   }
 
   getTotalQuestionNumber() {

@@ -1,7 +1,7 @@
 <!-- Header Component-->
 <app-header *ngIf="logedIn"></app-header>
 <!-- Edit Component -->
-<app-edit class="add_question_overlay" *ngIf="overlay" (closeAddQuestionOverlay)="overlay = false"></app-edit>
+<app-edit class="add_question_overlay" *ngIf="overlay" (closeAddQuestionOverlay)="overlay = false" [editQuestion]="questionToEdit" [editAnswer]="answerToEdit"></app-edit>
 
 <app-spinner *ngIf="service.loading"></app-spinner>
 
@@ -211,12 +211,12 @@
                             </div>
                             <!-- *ngIf="data.currentUserData.id == question.questioncreator.id" -->
                             <div *ngIf="data.currentUserID == questionData.creatorId" class="question_edit_btn_wrapper">
-                                <button class="question_edit_btn">Edit</button>
+                                <button class="question_edit_btn" (click)="showEditOverlay(questionData['frage'], questionData['antwort']); service.windowScrollTop();">Edit</button>
                                 <button class="question_edit_btn" (click)="data.log(questionData.id)">ds</button>
-                                <button class="question_edit_btn" (click)="infoOverlay = true">Delete</button>
+                                <button class="question_edit_btn" (click)="deleteQuestionOverlay = true">Delete</button>
                             </div>
 
-                            <app-info-overlay *ngIf="infoOverlay" (closeInfoOverlay)="infoOverlay = false"
+                            <app-info-overlay *ngIf="deleteQuestionOverlay" (closeQuestionDeleteOverlay)="deleteQuestionOverlay = false"
                                 [questionID]="questionData.id" [deleteQuestionOverlay]="true">
                             </app-info-overlay>
                         </div>
@@ -321,7 +321,7 @@
                 </div>
 
                 <div *ngIf="!search" class="add_question_btn_wrapper">
-                    <button (click)="overlay = true; service.windowScrollTop(); " class="add_question_btn">
+                    <button (click)="showAddOverlay(); service.windowScrollTop(); " class="add_question_btn">
                         Hinzufügen</button>
 
                     <div class="menu_burger">
@@ -350,10 +350,10 @@
                 <div id="page_number">
                     <p style="margin-bottom: 0px;" class="page_number">{{j + 1}}/{{ test['pages'].length }}</p>
                 </div>
-                <button *ngIf="addedToTest.length != 0 && j == 0" (click)="infoOverlay = true;" class="new_test_btn show_onHover d_flex"><img class="remove_icon" src="assets/x_icon.png" alt="">
+                <button *ngIf="addedToTest.length != 0 && j == 0" (click)="deleteTestOverlay = true;" class="new_test_btn show_onHover d_flex"><img class="remove_icon" src="assets/x_icon.png" alt="">
                 </button>
                 
-                <app-info-overlay *ngIf="infoOverlay" (closeInfoOverlay)="infoOverlay = false" [newTestOverlay]="true"> 
+                <app-info-overlay *ngIf="deleteTestOverlay" (closeTestDeleteOverlay)="deleteTestOverlay = false" [newTestOverlay]="true"> 
                 </app-info-overlay>
 
                 <div id="test_content{{j}}" class="test_content d_flex_column_start">

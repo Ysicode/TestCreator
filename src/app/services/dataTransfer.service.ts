@@ -131,6 +131,7 @@ export class dataTransferService {
             this.loadedQuestions = data;
             this.loadedQuestions.sort((x, y) => {
                 return y.frage.time - x.frage.time
+                
             })
         });
     }

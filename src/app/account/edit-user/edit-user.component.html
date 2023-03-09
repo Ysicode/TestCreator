@@ -41,11 +41,11 @@
             <input class="checkbox" [checked]="newAdminIsChecked" type="checkbox" id="admin_checkbox" [(ngModel)]="newAdminIsChecked">
             <label class="chackbox_label" for="admin_checkbox">Dieses Profil als Administrator festlegen</label>
         </div>
-        <button (click)="infoOverlay = true" class="delete_btn" type="submit">Dieses Profil löschen</button>
+        <button (click)="deleteSubuserOverlay = true" class="delete_btn" type="submit">Dieses Profil löschen</button>
 
         <div [class.d_none]="!alertService.alert" class="alert alert_border_red d_flex" id="alert"></div>
     </div>
 </div>
 
-<app-info-overlay *ngIf="infoOverlay" (closeInfoOverlay)="infoOverlay = false" [deleteSubuserOverlay]="true" [deleteSubuserId]="userEdit.id"> 
+<app-info-overlay *ngIf="deleteSubuserOverlay" (closeSubuserDeleteOverlay)="deleteSubuserOverlay = false" [deleteSubuserOverlay]="true" [deleteSubuserId]="userEdit.id"> 
 </app-info-overlay>

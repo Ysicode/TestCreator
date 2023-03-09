@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { collection, collectionData, doc, Firestore, setDoc, updateDoc } from '@angular/fire/firestore';
 import { NgForm } from '@angular/forms';
 import EditorJS from '@editorjs/editorjs';
@@ -44,6 +44,9 @@ export class EditComponent implements OnInit, AfterViewInit {
   selectedKind = 'standard';
 
 
+  @Input() editQuestion: any;
+  @Input() editAnswer: any;
+
   // EditorJS
   @ViewChild('questionEditor', { read: ElementRef, static: true })
   questionEditorElement: ElementRef;
@@ -56,6 +59,8 @@ export class EditComponent implements OnInit, AfterViewInit {
   @ViewChild('multiChoiceEditor', { read: ElementRef, static: true })
   multiChoiceEditorElement: ElementRef;
   multiChoiceEditor: EditorJS;
+
+  questionToEdit: any;
 
   Checklist = require('@editorjs/checklist');
   Marker = require('@editorjs/marker');
@@ -71,8 +76,13 @@ export class EditComponent implements OnInit, AfterViewInit {
     await this.data.loadSubUserData();
     setTimeout(() => {
       console.log(this.data.currentUserData);
+      console.log('Question to Edit', this.editQuestion)
       this.loaded = true;
     }, 100);
+
+    // setTimeout(() => {
+    //   this.questionEditor.render(this.editQuestion);
+    // }, 1000);
   }
 
   async loadDataFromLocalStorage() {
@@ -105,31 +115,31 @@ export class EditComponent implements OnInit, AfterViewInit {
       let alert = document.getElementById('alert');
       alert.innerHTML = this.alertService.showAlert('Bitte ein Fach wählen');
       return false
-    } 
+    }
     if (!this.currentClassChoice) {
       this.alertService.alert = true;
       let alert = document.getElementById('alert');
       alert.innerHTML = this.alertService.showAlert('Bitte eine Klasse wählen');
       return false
-    } 
+    }
     if (!this.currentDifficulty) {
       this.alertService.alert = true;
       let alert = document.getElementById('alert');
       alert.innerHTML = this.alertService.showAlert('Bitte eine Schwierigkeit wählen');
       return false
-    }  
+    }
     if (this.currentAnswer.blocks.length == 0) {
       this.alertService.alert = true;
       let alert = document.getElementById('alert');
       alert.innerHTML = this.alertService.showAlert('Bitte eine Lösung erstellen');
       return false
-    }  
+    }
     if (this.currentQuestion.blocks.length == 0) {
       this.alertService.alert = true;
       let alert = document.getElementById('alert');
       alert.innerHTML = this.alertService.showAlert('Bitte eine Aufgabe erstellen');
       return false
-    }  
+    }
     else {
       return true
     }
@@ -140,7 +150,7 @@ export class EditComponent implements OnInit, AfterViewInit {
     this.multipleChoiceEditor = !this.multipleChoiceEditor;
   }
 
-  //Standard Questions Editor
+  //Multiple Choice
   initializeMultipleChoiceEditor(): void {
     this.multiChoiceEditor = new EditorJS({
       minHeight: 100,
@@ -157,12 +167,12 @@ export class EditComponent implements OnInit, AfterViewInit {
 
   //Standard Questions Editor
   initializeQuestionEditor(): void {
-    this.questionEditor = this.initializeEditor(this.questionEditorElement.nativeElement);
+    this.questionEditor = this.initializeEditor(this.questionEditorElement.nativeElement, this.editQuestion);
   }
 
   //Standard Answer Editor
   initializeAnswerEditor(): void {
-    this.answerEditor = this.initializeEditor(this.answerEditorElement.nativeElement);
+    this.answerEditor = this.initializeEditor(this.answerEditorElement.nativeElement, this.editAnswer);
   }
 
 
@@ -323,6 +333,8 @@ export class EditComponent implements OnInit, AfterViewInit {
       // }
 
     }, 700);
+
+    console.log(this.currentQuestion)
   }
 
   //Das muss noch gemacht werden!!!!!!!!! Edit function
@@ -352,10 +364,15 @@ export class EditComponent implements OnInit, AfterViewInit {
         console.log('Das ist Multi Chopice', this.currentQuestion, this.currentAnswer);
       }, 500);
     }
-
+    
     if (!this.multipleChoiceEditor) {
+      console.log('VOR TRANSFORM', this.questionEditor.save());
       this.questionEditor.save().then(data => {
+       
         this.currentQuestion = data;
+       
+
+
         for (let i = 0; i < data.blocks.length; i++) { //If a table was in use of the editor nested array cannot saved in firestore
           if (data.blocks[i].data.content) {
             this.currentQuestion['blocks'][i]['data']['table'] = {};
@@ -365,10 +382,10 @@ export class EditComponent implements OnInit, AfterViewInit {
             this.currentQuestion['blocks'][i]['data']['table']['length'] = Object.keys(this.currentQuestion['blocks'][i]['data']['table']);
           }
           this.currentQuestion['blocks'][i]['data']['content'] = 'deleted';
-        }   
+        }
       });
       setTimeout(() => {
-        console.log('Das ist die Aufgabe', this.currentQuestion);
+        console.log('NACH TRANSFORM', this.currentQuestion);
       }, 200);
 
       this.answerEditor.save().then(data => {
@@ -384,9 +401,9 @@ export class EditComponent implements OnInit, AfterViewInit {
           this.currentAnswer['blocks'][i]['data']['content'] = 'deleted';
         }
       });
-      setTimeout(() => {
-        console.log('Das ist die Antwort', this.currentAnswer);
-      }, 500);
+      // setTimeout(() => {
+      //   console.log('Das ist die Antwort', this.currentAnswer);
+      // }, 500);
     }
   }
 
@@ -410,10 +427,11 @@ export class EditComponent implements OnInit, AfterViewInit {
    * @param htmlElement - This parameter is used to set the holder of the editor 
    * @returns the Editor with all configs
    */
-  initializeEditor(htmlElement: any) {
+  initializeEditor(htmlElement: any, editData: any) {
     return new EditorJS({
       minHeight: 100,
       holder: htmlElement,
+      data: editData,
       tools: {
         underline: Underline,
         Marker: {

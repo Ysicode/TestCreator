@@ -11,10 +11,13 @@ import { dataTransferService } from '../services/dataTransfer.service';
 export class InfoOverlayComponent implements OnInit {
 
   constructor(public data: dataTransferService) { }
-  
+
   loading: boolean = false;
 
-  @Output() closeInfoOverlay = new EventEmitter<boolean>();
+  @Output() closeTestDeleteOverlay = new EventEmitter<boolean>();
+  @Output() closeQuestionDeleteOverlay = new EventEmitter<boolean>();
+  @Output() closeSubuserDeleteOverlay = new EventEmitter<boolean>();
+
 
   @Input() questionID: string;
   @Input() deleteQuestionOverlay: boolean;
@@ -26,26 +29,27 @@ export class InfoOverlayComponent implements OnInit {
   }
 
   closeDeleteQuestionOverlay() {
-    this.closeInfoOverlay.emit();
+    this.closeQuestionDeleteOverlay.emit();
     this.deleteQuestionOverlay = false;
   }
 
   closeNewTestOverlay() {
-    this.closeInfoOverlay.emit();
+    this.closeTestDeleteOverlay.emit();
     this.newTestOverlay = false;
   }
 
   closeDeleteSubuserOverlay() {
-    this.closeInfoOverlay.emit();
+    this.closeSubuserDeleteOverlay.emit();
     this.deleteSubuserOverlay = false;
   }
 
   deleteQuestion() {
     this.loading = true;
     this.data.deletedata(this.questionID);
+    this.deleteQuestionOverlay = false;
     setTimeout(() => {
-      this.closeInfoOverlay.emit();
-      this.deleteQuestionOverlay = false;
+
+      this.closeQuestionDeleteOverlay.emit();
       this.loading = false;
     }, 2000);
   }
@@ -55,17 +59,18 @@ export class InfoOverlayComponent implements OnInit {
     localStorage.removeItem('currentTest');
     location.reload();
     setTimeout(() => {
-      this.closeInfoOverlay.emit();
       this.newTestOverlay = false;
+      this.closeTestDeleteOverlay.emit();
     }, 1000);
   }
 
   deleteSubuser() {
     this.data.deleteSubuser(this.deleteSubuserId)
     location.reload();
+    this.deleteSubuserOverlay = false;
     setTimeout(() => {
-      this.closeInfoOverlay.emit();
-      this.deleteSubuserOverlay = false;
+
+      this.closeSubuserDeleteOverlay.emit();
     }, 1000);
   }
 }

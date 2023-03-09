@@ -22,7 +22,7 @@ export class EditUserComponent implements OnInit {
   newAdminIsChecked: Boolean = false;
   validPassword: Boolean;
   validEmailFormat: Boolean;
-  infoOverlay: Boolean;
+  public deleteSubuserOverlay: Boolean;
 
   constructor(public alertService: AlertService, public data: dataTransferService) { }
 
