@@ -21,6 +21,7 @@ export class dataTransferService {
     currentTestHead: any;
     currentUserID: any;
     currentSchool: string = 'JonasWeiss';
+    currentSchoolType: string;
     currentUserData$: Observable<any>;
     currentUserData: any;
 
@@ -37,8 +38,13 @@ export class dataTransferService {
         if (docSnap.exists()) {
             console.log("Document data:", docSnap.data(), 'ID', docSnap.id);
             this.currentSchool = docSnap.id;
+            this.currentSchoolType = docSnap.data()['schoolType'];
+            localStorage.setItem('school', JSON.stringify({
+                schoolType: this.currentSchoolType,
+            }));
             return true;
         } else {
+            localStorage.removeItem('school');
             return false
         }
     }
@@ -53,7 +59,7 @@ export class dataTransferService {
             if (querySnapshot.empty) {
                 login_successfull = false;
             }
-            querySnapshot.forEach((doc) => {
+            querySnapshot.forEach((doc: any) => {
                 // doc.data() is never undefined for query doc snapshots
                 console.log('BINGO', doc.id, " => ", doc.data());
                 this.currentUserID = doc.id;
@@ -131,7 +137,7 @@ export class dataTransferService {
             this.loadedQuestions = data;
             this.loadedQuestions.sort((x, y) => {
                 return y.frage.time - x.frage.time
-                
+
             })
         });
     }
@@ -188,11 +194,11 @@ export class dataTransferService {
         }
     }
 
-     /**
-    * This function is used to delete a question form firebase
-    * @param id is the firebase id of the question to delete it
-    */
-      deleteSubuser(userId: string) {
+    /**
+   * This function is used to delete a question form firebase
+   * @param id is the firebase id of the question to delete it
+   */
+    deleteSubuser(userId: string) {
         const coll: any = doc(this.firestore, 'users', this.currentSchool, 'subusers', userId);
         deleteDoc(coll);
     }

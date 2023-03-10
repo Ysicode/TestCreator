@@ -121,7 +121,7 @@
             </div>
         </div>
 
-        <form class="questionForm" #questionForm="ngForm" (ngSubmit)="addData(questionForm.value)">
+        <form class="questionForm" #questionForm="ngForm" (ngSubmit)="editMode ? updateQuestion(questionForm.value) : addQuestion(questionForm.value)">
             <div class="d_flex_column">
                 <div class="d_flex section margin_top_zero">
                     <div class="d_flex_column rangbar_wrapper">

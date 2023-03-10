@@ -1,7 +1,7 @@
 <!-- Header Component-->
 <app-header *ngIf="logedIn"></app-header>
 <!-- Edit Component -->
-<app-edit class="add_question_overlay" *ngIf="overlay" (closeAddQuestionOverlay)="overlay = false" [editQuestion]="questionToEdit" [editAnswer]="answerToEdit"></app-edit>
+<app-edit class="add_question_overlay" *ngIf="overlay" (closeAddQuestionOverlay)="overlay = false" [editQuestion]="questionToEdit" [editAnswer]="answerToEdit" [questionId]="questionId" [editMode]="editQuestionMode"></app-edit>
 
 <app-spinner *ngIf="service.loading"></app-spinner>
 
@@ -211,8 +211,7 @@
                             </div>
                             <!-- *ngIf="data.currentUserData.id == question.questioncreator.id" -->
                             <div *ngIf="data.currentUserID == questionData.creatorId" class="question_edit_btn_wrapper">
-                                <button class="question_edit_btn" (click)="showEditOverlay(questionData['frage'], questionData['antwort']); service.windowScrollTop();">Edit</button>
-                                <button class="question_edit_btn" (click)="data.log(questionData.id)">ds</button>
+                                <button class="question_edit_btn" (click)="showEditOverlay(questionData['frage'], questionData['antwort'], questionData.id); service.windowScrollTop();">Edit</button>
                                 <button class="question_edit_btn" (click)="deleteQuestionOverlay = true">Delete</button>
                             </div>
 
@@ -630,6 +629,7 @@
                     </div> -->
 
                     <button class="add_question_btn">Speichern</button>
+           
                 </div>
             </div>
 

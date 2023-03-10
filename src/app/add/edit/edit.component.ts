@@ -38,7 +38,6 @@ export class EditComponent implements OnInit, AfterViewInit {
   currentKindOfQuestion: any;
   newSubject: Boolean = false;
   newClass: Boolean = false;
-  editMode: Boolean = false;
   multipleChoiceEditor: Boolean = false;
 
   selectedKind = 'standard';
@@ -46,6 +45,8 @@ export class EditComponent implements OnInit, AfterViewInit {
 
   @Input() editQuestion: any;
   @Input() editAnswer: any;
+  @Input() questionId: string;
+  @Input() editMode: Boolean;
 
   // EditorJS
   @ViewChild('questionEditor', { read: ElementRef, static: true })
@@ -86,10 +87,14 @@ export class EditComponent implements OnInit, AfterViewInit {
   }
 
   async loadDataFromLocalStorage() {
-    const data = localStorage.getItem('session');
-    const { school, sessionId } = JSON.parse(data);
+    const sessionData = localStorage.getItem('session');
+    const schoolData = localStorage.getItem('school');
+    const { school, sessionId } = JSON.parse(sessionData);
+    const { schoolType } = JSON.parse(schoolData);
+
     this.data.currentSchool = school;
     this.data.currentUserID = sessionId;
+    this.data.currentSchoolType = schoolType;
   }
 
   ngAfterViewInit(): void {
@@ -109,7 +114,7 @@ export class EditComponent implements OnInit, AfterViewInit {
     this.currentDifficulty = '';
   }
 
-  checkAlert() {
+  validData() {
     if (!this.currentSubjectChoice) {
       this.alertService.alert = true;
       let alert = document.getElementById('alert');
@@ -287,24 +292,61 @@ export class EditComponent implements OnInit, AfterViewInit {
     }
   }
 
-  async addData(question: any) {
+  async addQuestion(questionFormData: any) {
+    console.log('add')
     await this.saveEditorData();
     setTimeout(() => {
-      if (!this.editMode && this.checkAlert()) {
-        console.log(this.checkAlert());
+      if (this.validData()) {
         this.loading = true;
-        const coll: any = collection(this.firestore, '/users/JonasWeiss/fragen');
+        const coll: any = collection(this.firestore, 'users', this.data.currentSchool, 'fragen');
         setDoc(doc(coll), {
           fach: this.currentSubjectChoice,
           frage: this.currentQuestion,
           antwort: this.currentAnswer,
           schwierigkeit: this.currentDifficulty,
           klasse: this.currentClassChoice,
-          punktzahl: Number(question.punktzahl),
-          bearbeitungszeit: Number(question.bearbeitungszeit),
+          punktzahl: Number(questionFormData.punktzahl),
+          bearbeitungszeit: Number(questionFormData.bearbeitungszeit),
           kindOf: this.selectedKind,
-          keywords: question.keywords.split(','),
-          creatorId: this.data.currentUserID
+          keywords: questionFormData.keywords.split(','),
+          creatorId: this.data.currentUserID,
+          schoolType: this.data.currentSchoolType,
+          creationDate: Date.now(),
+          lastEditDate: ''
+        }).then(() => {
+          this.loading = false;
+          this.closeEditComponent();
+          this.multiChoiceEditor.clear();
+        }).then(() => {
+          this.questionEditor.clear();
+        }).then(() => {
+          this.answerEditor.clear();
+          this.editMode = false;
+        })
+      }
+    }, 700);
+
+    console.log(this.currentQuestion)
+  }
+
+  async updateQuestion(questionFormData: any) {
+    console.log('Edit')
+    await this.saveEditorData();
+    setTimeout(() => {
+      if (this.validData()) {
+        this.loading = true;
+        const coll: any = doc(this.firestore, 'users', this.data.currentSchool, 'fragen' , this.questionId);
+        updateDoc(coll, {
+          fach: this.currentSubjectChoice,
+          frage: this.currentQuestion,
+          antwort: this.currentAnswer,
+          schwierigkeit: this.currentDifficulty,
+          klasse: this.currentClassChoice,
+          punktzahl: Number(questionFormData.punktzahl),
+          bearbeitungszeit: Number(questionFormData.bearbeitungszeit),
+          kindOf: this.selectedKind,
+          keywords: questionFormData.keywords.split(','),
+          lastEditDate: Date.now()
         }).then(() => {
           this.loading = false;
           this.closeEditComponent();
@@ -317,24 +359,22 @@ export class EditComponent implements OnInit, AfterViewInit {
         })
       }
       // else {
-      //   const coll: any = doc(this.firestore, '/users/JonasWeiss/fragen/' + this.currentId);
+      //   const coll: any = doc(this.firestore, 'users', this.data.currentSchool, 'fragen' , this.currentId);
       //   updateDoc(coll, {
       //     fach: this.currentSubjectChoice,
-      //     frage: { frage: question.frage, antwort: question.antwort },
+      //     frage: { frage: questionFormData.frage, antwort: questionFormData.antwort },
       //     klasse: this.currentClassChoice,
-      //     punktzahl: Number(question.punktzahl),
-      //     bearbeitungszeit: Number(question.bearbeitungszeit),
-      //     keywords: question.keywords.split(',')
+      //     punktzahl: Number(questionFormData.punktzahl),
+      //     bearbeitungszeit: Number(questionFormData.bearbeitungszeit),
+      //     keywords: questionFormData.keywords.split(',')
       //   }).then(() => {
-      //     this.service.loading = false;
+      //     this.loading = false;
       //     this.closeEditComponent();
       //   })
-      //  
+       
       // }
 
     }, 700);
-
-    console.log(this.currentQuestion)
   }
 
   //Das muss noch gemacht werden!!!!!!!!! Edit function
@@ -371,8 +411,6 @@ export class EditComponent implements OnInit, AfterViewInit {
        
         this.currentQuestion = data;
        
-
-
         for (let i = 0; i < data.blocks.length; i++) { //If a table was in use of the editor nested array cannot saved in firestore
           if (data.blocks[i].data.content) {
             this.currentQuestion['blocks'][i]['data']['table'] = {};
@@ -384,6 +422,8 @@ export class EditComponent implements OnInit, AfterViewInit {
           this.currentQuestion['blocks'][i]['data']['content'] = 'deleted';
         }
       });
+
+
       setTimeout(() => {
         console.log('NACH TRANSFORM', this.currentQuestion);
       }, 200);

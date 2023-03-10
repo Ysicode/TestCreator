@@ -33,11 +33,13 @@ export class QuestionsComponent implements OnInit {
 
 
   // variables for the new question window
-  editMode: boolean = false;
   overlay: boolean = false;
-
   questionToEdit: any;
   answerToEdit: any;
+  questionId: string;
+  editQuestionMode: Boolean = false;
+
+
 
   //multi used variables
   currentTestPoints: number = 0;
@@ -102,10 +104,6 @@ export class QuestionsComponent implements OnInit {
     this.loadData();
   }
 
-  deleteCurrentTets() {
-    this.addedToTest = [];
-  }
-
   async loadData() {
     this.service.loading = true;
     if (this.data.getUserDataFromLocalStorage()) {
@@ -118,24 +116,6 @@ export class QuestionsComponent implements OnInit {
         this.service.loading = false;
       }, 50);
     }
-  }
-
-  // Open Add Question overlay and deletes data when before edit question was clicked
-  showAddOverlay() {
-    this.questionToEdit = null;
-    this.answerToEdit = null;
-    setTimeout(() => {
-      this.overlay = true;
-    }, 500);
-  }
-
-  // Open Add Question overlay with the data of the Question to edit it. 
-  showEditOverlay(questionData: any, answerData: any) {
-    this.questionToEdit = questionData;
-    this.answerToEdit = answerData;
-    setTimeout(() => {
-      this.overlay = true;
-    }, 500);
   }
 
   getTotalQuestionNumber() {
@@ -863,6 +843,39 @@ export class QuestionsComponent implements OnInit {
     }
   }
 
+  deleteCurrentTets() {
+    this.addedToTest = [];
+  }
+
+ /**
+  * This function is used to open the app-edit in standard and nor edit mode
+  */
+  showAddOverlay() {
+    this.questionToEdit = null;
+    this.answerToEdit = null;
+    setTimeout(() => {
+      this.overlay = true;
+    }, 500);
+  }
+
+  
+  /**
+   * This function is used to open the app-edit in editMode
+   * 
+   * @param questionData - all blocks of the question saved in firebase
+   * @param answerData - all blocks of the answer saved in firebase
+   * @param questionId - question id of firebase
+   */ 
+  showEditOverlay(questionData: any, answerData: any, questionId: string) {
+    this.questionToEdit = questionData;
+    this.answerToEdit = answerData;
+    this.questionId = questionId;
+    this.editQuestionMode = true;
+    setTimeout(() => {
+      this.overlay = true;
+    }, 500);
+  }
+
 
   openEditTestHeadComponent() {
     this.editTesthead = true;
@@ -875,10 +888,6 @@ export class QuestionsComponent implements OnInit {
   stopLoop = (time: any) => {
     return new Promise((resolve) => setTimeout(resolve, time))
   }
-
-  // closeEditTestHead() {
-  //   this.editTesthead = false;
-  // }
 
   printTest() {
     window.print();
