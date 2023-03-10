@@ -14,21 +14,11 @@ import { overlaysService } from 'src/app/services/overlays.service';
 })
 
 export class QuestionsComponent implements OnInit {
-  @ViewChild(EditComponent, { static: true }) editComp: EditComponent;
-  @ViewChild("search") searchInput: ElementRef;
-
-  //variables for the Questions list view
-  filteredQuestions = [];
 
   // Variables for the app Edit comp when edit mode
   currentQuestion: any;
   currentAnswer: any;
   currentId: string;
-
-
-  totalQuestionsNumber: number = 0;
-  deleteTestOverlay: boolean = false;
-  deleteQuestionOverlay: boolean = false;
 
   // variables for the new question window
   overlay: boolean = false;
@@ -44,7 +34,6 @@ export class QuestionsComponent implements OnInit {
   //variables for the preview window
   @ViewChild("rangeSliderForm") rangebars: NgForm;
   addedToTest = [];
-  dinA4Pages = [];
   preview = true;
   checkHeightsAndSetQuestionNumberInterval: any;
   editQuestionAtPreview = false;
@@ -62,16 +51,21 @@ export class QuestionsComponent implements OnInit {
   squareWhitspace = false;
 
   //help variables
+  totalQuestionsNumber: number = 0;
+  deleteTestOverlay: boolean = false;
+  deleteQuestionOverlay: boolean = false;
   logedIn: Boolean = false;
   sampleSolution = false;
 
   // Filter And Search variables
+  @ViewChild("search") searchInput: ElementRef;
   openFilter = false;
   search = false;
   searchactive = false;
   currentSearch = '';
 
   //Filter Variables
+  filteredQuestions = [];
   filters = []
   filteredDifficulty: any = null;
   filteredSubject: any = null
@@ -79,7 +73,6 @@ export class QuestionsComponent implements OnInit {
   filteredClass: any = null;
   selectedClassButton: number;
   filteredKind: any = null;
-
   filteredOnlyMyQuestion: any = null;
   filteredBearbeitungszeit: any = null;
   filteredPunktzahl: any = null
@@ -160,7 +153,7 @@ export class QuestionsComponent implements OnInit {
    */
   toggleAnswer(id: string) {
     if (this.currentId == id) {
-      this.currentId = '2883993553545543545353345'
+      this.currentId = '';
     } else {
       this.currentId = id;
     }
@@ -838,8 +831,10 @@ export class QuestionsComponent implements OnInit {
   * This function is used to open the app-edit in standard and nor edit mode
   */
   showAddOverlay() {
-    this.questionToEdit = null;
-    this.answerToEdit = null;
+    this.questionToEdit = {
+      frage: null,
+      antwort: null
+    };
     setTimeout(() => {
       this.overlay = true;
     }, 500);
@@ -849,14 +844,10 @@ export class QuestionsComponent implements OnInit {
   /**
    * This function is used to open the app-edit in editMode
    * 
-   * @param questionData - all blocks of the question saved in firebase
-   * @param answerData - all blocks of the answer saved in firebase
-   * @param questionId - question id of firebase
+   * @param questionData - all questionData of the question saved in firebase
    */ 
-  showEditOverlay(questionData: any, answerData: any, questionId: string) {
+  showEditOverlay(questionData: any) {
     this.questionToEdit = questionData;
-    this.answerToEdit = answerData;
-    this.questionId = questionId;
     this.editQuestionMode = true;
     setTimeout(() => {
       this.overlay = true;

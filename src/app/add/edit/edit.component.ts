@@ -12,6 +12,7 @@ import { Storage } from '@angular/fire/storage';
 import { overlaysService } from 'src/app/services/overlays.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { dataTransferService } from 'src/app/services/dataTransfer.service';
+import { analyticsInstanceFactory } from '@angular/fire/analytics/analytics.module';
 
 @Component({
   selector: 'app-edit',
@@ -25,28 +26,23 @@ export class EditComponent implements OnInit, AfterViewInit {
   loadedQuestions = [];
   loaded: Boolean = false;
   loading: Boolean = false;
+  currentId: string;
+
+  @ViewChild('questionForm') form: NgForm;
   currentQuestion: any;
   currentAnswer: any;
-  currentId: string;
-  @ViewChild('questionForm') form: NgForm;
-  @Output() closeAddQuestionOverlay = new EventEmitter<boolean>();
-  selectedSubjectButton: number;
-  selectedClassButton: number;
-  currentSubjectChoice: string;
-  currentClassChoice: string;
-  currentDifficulty: any;
+  selectedClassButton: string;
+  selectedSubjectButton: string;
+  selectedDifficulty: any;
   currentKindOfQuestion: any;
-  newSubject: Boolean = false;
-  newClass: Boolean = false;
   multipleChoiceEditor: Boolean = false;
 
   selectedKind = 'standard';
 
 
   @Input() editQuestion: any;
-  @Input() editAnswer: any;
-  @Input() questionId: string;
   @Input() editMode: Boolean;
+  @Output() closeAddQuestionOverlay = new EventEmitter<boolean>();
 
   // EditorJS
   @ViewChild('questionEditor', { read: ElementRef, static: true })
@@ -65,6 +61,7 @@ export class EditComponent implements OnInit, AfterViewInit {
 
   Checklist = require('@editorjs/checklist');
   Marker = require('@editorjs/marker');
+
   constructor(private firestore: Firestore, public alertService: AlertService, public data: dataTransferService) { }
 
   ngOnInit(): void {
@@ -76,14 +73,8 @@ export class EditComponent implements OnInit, AfterViewInit {
     await this.loadDataFromLocalStorage();
     await this.data.loadSubUserData();
     setTimeout(() => {
-      console.log(this.data.currentUserData);
-      console.log('Question to Edit', this.editQuestion)
       this.loaded = true;
     }, 100);
-
-    // setTimeout(() => {
-    //   this.questionEditor.render(this.editQuestion);
-    // }, 1000);
   }
 
   async loadDataFromLocalStorage() {
@@ -107,27 +98,26 @@ export class EditComponent implements OnInit, AfterViewInit {
 
   }
 
-  closeEditComponent() {
+  async closeEditComponent() {
+    await this.clearForm();
     this.closeAddQuestionOverlay.emit();
     window.scrollTo(0, 0);
-    this.clearForm();
-    this.currentDifficulty = '';
   }
 
   validData() {
-    if (!this.currentSubjectChoice) {
+    if (!this.selectedSubjectButton) {
       this.alertService.alert = true;
       let alert = document.getElementById('alert');
       alert.innerHTML = this.alertService.showAlert('Bitte ein Fach wählen');
       return false
     }
-    if (!this.currentClassChoice) {
+    if (!this.selectedClassButton) {
       this.alertService.alert = true;
       let alert = document.getElementById('alert');
       alert.innerHTML = this.alertService.showAlert('Bitte eine Klasse wählen');
       return false
     }
-    if (!this.currentDifficulty) {
+    if (!this.selectedDifficulty) {
       this.alertService.alert = true;
       let alert = document.getElementById('alert');
       alert.innerHTML = this.alertService.showAlert('Bitte eine Schwierigkeit wählen');
@@ -155,29 +145,30 @@ export class EditComponent implements OnInit, AfterViewInit {
     this.multipleChoiceEditor = !this.multipleChoiceEditor;
   }
 
-  //Multiple Choice
-  initializeMultipleChoiceEditor(): void {
-    this.multiChoiceEditor = new EditorJS({
-      minHeight: 100,
-      holder: this.multiChoiceEditorElement.nativeElement,
-      tools: {
-        underline: Underline,
-        checklist: {
-          class: this.Checklist,
-          inlineToolbar: true,
-        }
-      }
-    });
+  initializeMultipleChoiceEditor() {
+    if (this.editMode && this.editQuestion.kindOf === 'multipleChoice') {
+      this.multiChoiceEditor = this.initMultipleChoiceEditor(this.multiChoiceEditorElement.nativeElement, this.editQuestion.frage);
+    } else {
+      this.multiChoiceEditor = this.initMultipleChoiceEditor(this.multiChoiceEditorElement.nativeElement, null);
+    }
   }
 
   //Standard Questions Editor
   initializeQuestionEditor(): void {
-    this.questionEditor = this.initializeEditor(this.questionEditorElement.nativeElement, this.editQuestion);
+    if (this.editMode && this.editQuestion.kindOf === 'standard') {
+      this.questionEditor = this.initializeEditor(this.questionEditorElement.nativeElement, this.editQuestion.frage);
+    } else {
+      this.questionEditor = this.initializeEditor(this.questionEditorElement.nativeElement, null);
+    }
   }
 
   //Standard Answer Editor
   initializeAnswerEditor(): void {
-    this.answerEditor = this.initializeEditor(this.answerEditorElement.nativeElement, this.editAnswer);
+    if (this.editMode && this.editQuestion.kindOf === 'standard') {
+    this.answerEditor = this.initializeEditor(this.answerEditorElement.nativeElement, this.editQuestion.antwort);
+    } else {
+      this.answerEditor = this.initializeEditor(this.answerEditorElement.nativeElement, null);
+    }
   }
 
 
@@ -185,11 +176,26 @@ export class EditComponent implements OnInit, AfterViewInit {
    * This function is used to set the form of the rangebars in the add question overlay to given values
    */
   setForm() {
-    this.form.setValue({
-      punktzahl: '10',
-      keywords: '',
-      bearbeitungszeit: '7',
-    });
+    if (this.editMode) {
+      this.form.setValue({
+        punktzahl: this.editQuestion.punktzahl,
+        keywords: this.editQuestion.keywords.toString(),
+        bearbeitungszeit: this.editQuestion.bearbeitungszeit,
+      });
+      this.selectedSubjectButton = this.editQuestion.fach;
+      this.selectedClassButton = this.editQuestion.klasse;
+      this.selectedDifficulty = this.editQuestion.schwierigkeit;
+      if (this.editQuestion.kindOf === 'multipleChoice') {
+        this.selectedKind = 'multipleChoice';
+        this.multipleChoiceEditor = true;
+      }
+    } else {
+      this.form.setValue({
+        punktzahl: '10',
+        keywords: '',
+        bearbeitungszeit: '7',
+      });
+    }
   }
 
   /**
@@ -197,53 +203,15 @@ export class EditComponent implements OnInit, AfterViewInit {
   * @param subjectChoice This function is used to activate the clicked button
   * @param index : number of the clicked button
   */
-  choiceSubject(subjectChoice: any, index: number) {
-    this.currentSubjectChoice = subjectChoice;
-    this.selectedSubjectButton = index;
+  choiceSubject(subjectChoice: any) {
+    this.selectedSubjectButton = subjectChoice;
     if (this.alertService.alert) {
       this.alertService.alert = false;
     }
   }
 
-  /**
-  * This function is used to show the input field to set a new subject
-  */
-  showInputForNewSubject(type: string) {
-    if (type == 'subject') {
-      this.newSubject = true;
-    } else {
-      this.newClass = true;
-    }
-  }
-
   selectKind(selection: string) {
     this.selectedKind = selection;
-  }
-
-  /**
-   * This function is used to get the value of the new subject input field and push it to the array
-   * @param value : string of inputfield
-   */
-  addNewSubject(value: string) {
-    if (!this.loadedUserdata[0]['subjects'].includes(value)) {
-      this.loadedUserdata[0]['subjects'].push(value);
-    }
-    document.getElementById('subjectInput').innerHTML = '';
-    this.newSubject = false;
-    this.updateUserSubjectsAndClasses();
-  }
-
-  /**
-  * This function is used to get the value of the new class input field and push it to the array
-  * @param value : string of inputfield
-  */
-  addNewClass(value: string) {
-    if (!this.loadedUserdata[0]['classes'].includes(value)) {
-      this.loadedUserdata[0]['classes'].push(value);
-    }
-    document.getElementById('classInput').innerHTML = '';
-    this.newClass = false;
-    this.updateUserSubjectsAndClasses();
   }
 
   /**
@@ -262,9 +230,8 @@ export class EditComponent implements OnInit, AfterViewInit {
   * @param subjectChoice This function is used to activate the clicked button
   * @param index : number of the clicked button
   */
-  choiceClass(classChoice: any, index: number) {
-    this.currentClassChoice = classChoice;
-    this.selectedClassButton = index;
+  choiceClass(classChoice: any) {
+    this.selectedClassButton = classChoice;
     if (this.alertService.alert) {
       this.alertService.alert = false;
     }
@@ -273,20 +240,22 @@ export class EditComponent implements OnInit, AfterViewInit {
   /**
   * This function is used to set the form of the rangebars in the add question overlay to default
   */
-  clearForm() {
+  async clearForm() {
     this.form.setValue({
       punktzahl: '10',
       keywords: '',
       bearbeitungszeit: '7',
     })
-    this.selectedSubjectButton = -1;
-    this.selectedClassButton = -1;
+    this.selectedSubjectButton = '';
+    this.selectedClassButton = '';
     this.selectedKind = 'standard';
-    this.currentDifficulty = '';
+    this.selectedDifficulty = '';
+    this.multipleChoiceEditor = false;
+    this.editMode = false;
   }
 
   selectDifficulty(difficulty: string) {
-    this.currentDifficulty = difficulty;
+    this.selectedDifficulty = difficulty;
     if (this.alertService.alert) {
       this.alertService.alert = false;
     }
@@ -300,11 +269,11 @@ export class EditComponent implements OnInit, AfterViewInit {
         this.loading = true;
         const coll: any = collection(this.firestore, 'users', this.data.currentSchool, 'fragen');
         setDoc(doc(coll), {
-          fach: this.currentSubjectChoice,
+          fach: this.selectedSubjectButton,
           frage: this.currentQuestion,
           antwort: this.currentAnswer,
-          schwierigkeit: this.currentDifficulty,
-          klasse: this.currentClassChoice,
+          schwierigkeit: this.selectedDifficulty,
+          klasse: this.selectedClassButton,
           punktzahl: Number(questionFormData.punktzahl),
           bearbeitungszeit: Number(questionFormData.bearbeitungszeit),
           kindOf: this.selectedKind,
@@ -314,6 +283,7 @@ export class EditComponent implements OnInit, AfterViewInit {
           creationDate: Date.now(),
           lastEditDate: ''
         }).then(() => {
+          this.clearForm();
           this.loading = false;
           this.closeEditComponent();
           this.multiChoiceEditor.clear();
@@ -335,19 +305,20 @@ export class EditComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       if (this.validData()) {
         this.loading = true;
-        const coll: any = doc(this.firestore, 'users', this.data.currentSchool, 'fragen' , this.questionId);
+        const coll: any = doc(this.firestore, 'users', this.data.currentSchool, 'fragen', this.editQuestion.id);
         updateDoc(coll, {
-          fach: this.currentSubjectChoice,
+          fach: this.selectedSubjectButton,
           frage: this.currentQuestion,
           antwort: this.currentAnswer,
-          schwierigkeit: this.currentDifficulty,
-          klasse: this.currentClassChoice,
+          schwierigkeit: this.selectedDifficulty,
+          klasse: this.selectedClassButton,
           punktzahl: Number(questionFormData.punktzahl),
           bearbeitungszeit: Number(questionFormData.bearbeitungszeit),
           kindOf: this.selectedKind,
           keywords: questionFormData.keywords.split(','),
           lastEditDate: Date.now()
         }).then(() => {
+          this.clearForm();
           this.loading = false;
           this.closeEditComponent();
           this.multiChoiceEditor.clear();
@@ -371,24 +342,12 @@ export class EditComponent implements OnInit, AfterViewInit {
       //     this.loading = false;
       //     this.closeEditComponent();
       //   })
-       
+
       // }
 
     }, 700);
   }
 
-  //Das muss noch gemacht werden!!!!!!!!! Edit function
-  updateData(id: string) {
-    this.currentId = id;
-    this.editMode = true;
-    let currentQuestion = this.loadedQuestions.find((question) => { return question.id === id });
-
-    this.form.setValue({
-      bearbeitungszeit: `${currentQuestion.bearbeitungszeit}`,
-      punktzahl: `${currentQuestion.punktzahl}`,
-      keywords: currentQuestion.keywords.join(', ')
-    });
-  }
 
   /**
    * As firebase cant save nested arrays
@@ -404,13 +363,13 @@ export class EditComponent implements OnInit, AfterViewInit {
         console.log('Das ist Multi Chopice', this.currentQuestion, this.currentAnswer);
       }, 500);
     }
-    
+
     if (!this.multipleChoiceEditor) {
       console.log('VOR TRANSFORM', this.questionEditor.save());
       this.questionEditor.save().then(data => {
-       
+
         this.currentQuestion = data;
-       
+
         for (let i = 0; i < data.blocks.length; i++) { //If a table was in use of the editor nested array cannot saved in firestore
           if (data.blocks[i].data.content) {
             this.currentQuestion['blocks'][i]['data']['table'] = {};
@@ -517,6 +476,22 @@ export class EditComponent implements OnInit, AfterViewInit {
             }
           }
         },
+      }
+    });
+  }
+
+   //Multiple Choice
+   initMultipleChoiceEditor(htmlElement: any, editData: any) {
+    return new EditorJS({
+      minHeight: 100,
+      holder: htmlElement,
+      data: editData,
+      tools: {
+        underline: Underline,
+        checklist: {
+          class: this.Checklist,
+          inlineToolbar: true,
+        }
       }
     });
   }

@@ -7,14 +7,14 @@
         <div class="subject_wrapper d_flex_column">
             <div class="d_flex_column section">
                 <h2 id="choice_Subject">Für welches Schulfach soll die Aufgabe angelegt werden?</h2>
-                <div (click)="setForm()" class="subject_btn_wrapper d_flex" *ngIf="loaded">
+                <div class="subject_btn_wrapper d_flex" *ngIf="loaded">
                     <div *ngIf="data.currentUserData.subjects == 0" class="d_flex_column">
                         <p >{{ 'Es wurde noch kein Fach ausgewählt!' }}</p>
                         <button routerLink="/account" class="subject_btn">Schulfach auswählen</button>
                     </div>
                     <div *ngFor="let button of data.currentUserData.subjects; let i = index">
-                        <button class="subject_btn" [class.selectedButton]="i == selectedSubjectButton"
-                            (click)="choiceSubject(button, i)">{{ button }}</button>
+                        <button class="subject_btn" [class.selectedButton]="button == selectedSubjectButton"
+                            (click)="choiceSubject(button)">{{ button }}</button>
                     </div>
                 </div>
             </div>
@@ -30,26 +30,11 @@
                         <button routerLink="/account" class="subject_btn">Klasse auswählen</button>
                     </div>
                     <div *ngFor="let button of data.currentUserData.classes; let i = index">
-                        <button class="subject_btn" [class.selectedButton]="i == selectedClassButton"
-                            (click)="choiceClass(button, i)">{{ button }}</button>
+                        <button class="subject_btn" [class.selectedButton]="button == selectedClassButton"
+                            (click)="choiceClass(button)">{{ button }}</button>
                     </div>
                 </div>
-                <!-- <div class="addNew_container">
-                    <button *ngIf="!newClass" class="subject_btn addNew_btn" (click)="showInputForNewSubject('class')">
-                        + Neue Klasse anlegen
-                    </button>
-                    <div *ngIf="newClass" class="d_flex">
-                        <form class="d_flex_column" action="">
-                            <input class="inputfield" id="classInput" #classInput type="text" value=""
-                                placeholder="Name Klasse">
-                            <div class="d_flex">
-                                <button class="subject_btn cancel_btn" (click)="newClass = false">Abbrechen</button>
-                                <button class="subject_btn addNew_btn" (click)="addNewClass(classInput.value)">Klasse
-                                    anlegen</button>
-                            </div>
-                        </form>
-                    </div>
-                </div> -->
+                
                 <div class="section_separator margin_top_bottom"></div>
               
                 <div class="d_flex subject_btn_wrapper"> 
@@ -104,17 +89,17 @@
                 <div class="d_flex subject_btn_wrapper">
                     <div>
                         <button class="subject_btn"
-                            [class.selectedButton_leicht]="currentDifficulty == 'Leicht'"
+                            [class.selectedButton_leicht]="selectedDifficulty == 'Leicht'"
                             (click)="selectDifficulty('Leicht')">Leicht</button>
                     </div>
                     <div>
                         <button class="subject_btn"
-                            [class.selectedButton_mittel]="currentDifficulty == 'Mittel'"
+                            [class.selectedButton_mittel]="selectedDifficulty == 'Mittel'"
                             (click)="selectDifficulty('Mittel')">Mittel</button>
                     </div>
                     <div>
                         <button class="subject_btn"
-                            [class.selectedButton_schwer]="currentDifficulty == 'Schwer'"
+                            [class.selectedButton_schwer]="selectedDifficulty == 'Schwer'"
                             (click)="selectDifficulty('Schwer')">Schwer</button>
                     </div>
                 </div>

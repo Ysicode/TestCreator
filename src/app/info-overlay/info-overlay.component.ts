@@ -22,6 +22,8 @@ export class InfoOverlayComponent implements OnInit {
   @Input() questionID: string;
   @Input() deleteQuestionOverlay: boolean;
   @Input() newTestOverlay: boolean;
+
+  
   @Input() deleteSubuserOverlay: Boolean;
   @Input() deleteSubuserId: string;
 

@@ -1,7 +1,7 @@
 <!-- Header Component-->
 <app-header *ngIf="logedIn"></app-header>
 <!-- Edit Component -->
-<app-edit class="add_question_overlay" *ngIf="overlay" (closeAddQuestionOverlay)="overlay = false" [editQuestion]="questionToEdit" [editAnswer]="answerToEdit" [questionId]="questionId" [editMode]="editQuestionMode"></app-edit>
+<app-edit class="add_question_overlay" *ngIf="overlay" (closeAddQuestionOverlay)="overlay = false; editQuestionMode = false;" [editQuestion]="questionToEdit" [editMode]="editQuestionMode"></app-edit>
 
 <app-spinner *ngIf="service.loading"></app-spinner>
 
@@ -211,11 +211,11 @@
                             </div>
                             <!-- *ngIf="data.currentUserData.id == question.questioncreator.id" -->
                             <div *ngIf="data.currentUserID == questionData.creatorId" class="question_edit_btn_wrapper">
-                                <button class="question_edit_btn" (click)="showEditOverlay(questionData['frage'], questionData['antwort'], questionData.id); service.windowScrollTop();">Edit</button>
-                                <button class="question_edit_btn" (click)="deleteQuestionOverlay = true">Delete</button>
+                                <button class="question_edit_btn" (click)="showEditOverlay(questionData); service.windowScrollTop();">Edit</button>
+                                <button class="question_edit_btn" (click)="deleteQuestionOverlay = true;">Delete</button>
                             </div>
 
-                            <app-info-overlay *ngIf="deleteQuestionOverlay" (closeQuestionDeleteOverlay)="deleteQuestionOverlay = false"
+                            <app-info-overlay *ngIf="deleteQuestionOverlay" (closeQuestionDeleteOverlay)="deleteQuestionOverlay = false; currentId = ''"
                                 [questionID]="questionData.id" [deleteQuestionOverlay]="true">
                             </app-info-overlay>
                         </div>
