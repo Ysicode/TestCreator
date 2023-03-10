@@ -18,19 +18,17 @@ export class QuestionsComponent implements OnInit {
   @ViewChild("search") searchInput: ElementRef;
 
   //variables for the Questions list view
-  // dataFromFirestore$: Observable<any>;
-  // testHeadFromFirestore$: Observable<any>;
   filteredQuestions = [];
-  loaded = false;
 
+  // Variables for the app Edit comp when edit mode
   currentQuestion: any;
   currentAnswer: any;
   currentId: string;
-  public totalQuestionsNumber: number = 0;
-  public deleteTestOverlay: boolean = false;
-  public deleteQuestionOverlay: boolean = false;
 
 
+  totalQuestionsNumber: number = 0;
+  deleteTestOverlay: boolean = false;
+  deleteQuestionOverlay: boolean = false;
 
   // variables for the new question window
   overlay: boolean = false;
@@ -38,8 +36,6 @@ export class QuestionsComponent implements OnInit {
   answerToEdit: any;
   questionId: string;
   editQuestionMode: Boolean = false;
-
-
 
   //multi used variables
   currentTestPoints: number = 0;
@@ -66,13 +62,7 @@ export class QuestionsComponent implements OnInit {
   squareWhitspace = false;
 
   //help variables
-  // @ViewChild('email') emailInput: ElementRef;
-  // wrongEmailAdress: boolean = false;
-  // @ViewChild('password') passwordInput: ElementRef;
-  // wrongPassword: boolean = false;
-  // schoolFound: boolean = false;
   logedIn: Boolean = false;
-  file: any;
   sampleSolution = false;
 
   // Filter And Search variables
@@ -81,10 +71,7 @@ export class QuestionsComponent implements OnInit {
   searchactive = false;
   currentSearch = '';
 
-
-
   //Filter Variables
-
   filters = []
   filteredDifficulty: any = null;
   filteredSubject: any = null
