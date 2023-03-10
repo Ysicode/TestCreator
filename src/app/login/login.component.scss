@@ -47,6 +47,15 @@
         border-radius: 50px;
     }
 
+    .school {
+        background-color: white;
+        padding: 10px;
+        .school_adress {
+            font-size: 13px;
+            margin: 5px;
+        }
+    }
+
     .enabled {
         opacity: 1 !important;
     }

@@ -11,6 +11,7 @@ import { dataTransferService } from '../services/dataTransfer.service';
 })
 export class LoginComponent implements OnInit {
 
+  @ViewChild('school') schoolInput: ElementRef;
   @ViewChild('email') emailInput: ElementRef;
   @ViewChild('password') passwordInput: ElementRef;
   @ViewChild('loginBtn') loginBtn: ElementRef;
@@ -20,6 +21,7 @@ export class LoginComponent implements OnInit {
   allInputsFilled: boolean = false;
   logedIn: Boolean = false;
   loading: Boolean = false;
+  loadedSchoolFromLocalStorage: any = null;
 
   constructor(public data: dataTransferService, private router: Router, public alertService: AlertService) { }
 
@@ -30,6 +32,15 @@ export class LoginComponent implements OnInit {
   checkIfUserDataAlreadyInLocalStorage() {
     if (this.data.getUserDataFromLocalStorage()) {
       this.router.navigate(['dashboard']);
+    } else {
+      const data = localStorage.getItem('school')
+      if (data) {
+        this.loadedSchoolFromLocalStorage = JSON.parse(data);
+        setTimeout(() => {
+          this.schoolInput.nativeElement.value = this.loadedSchoolFromLocalStorage.school;
+          this.checkIfSchoolExists(this.loadedSchoolFromLocalStorage.school)
+        }, 200);
+      }   
     }
   }
 
@@ -72,7 +83,7 @@ export class LoginComponent implements OnInit {
 
   removeAlertInformation() {
     if (this.alertService.alert) {
-      this.alertService.alert = false; 
+      this.alertService.alert = false;
     }
   }
 

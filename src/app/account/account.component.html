@@ -150,7 +150,7 @@
                         </div>
                     </div>
                 </ng-container>
-                <button (click)="addUser = true" class="add_new_btn subject_btn">Profil anlegen</button>
+                <button *ngIf="data.currentUserData.usertype === 'admin'" (click)="addUser = true" class="add_new_btn subject_btn">Profil anlegen</button>
             </div>
         </div>
         <div class="section_separator"></div>

@@ -38,9 +38,8 @@ export class dataTransferService {
         if (docSnap.exists()) {
             console.log("Document data:", docSnap.data(), 'ID', docSnap.id);
             this.currentSchool = docSnap.id;
-            this.currentSchoolType = docSnap.data()['schoolType'];
             localStorage.setItem('school', JSON.stringify({
-                schoolType: this.currentSchoolType,
+              school: this.currentSchool
             }));
             return true;
         } else {
@@ -83,6 +82,7 @@ export class dataTransferService {
             expiration
         }));
     }
+
     // gets userData from local storage
     getUserDataFromLocalStorage() {
         const data = localStorage.getItem('session');
