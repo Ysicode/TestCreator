@@ -1,18 +1,15 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { collection, collectionData, doc, Firestore, setDoc, updateDoc } from '@angular/fire/firestore';
+import { collection, doc, Firestore, setDoc, updateDoc } from '@angular/fire/firestore';
 import { NgForm } from '@angular/forms';
 import EditorJS from '@editorjs/editorjs';
-import { Observable } from 'rxjs';
 import Underline from '@editorjs/underline';
 import List from '@editorjs/list';
 import ImageTool from '@editorjs/image';
-import Table from '@editorjs/table';
+import Table from '@editorjs/table' ;
 import { getDownloadURL, getStorage, ref, uploadBytes } from '@angular/fire/storage';
-import { Storage } from '@angular/fire/storage';
 import { overlaysService } from 'src/app/services/overlays.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { dataTransferService } from 'src/app/services/dataTransfer.service';
-import { analyticsInstanceFactory } from '@angular/fire/analytics/analytics.module';
 
 @Component({
   selector: 'app-edit',
@@ -21,12 +18,9 @@ import { analyticsInstanceFactory } from '@angular/fire/analytics/analytics.modu
   providers: [overlaysService, AlertService, dataTransferService],
 })
 export class EditComponent implements OnInit, AfterViewInit {
-  dataFromFirestore$: Observable<any>;
-  loadedUserdata = [];
-  loadedQuestions = [];
+ 
   loaded: Boolean = false;
   loading: Boolean = false;
-  currentId: string;
 
   @ViewChild('questionForm') form: NgForm;
   currentQuestion: any;
@@ -36,9 +30,7 @@ export class EditComponent implements OnInit, AfterViewInit {
   selectedDifficulty: any;
   currentKindOfQuestion: any;
   multipleChoiceEditor: Boolean = false;
-
   selectedKind = 'standard';
-
 
   @Input() editQuestion: any;
   @Input() editMode: Boolean;
@@ -56,8 +48,6 @@ export class EditComponent implements OnInit, AfterViewInit {
   @ViewChild('multiChoiceEditor', { read: ElementRef, static: true })
   multiChoiceEditorElement: ElementRef;
   multiChoiceEditor: EditorJS;
-
-  questionToEdit: any;
 
   Checklist = require('@editorjs/checklist');
   Marker = require('@editorjs/marker');
@@ -85,7 +75,7 @@ export class EditComponent implements OnInit, AfterViewInit {
 
     this.data.currentSchool = school;
     this.data.currentUserID = sessionId;
-    this.data.currentSchoolType = schoolType;
+    this.data.currentSchoolType = schoolType;  
   }
 
   ngAfterViewInit(): void {
@@ -215,17 +205,6 @@ export class EditComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * This function is used to update firestore with the new data from an input field
-   */
-  updateUserSubjectsAndClasses() {
-    const coll: any = doc(this.firestore, '/users/JonasWeiss/subjects/' + this.loadedUserdata[0]['id']);
-    updateDoc(coll, {
-      classes: this.loadedUserdata[0]['classes'],
-      subjects: this.loadedUserdata[0]['subjects']
-    })
-  }
-
-  /**
   * 
   * @param subjectChoice This function is used to activate the clicked button
   * @param index : number of the clicked button
@@ -262,7 +241,6 @@ export class EditComponent implements OnInit, AfterViewInit {
   }
 
   async addQuestion(questionFormData: any) {
-    console.log('add')
     await this.saveEditorData();
     setTimeout(() => {
       if (this.validData()) {
@@ -295,12 +273,9 @@ export class EditComponent implements OnInit, AfterViewInit {
         })
       }
     }, 700);
-
-    console.log(this.currentQuestion)
   }
 
   async updateQuestion(questionFormData: any) {
-    console.log('Edit')
     await this.saveEditorData();
     setTimeout(() => {
       if (this.validData()) {
@@ -329,22 +304,6 @@ export class EditComponent implements OnInit, AfterViewInit {
           this.editMode = false;
         })
       }
-      // else {
-      //   const coll: any = doc(this.firestore, 'users', this.data.currentSchool, 'fragen' , this.currentId);
-      //   updateDoc(coll, {
-      //     fach: this.currentSubjectChoice,
-      //     frage: { frage: questionFormData.frage, antwort: questionFormData.antwort },
-      //     klasse: this.currentClassChoice,
-      //     punktzahl: Number(questionFormData.punktzahl),
-      //     bearbeitungszeit: Number(questionFormData.bearbeitungszeit),
-      //     keywords: questionFormData.keywords.split(',')
-      //   }).then(() => {
-      //     this.loading = false;
-      //     this.closeEditComponent();
-      //   })
-
-      // }
-
     }, 700);
   }
 
@@ -404,21 +363,6 @@ export class EditComponent implements OnInit, AfterViewInit {
       //   console.log('Das ist die Antwort', this.currentAnswer);
       // }, 500);
     }
-  }
-
-
-  /**
-  * this function is used to load all subject and classes from firebase
-  * and store it in a local object (loadedUserData)
-  */
-  async loadSubjectsAndClasses() {
-    //gets UserData like classes and subjects and email adress and username
-    const subject: any = collection(this.firestore, '/users/JonasWeiss/subjects');
-    this.dataFromFirestore$ = collectionData(subject, { idField: 'id' });
-    this.dataFromFirestore$.subscribe((data) => {
-      this.loadedUserdata = data;
-      this.loaded = true;
-    });
   }
 
   /**

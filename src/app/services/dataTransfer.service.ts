@@ -36,10 +36,12 @@ export class dataTransferService {
         const docRef = doc(this.firestore, "users", schoolId);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-            console.log("Document data:", docSnap.data(), 'ID', docSnap.id);
+            // console.log("Document data:", docSnap.data(), 'ID', docSnap.id);
             this.currentSchool = docSnap.id;
+            this.currentSchoolType = docSnap.data()['schoolType'];
             localStorage.setItem('school', JSON.stringify({
-              school: this.currentSchool
+              school: this.currentSchool,
+              schoolType: this.currentSchoolType
             }));
             return true;
         } else {
