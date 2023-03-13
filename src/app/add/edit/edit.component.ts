@@ -59,6 +59,19 @@ export class EditComponent implements OnInit, AfterViewInit {
     window.scrollTo(0, 0);
   }
 
+  ngAfterViewInit(): void {
+    this.initializeQuestionEditor();
+    this.initializeAnswerEditor();
+    this.initializeMultipleChoiceEditor();
+    setTimeout(() => {
+      this.setForm();
+    }, 700);
+  }
+
+  /**
+   * This function is used to call functions loading Data
+   * dataTransferService function is used to load subuserdata like subjects and classes
+   */
   async loadData() {
     await this.loadDataFromLocalStorage();
     await this.data.loadSubUserData();
@@ -67,6 +80,9 @@ export class EditComponent implements OnInit, AfterViewInit {
     }, 100);
   }
 
+  /**
+   * This function is used to load current user- and schoolData from local storage
+   */
   async loadDataFromLocalStorage() {
     const sessionData = localStorage.getItem('session');
     const schoolData = localStorage.getItem('school');
@@ -78,22 +94,20 @@ export class EditComponent implements OnInit, AfterViewInit {
     this.data.currentSchoolType = schoolType;  
   }
 
-  ngAfterViewInit(): void {
-    this.initializeQuestionEditor();
-    this.initializeAnswerEditor();
-    this.initializeMultipleChoiceEditor();
-    setTimeout(() => {
-      this.setForm();
-    }, 700);
-
-  }
-
+  /**
+   * This fucntion is used to close the edit component
+   */
   async closeEditComponent() {
     await this.clearForm();
     this.closeAddQuestionOverlay.emit();
     window.scrollTo(0, 0);
   }
 
+  /**
+   * This function is used to show alert with AlertService function when invalid form data is provided on submit
+   * 
+   * @returns - false if invalid form data
+   */
   validData() {
     if (!this.selectedSubjectButton) {
       this.alertService.alert = true;
@@ -131,10 +145,16 @@ export class EditComponent implements OnInit, AfterViewInit {
 
   }
 
+  /**
+   * This function is used to toggle between the Editors (question, answer) and multiple choice Editor 
+   */
   toggleMultipleChoiceEditor() {
     this.multipleChoiceEditor = !this.multipleChoiceEditor;
   }
 
+  /**
+   * This function is used to initialize the Editor for a multiple choice question
+   */
   initializeMultipleChoiceEditor() {
     if (this.editMode && this.editQuestion.kindOf === 'multipleChoice') {
       this.multiChoiceEditor = this.initMultipleChoiceEditor(this.multiChoiceEditorElement.nativeElement, this.editQuestion.frage);
@@ -143,7 +163,9 @@ export class EditComponent implements OnInit, AfterViewInit {
     }
   }
 
-  //Standard Questions Editor
+  /**
+   * This function is used to initialize the Editor for a question
+   */
   initializeQuestionEditor(): void {
     if (this.editMode && this.editQuestion.kindOf === 'standard') {
       this.questionEditor = this.initializeEditor(this.questionEditorElement.nativeElement, this.editQuestion.frage);
@@ -152,7 +174,9 @@ export class EditComponent implements OnInit, AfterViewInit {
     }
   }
 
-  //Standard Answer Editor
+  /**
+   * This functio is used to initialize the Editor for an answer
+   */
   initializeAnswerEditor(): void {
     if (this.editMode && this.editQuestion.kindOf === 'standard') {
     this.answerEditor = this.initializeEditor(this.answerEditorElement.nativeElement, this.editQuestion.antwort);
@@ -163,7 +187,8 @@ export class EditComponent implements OnInit, AfterViewInit {
 
 
   /**
-   * This function is used to set the form of the rangebars in the add question overlay to given values
+   * This function is used to set the values of rangebars (punktzahl & bearbeitungszeit) and keywords
+   * On Edit mode subject, class, difficulty and editor will be set as well
    */
   setForm() {
     if (this.editMode) {
@@ -189,9 +214,9 @@ export class EditComponent implements OnInit, AfterViewInit {
   }
 
   /**
+  * This function is used to activate the selected subject button
   * 
-  * @param subjectChoice This function is used to activate the clicked button
-  * @param index : number of the clicked button
+  * @param subjectChoice - subject selection
   */
   choiceSubject(subjectChoice: any) {
     this.selectedSubjectButton = subjectChoice;
@@ -200,14 +225,10 @@ export class EditComponent implements OnInit, AfterViewInit {
     }
   }
 
-  selectKind(selection: string) {
-    this.selectedKind = selection;
-  }
-
   /**
+  * This function is used to activate the selected class button
   * 
-  * @param subjectChoice This function is used to activate the clicked button
-  * @param index : number of the clicked button
+  * @param subjectChoice - class selection
   */
   choiceClass(classChoice: any) {
     this.selectedClassButton = classChoice;
@@ -217,7 +238,16 @@ export class EditComponent implements OnInit, AfterViewInit {
   }
 
   /**
-  * This function is used to set the form of the rangebars in the add question overlay to default
+ * This function is used to activate the selected kind of question Editor
+ * 
+ * @param selection - standard or multiple choice
+ */
+   selectKind(selection: string) {
+    this.selectedKind = selection;
+  }
+
+  /**
+  * This function is used to clear all forms and selctions when the edit component closed
   */
   async clearForm() {
     this.form.setValue({
@@ -233,6 +263,11 @@ export class EditComponent implements OnInit, AfterViewInit {
     this.editMode = false;
   }
 
+  /**
+   * Thjis function is used to activate the selceted difficulty button
+   * 
+   * @param difficulty - difficulty selection
+   */
   selectDifficulty(difficulty: string) {
     this.selectedDifficulty = difficulty;
     if (this.alertService.alert) {
@@ -366,8 +401,10 @@ export class EditComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * This function is used to initialize the editors for create a question and an answer
-   * @param htmlElement - This parameter is used to set the holder of the editor 
+   * This function is used to initialize the Editors (question, answer)
+   * 
+   * @param htmlElement - This parameter is used to set the holder of the Editor 
+   * @param editData - This parameter is the data should be displayed in the Editor when initialize. On Editmode the data of the question will be displayed
    * @returns the Editor with all configs
    */
   initializeEditor(htmlElement: any, editData: any) {
