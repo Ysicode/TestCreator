@@ -5,7 +5,7 @@ import EditorJS from '@editorjs/editorjs';
 import Underline from '@editorjs/underline';
 import List from '@editorjs/list';
 import ImageTool from '@editorjs/image';
-import Table from '@editorjs/table' ;
+import Table from '@editorjs/table';
 import { getDownloadURL, getStorage, ref, uploadBytes } from '@angular/fire/storage';
 import { overlaysService } from 'src/app/services/overlays.service';
 import { AlertService } from 'src/app/services/alert.service';
@@ -18,7 +18,7 @@ import { dataTransferService } from 'src/app/services/dataTransfer.service';
   providers: [overlaysService, AlertService, dataTransferService],
 })
 export class EditComponent implements OnInit, AfterViewInit {
- 
+
   loaded: Boolean = false;
   loading: Boolean = false;
 
@@ -91,7 +91,7 @@ export class EditComponent implements OnInit, AfterViewInit {
 
     this.data.currentSchool = school;
     this.data.currentUserID = sessionId;
-    this.data.currentSchoolType = schoolType;  
+    this.data.currentSchoolType = schoolType;
   }
 
   /**
@@ -166,8 +166,9 @@ export class EditComponent implements OnInit, AfterViewInit {
   /**
    * This function is used to initialize the Editor for a question
    */
-  initializeQuestionEditor(): void {
+  async initializeQuestionEditor() {
     if (this.editMode && this.editQuestion.kindOf === 'standard') {
+      await this.reTransformQuestionToEditorFormat();
       this.questionEditor = this.initializeEditor(this.questionEditorElement.nativeElement, this.editQuestion.frage);
     } else {
       this.questionEditor = this.initializeEditor(this.questionEditorElement.nativeElement, null);
@@ -177,9 +178,10 @@ export class EditComponent implements OnInit, AfterViewInit {
   /**
    * This functio is used to initialize the Editor for an answer
    */
-  initializeAnswerEditor(): void {
+  async initializeAnswerEditor() {
     if (this.editMode && this.editQuestion.kindOf === 'standard') {
-    this.answerEditor = this.initializeEditor(this.answerEditorElement.nativeElement, this.editQuestion.antwort);
+      await this.reTransformAnswerToEditorFormat();
+      this.answerEditor = this.initializeEditor(this.answerEditorElement.nativeElement, this.editQuestion.antwort);
     } else {
       this.answerEditor = this.initializeEditor(this.answerEditorElement.nativeElement, null);
     }
@@ -190,7 +192,7 @@ export class EditComponent implements OnInit, AfterViewInit {
    * This function is used to set the values of rangebars (punktzahl & bearbeitungszeit) and keywords
    * On Edit mode subject, class, difficulty and editor will be set as well
    */
-  setForm() {
+  async setForm() {
     if (this.editMode) {
       this.form.setValue({
         punktzahl: this.editQuestion.punktzahl,
@@ -242,7 +244,7 @@ export class EditComponent implements OnInit, AfterViewInit {
  * 
  * @param selection - standard or multiple choice
  */
-   selectKind(selection: string) {
+  selectKind(selection: string) {
     this.selectedKind = selection;
   }
 
@@ -275,6 +277,11 @@ export class EditComponent implements OnInit, AfterViewInit {
     }
   }
 
+  /**
+   * This function is used to save all data from the edit comp (erstelle Frage) in firebase to collection fragen of the school
+   * 
+   * @param questionFormData - data from the questionForm
+   */
   async addQuestion(questionFormData: any) {
     await this.saveEditorData();
     setTimeout(() => {
@@ -310,6 +317,11 @@ export class EditComponent implements OnInit, AfterViewInit {
     }, 700);
   }
 
+  /**
+   * This function is used to update question data from the before loaded question data in firebase in collection fragen with current doc ID (this.editQuestion.id)
+   * 
+   * @param questionFormData - data from the questionForm
+   */
   async updateQuestion(questionFormData: any) {
     await this.saveEditorData();
     setTimeout(() => {
@@ -344,68 +356,109 @@ export class EditComponent implements OnInit, AfterViewInit {
 
 
   /**
-   * As firebase cant save nested arrays
-   * this function is used to save a table as an object
+   * As firebase cant save nested arrays, this function is used transform a table [Array] in an object with key-values as Array
    */
   async saveEditorData(): Promise<void> {
     if (this.multipleChoiceEditor) {
       this.multiChoiceEditor.save().then(data => {
         this.currentQuestion = data;
         this.currentAnswer = data;
+        return
       });
-      setTimeout(() => {
-        console.log('Das ist Multi Chopice', this.currentQuestion, this.currentAnswer);
-      }, 500);
     }
+    this.transformQuestionToFirebaseFormat();
+    this.transformAnswerToFirebaseFormat();
+  }
 
-    if (!this.multipleChoiceEditor) {
-      console.log('VOR TRANSFORM', this.questionEditor.save());
-      this.questionEditor.save().then(data => {
+/**
+ * This function is used to check if a question has a table 
+ * => transform the question table as object with keys and each array as value
+ */
+  transformQuestionToFirebaseFormat() {
+    this.questionEditor.save().then(data => {
+      this.currentQuestion = data;
 
-        this.currentQuestion = data;
-
-        for (let i = 0; i < data.blocks.length; i++) { //If a table was in use of the editor nested array cannot saved in firestore
-          if (data.blocks[i].data.content) {
-            this.currentQuestion['blocks'][i]['data']['table'] = {};
-            for (let j = 0; j < data.blocks[i].data.content.length; j++) {
-              this.currentQuestion['blocks'][i]['data']['table'][`${j}`] = data.blocks[i].data.content[j];
-            }
-            this.currentQuestion['blocks'][i]['data']['table']['length'] = Object.keys(this.currentQuestion['blocks'][i]['data']['table']);
+      for (let i = 0; i < data.blocks.length; i++) { //If a table was in use of the editor nested array cannot saved in firestore
+        if (data.blocks[i].data.content) {
+          this.currentQuestion['blocks'][i]['data']['table'] = {};
+          for (let j = 0; j < data.blocks[i].data.content.length; j++) {
+            this.currentQuestion['blocks'][i]['data']['table'][`${j}`] = data.blocks[i].data.content[j];
           }
+          this.currentQuestion['blocks'][i]['data']['table']['length'] = Object.keys(this.currentQuestion['blocks'][i]['data']['table']);
           this.currentQuestion['blocks'][i]['data']['content'] = 'deleted';
         }
-      });
+      }
+    });
+  }
 
+  /**
+   * This function is used to check if an answer has a table 
+   * => transform the question table as object with keys and each array as value
+   */
+  transformAnswerToFirebaseFormat() {
+    this.answerEditor.save().then(data => {
+      this.currentAnswer = data;
 
-      setTimeout(() => {
-        console.log('NACH TRANSFORM', this.currentQuestion);
-      }, 200);
-
-      this.answerEditor.save().then(data => {
-        this.currentAnswer = data;
-        for (let i = 0; i < data.blocks.length; i++) { //If a table was in use of the editor nested array cannot saved in firestore
-          if (data.blocks[i].data.content) {
-            this.currentAnswer['blocks'][i]['data']['table'] = {};
-            for (let j = 0; j < data.blocks[i].data.content.length; j++) {
-              this.currentAnswer['blocks'][i]['data']['table'][`${j}`] = data.blocks[i].data.content[j];
-            }
-            this.currentAnswer['blocks'][i]['data']['table']['length'] = Object.keys(this.currentAnswer['blocks'][i]['data']['table']);
+      for (let i = 0; i < data.blocks.length; i++) { //If a table was in use of the editor nested array cannot saved in firestore
+        if (data.blocks[i].data.content) {
+          this.currentAnswer['blocks'][i]['data']['table'] = {};
+          for (let j = 0; j < data.blocks[i].data.content.length; j++) {
+            this.currentAnswer['blocks'][i]['data']['table'][`${j}`] = data.blocks[i].data.content[j];
           }
+          this.currentAnswer['blocks'][i]['data']['table']['length'] = Object.keys(this.currentAnswer['blocks'][i]['data']['table']);
           this.currentAnswer['blocks'][i]['data']['content'] = 'deleted';
         }
-      });
-      // setTimeout(() => {
-      //   console.log('Das ist die Antwort', this.currentAnswer);
-      // }, 500);
+      }
+    });
+  }
+
+/**
+ * ONLY ON EDIT MODE - This function is used to check if a loaded question has a table format 
+ * => The values of each table Object keys will be pushed into content array 
+ * => nested Array
+ */
+  async reTransformAnswerToEditorFormat() {
+    for (let i = 0; i < this.editQuestion.antwort.blocks.length; i++) { //If a table was in use of the editor nested array cannot saved in firestore
+      if (this.editQuestion.antwort.blocks[i].data.table) {
+        this.editQuestion.antwort.blocks[i].data.content = [];
+
+        for (let key in this.editQuestion.antwort.blocks[i].data.table) {
+          if (key !== 'length') {
+            this.editQuestion.antwort.blocks[i].data.content.push(this.editQuestion.antwort.blocks[i].data.table[key])
+          }
+        }
+        delete this.editQuestion.antwort.blocks[i].data.table
+      }
     }
   }
+
+/**
+ * * ONLY ON EDIT MODE - This function is used to check if a loaded answer has a table format 
+ * => The values of each table Object keys will be pushed into content array 
+ * => nested Array
+ */
+  async reTransformQuestionToEditorFormat() {
+    for (let i = 0; i < this.editQuestion.frage.blocks.length; i++) { //If a table was in use of the editor nested array cannot saved in firestore
+      if (this.editQuestion.frage.blocks[i].data.table) {
+        this.editQuestion.frage.blocks[i].data.content = [];
+
+        for (let key in this.editQuestion.frage.blocks[i].data.table) {
+          if (key !== 'length') {
+            this.editQuestion.frage.blocks[i].data.content.push(this.editQuestion.frage.blocks[i].data.table[key])
+          }
+        }
+        delete this.editQuestion.frage.blocks[i].data.table
+      }
+    }
+  }
+
 
   /**
    * This function is used to initialize the Editors (question, answer)
    * 
    * @param htmlElement - This parameter is used to set the holder of the Editor 
    * @param editData - This parameter is the data should be displayed in the Editor when initialize. On Editmode the data of the question will be displayed
-   * @returns the Editor with all configs
+   * @returns - the Editor with all configs
    */
   initializeEditor(htmlElement: any, editData: any) {
     return new EditorJS({
@@ -461,8 +514,14 @@ export class EditComponent implements OnInit, AfterViewInit {
     });
   }
 
-   //Multiple Choice
-   initMultipleChoiceEditor(htmlElement: any, editData: any) {
+  /**
+   * This function is used to initialize the Editors (multipleChoice)
+   * 
+   * @param htmlElement - This parameter is used to set the holder of the Editor 
+   * @param editData - This parameter is the data should be displayed in the Editor when initialize. On Editmode the data of the question will be displayed
+   * @returns - the Editor with all configs
+   */
+  initMultipleChoiceEditor(htmlElement: any, editData: any) {
     return new EditorJS({
       minHeight: 100,
       holder: htmlElement,
