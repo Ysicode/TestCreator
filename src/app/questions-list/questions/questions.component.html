@@ -1,7 +1,9 @@
 <!-- Header Component-->
 <app-header *ngIf="logedIn"></app-header>
 <!-- Edit Component -->
-<app-edit class="add_question_overlay" *ngIf="overlay" (closeAddQuestionOverlay)="overlay = false; editQuestionMode = false;" [editQuestion]="questionToEdit" [editMode]="editQuestionMode"></app-edit>
+<app-edit class="add_question_overlay" *ngIf="overlay"
+    (closeAddQuestionOverlay)="overlay = false; editQuestionMode = false;" [editQuestion]="questionToEdit"
+    [editMode]="editQuestionMode"></app-edit>
 
 <app-spinner *ngIf="service.loading"></app-spinner>
 
@@ -103,9 +105,15 @@
                             </div>
                         </div>
 
-                        <div class="element_margin_text" *ngIf="question['data']['file']">
+                        <div class="element_margin_doc" style="display: flex;" *ngIf="question['data']['file']">
                             <img loading="lazy" class="question_img" src="{{ question['data']['file']['url'] }}" alt="">
-
+                            <div class="attaches d_flex" *ngIf="question['type'] === 'attaches'">
+                                <img class="attached_icon" src="assets/attaches.png" alt="">
+                                <a target="_blank" href="{{ question['data']['file']['url'] }}">
+                                    Dokument angehängt
+                                </a>
+                                <img class="link_icon" src="assets/external_link.png" alt="">
+                            </div>
                         </div>
 
                         <div class="question_container" *ngFor="let items of question['data']['items'] let i = index">
@@ -151,7 +159,7 @@
                         </div>
 
 
-                        <div *ngIf="currentId == questionData.id" class="answer_wrapper" >
+                        <div *ngIf="currentId == questionData.id" class="answer_wrapper">
                             <div class="">
                                 <div *ngFor="let question of questionData['antwort']['blocks']">
                                     <div class="question_container" [innerHTML]="question['data']['text'] ">
@@ -211,11 +219,14 @@
                             </div>
                             <!-- *ngIf="data.currentUserData.id == question.questioncreator.id" -->
                             <div *ngIf="data.currentUserID == questionData.creatorId" class="question_edit_btn_wrapper">
-                                <button class="question_edit_btn" (click)="showEditOverlay(questionData); service.windowScrollTop();">Edit</button>
-                                <button class="question_edit_btn" (click)="deleteQuestionOverlay = true;">Delete</button>
+                                <button class="question_edit_btn"
+                                    (click)="showEditOverlay(questionData); service.windowScrollTop();">Edit</button>
+                                <button class="question_edit_btn"
+                                    (click)="deleteQuestionOverlay = true;">Delete</button>
                             </div>
 
-                            <app-info-overlay *ngIf="deleteQuestionOverlay" (closeQuestionDeleteOverlay)="deleteQuestionOverlay = false; currentId = ''"
+                            <app-info-overlay *ngIf="deleteQuestionOverlay"
+                                (closeQuestionDeleteOverlay)="deleteQuestionOverlay = false; currentId = ''"
                                 [questionID]="questionData.id" [deleteQuestionOverlay]="true">
                             </app-info-overlay>
                         </div>
@@ -230,10 +241,10 @@
                         <h2>Nach Fach filtern</h2>
                         <div class="subject_btn_wrapper d_flex">
                             <div *ngIf="data.currentUserData.subjects == 0" class="d_flex_column">
-                                <p >{{ 'Es wurde noch kein Fach ausgewählt!' }}</p>
+                                <p>{{ 'Es wurde noch kein Fach ausgewählt!' }}</p>
                                 <button routerLink="/account" class="subject_btn">Schulfach auswählen</button>
                             </div>
-                            
+
                             <button *ngFor="let subject of data.currentUserData.subjects; let i = index"
                                 (click)="setSubjectFilter(subject, i)" class="subject_btn"
                                 [class.selectedButton]="i == selectedSubjectButton">{{ subject }}</button>
@@ -246,7 +257,7 @@
                         <h2>Nach Klasse filtern</h2>
                         <div class="subject_btn_wrapper d_flex">
                             <div *ngIf="data.currentUserData.classes == 0" class="d_flex_column">
-                                <p >{{ 'Es wurde noch keine Klasse ausgewählt!'}}</p>
+                                <p>{{ 'Es wurde noch keine Klasse ausgewählt!'}}</p>
                                 <button routerLink="/account" class="subject_btn">Klasse auswählen</button>
                             </div>
 
@@ -349,10 +360,12 @@
                 <div id="page_number">
                     <p style="margin-bottom: 0px;" class="page_number">{{j + 1}}/{{ test['pages'].length }}</p>
                 </div>
-                <button *ngIf="addedToTest.length != 0 && j == 0" (click)="deleteTestOverlay = true;" class="new_test_btn show_onHover d_flex"><img class="remove_icon" src="assets/x_icon.png" alt="">
+                <button *ngIf="addedToTest.length != 0 && j == 0" (click)="deleteTestOverlay = true;"
+                    class="new_test_btn show_onHover d_flex"><img class="remove_icon" src="assets/x_icon.png" alt="">
                 </button>
-                
-                <app-info-overlay *ngIf="deleteTestOverlay" (closeTestDeleteOverlay)="deleteTestOverlay = false" [newTestOverlay]="true"> 
+
+                <app-info-overlay *ngIf="deleteTestOverlay" (closeTestDeleteOverlay)="deleteTestOverlay = false"
+                    [newTestOverlay]="true">
                 </app-info-overlay>
 
                 <div id="test_content{{j}}" class="test_content d_flex_column_start">
@@ -629,7 +642,7 @@
                     </div> -->
 
                     <button class="add_question_btn">Speichern</button>
-           
+
                 </div>
             </div>
 

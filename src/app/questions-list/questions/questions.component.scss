@@ -375,7 +375,7 @@ style for rendered subjects
 
 .test_info_item {
     margin-left: 10px;
-    font-size: 17px;
+    font-size: 15px;
 }
 
 .preview_btn {
@@ -551,8 +551,44 @@ style for rendered subjects
     max-height: 250px;
 }
 
+.attaches {
+    background: #f1f1f1;
+    border: 1px solid grey;
+    width: fit-content;
+    padding: 3px 5px;
+    font-size: 2vw;
+    margin-left: 3%;
+
+    a {
+        text-decoration: none;
+        color: black;
+    }
+
+    .attached_icon {
+        width: 21px;
+        height: 21px;
+        margin-right: 5px;
+    }
+
+    .link_icon {
+        width: 16px;
+        height: 16px;
+        margin-left: 10px;
+    }
+
+    &:hover {
+        cursor: pointer;
+        opacity: 0.8;
+    }
+}
+
 .margin_left {
     margin-left: 4vw;
+}
+
+.element_margin_doc {
+    margin-bottom: 1.5vw;
+    margin-top: 1.5vw;
 }
 
 .element_margin_text {
@@ -1485,6 +1521,12 @@ Styles für die Vorschau sektion
 
     .totalQuestionsNumber_wrapper {
         font-size: 20px;
+    }
+}
+
+@media (min-width: 650px) {
+    .attaches {
+        font-size: 13px;
     }
 }
 

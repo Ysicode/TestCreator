@@ -6,6 +6,7 @@ import Underline from '@editorjs/underline';
 import List from '@editorjs/list';
 import ImageTool from '@editorjs/image';
 import Table from '@editorjs/table';
+import AttachesTool from '@editorjs/attaches';
 import { getDownloadURL, getStorage, ref, uploadBytes } from '@angular/fire/storage';
 import { overlaysService } from 'src/app/services/overlays.service';
 import { AlertService } from 'src/app/services/alert.service';
@@ -314,6 +315,9 @@ export class EditComponent implements OnInit, AfterViewInit {
           this.editMode = false;
         })
       }
+      setTimeout(() => {
+        console.log(this.currentQuestion)
+      }, 500);
     }, 700);
   }
 
@@ -510,6 +514,26 @@ export class EditComponent implements OnInit, AfterViewInit {
             }
           }
         },
+        attaches: {
+          class: AttachesTool,
+          config: {
+            uploader: {
+              async uploadByFile(file: any) {
+                const storage = getStorage();
+                const storageRef = ref(storage, file.name);
+                const snapshot = await uploadBytes(storageRef, file);
+                const downloadURL = await getDownloadURL(snapshot.ref);
+                return {
+                  success: 1,
+                  file: {
+                    url: downloadURL,
+                    size: file.size,
+                  }
+                };
+              }
+            }
+          }
+        }
       }
     });
   }
