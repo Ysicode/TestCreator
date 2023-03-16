@@ -473,7 +473,7 @@ style for rendered subjects
     width: 100%;
 
     img {
-        width: 17px;
+        width: 13px;
         margin-right: 15px;
     }
 }
@@ -559,7 +559,7 @@ style for rendered subjects
     border-left: 2px solid grey;
     width: fit-content;
     padding: 3px 5px;
-    font-size: 13px;
+    font-size: calc(100vw * 0.018);
     margin-left: 3%;
 
     a {
@@ -568,14 +568,14 @@ style for rendered subjects
     }
 
     .attached_icon {
-        width: 22px;
-        height: 22px;
+        width: 20px;
+        height: 20px;
         margin-right: 5px;
     }
 
     .link_icon {
-        width: 16px;
-        height: 16px;
+        width: 15px;
+        height: 15px;
         margin-left: 10px;
     }
 
@@ -835,14 +835,10 @@ Answer styles
     width: 60px;
     margin-left: 10px;
     margin-right: 10px;
-    display: flex;
     border-radius: 50px;
     background: white;
     border: 1px solid grey;
     height: 40px;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
 
     &:hover {
         cursor: pointer;
@@ -850,21 +846,6 @@ Answer styles
     }
 }
 
-.burger_top {
-    width: 20px;
-    margin-bottom: 2px;
-    height: 3px;
-    background: black;
-    background: #339af0;
-}
-
-.burger_bottom {
-    width: 20px;
-    margin-top: 2px;
-    height: 3px;
-    background: black;
-    background: #339af0;
-}
 
 /*
 Styles für die Vorschau sektion
@@ -1128,9 +1109,31 @@ Styles für die Vorschau sektion
         border: 2px solid #4ea7f0;
     }
 
-    .whitespace_btn_icon {
-        width: 25px;
-        height: 25px;
+    .square_row {
+        border-left: 1px solid grey;
+
+        &.is_top {
+            border-top: 1px solid grey;
+        }
+    }
+
+    .squares {
+        width: 6px;
+        height: 6px;
+        border-bottom: 1px solid grey;
+        border-right: 1px solid grey;
+    }
+
+    .lines {
+        border-top: 1px solid grey;
+        width: 21px;
+        height: 5px;
+
+        &.is_last {
+            height: 5px;
+            border-bottom: 1px solid grey;
+            border-top: 1px solid grey;
+        }
     }
 }
 
@@ -1428,18 +1431,18 @@ Styles für die Vorschau sektion
     }
 
     .question_added_leicht {
-        border-right: 3px solid #9f9f9e;
-        border-left: 3px solid #9f9f9e;
+        border-right: 3px solid #FCC419;
+        border-left: 3px solid #FCC419;
     }
 
     .question_added_mittel {
-        border-right: 3px solid #5fc1d8;
-        border-left: 3px solid #5fc1d8;
+        border-right: 3px solid #339AF0;
+        border-left: 3px solid #339AF0;
     }
 
     .question_added_schwer {
-        border-right: 3px solid #f5af19;
-        border-left: 3px solid #f5af19;
+        border-right: 3px solid #FA5252;
+        border-left: 3px solid #FA5252;
     }
 }
 
@@ -1524,6 +1527,10 @@ Styles für die Vorschau sektion
 @media (min-width: 850px) {
     .question_info {
         font-size: 15px;
+
+        img {
+            width: 17px;
+        }
     }
 }
 
@@ -1535,7 +1542,8 @@ Styles für die Vorschau sektion
 }
 
 @media (min-width: 725px) {
-    .question_info {
+    .question_info,
+    .attaches {
         font-size: 13px;
     }
 
@@ -1545,12 +1553,6 @@ Styles für die Vorschau sektion
 
     .totalQuestionsNumber_wrapper {
         font-size: 20px;
-    }
-}
-
-@media (min-width: 650px) {
-    .attaches {
-        font-size: 13px;
     }
 }
 

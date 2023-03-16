@@ -175,8 +175,7 @@ export class QuestionsComponent implements OnInit {
           this.test.pages[this.test.pages.length - 1]['0'].push(this.data.loadedQuestions[i]);
           this.addedToTest.push(this.data.loadedQuestions[i]);
         //  this.checkQuestionAttachedFiles(i);
-       
-        
+  
           setTimeout(() => {
             this.getDefaultHeightsOfEachAddedQuestions();
           }, 200)

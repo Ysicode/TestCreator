@@ -323,9 +323,7 @@
             </div>
 
 
-            <!-- -->
-
-            <!-- SEARCH / BUTTONS-->
+            <!-- BOTTOMBAR Questionslist SEARCH / BUTTONS-->
             <div class="add_question_container d_flex">
                 <div *ngIf="search" class="add_question_btn_wrapper">
                     <input class="search" #search id="search" type="search" placeholder="Suche"
@@ -339,8 +337,7 @@
                     <button (click)="showAddOverlay()" class="add_question_btn">
                         Hinzufügen</button>
 
-                    <div class="menu_burger">
-                        <!-- <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="manage_search"></mat-icon> -->
+                    <div class="menu_burger d_flex">
                         <img (click)="openSearch()" style="width: 60%;" src="assets/search.png" alt="">
                     </div>
                     <button class="add_question_btn" (click)="openFilter = true">
@@ -348,7 +345,6 @@
                             }}</span></button>
                 </div>
             </div>
-            <!--  -->
         </div>
 
 
@@ -357,10 +353,6 @@
         <!--  -->
         <div *ngIf="data.loaded" id="test_print" class="test_print" [class.opacity0]="!preview"
             style="position: relative;" (mouseup)="checkHeightsInterval('stop')">
-            <!-- <div id="myDiv" style="position: absolute; top: 0; right: 0; left: 0; bottom: 0; z-index: 999;
-            background-color: #ff00000d;"  contenteditable="true">
-                    <button (click)="saveHtmlAsPNG()">save</button>
-            </div> -->
             <div id="test_dinA4{{j}}" *ngFor="let pages of test['pages'] let j = index" class="test_dinA4 page_break">
                 <div id="page_number">
                     <p style="margin-bottom: 0px;" class="page_number">{{j + 1}}/{{ test['pages'].length }}</p>
@@ -412,8 +404,9 @@
                                 bearbeiten</button>
                         </div>
                     </div>
-                    <!-- TESTHEAD END -->
 
+
+                    <!-- Noch keien Aufgabe hinzugefügt INFO-->
                     <div class="added_questions_empty_container d_flex_column"
                         *ngIf="test['pages'][0][0].length == 0 && j == 0 && test['pages'].length < 2 ">
                         <button (click)="openPreview()" class="question_add_btn d_flex"><img class="add_icon"
@@ -490,13 +483,13 @@
                                                 <div class="d_flex">
                                                     <img class="attached_icon" src="assets/attached.png" alt="">
                                                     <a target="_blank" href="{{ question['data']['file']['url'] }}">
-                                                        Siehe Anhang {{ question['data']['title'] != '' ?  '/ ' + question['data']['title'] : ''}}
+                                                        Siehe Anhang {{ question['data']['title'] != '' ? '/ ' +
+                                                        question['data']['title'] : ''}}
                                                     </a>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-
 
                                     <div class="preview_question_container"
                                         *ngFor="let items of question['data']['items'] let i = index">
@@ -533,6 +526,8 @@
                                 </div>
                             </ng-container>
 
+
+
                             <!-- SOLUTION -->
                             <ng-container *ngIf="sampleSolution">
                                 <div *ngFor="let question of data['antwort']['blocks'] let k = index">
@@ -563,6 +558,18 @@
                                                 <div (click)="service.onEvent($event)" id="resizeImage{{j}}{{i}}{{k}}"
                                                     class="resize_image d_flex show_onHover">
                                                     <span class="resize_image_line"></span>
+                                                </div>
+                                            </div>
+
+                                            <!-- ATTACHES -->
+                                            <div class="attaches d_flex_column opacity1_onHover"
+                                                *ngIf="question['type'] === 'attaches'">
+                                                <div class="d_flex">
+                                                    <img class="attached_icon" src="assets/attached.png" alt="">
+                                                    <a target="_blank" href="{{ question['data']['file']['url'] }}">
+                                                        Siehe Anhang {{ question['data']['title'] != '' ? '/ ' +
+                                                        question['data']['title'] : ''}}
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
@@ -610,15 +617,36 @@
                                 <div class="edit_question_whitespace_btn_wrapper d_flex">
                                     <button class="whitespace_btn d_flex"
                                         (click)="showWhite(j, i); checkHeightsInterval('stop')"></button>
-                                    <button class="whitespace_btn d_flex"
-                                        (click)="showLines(j, i); checkHeightsInterval('stop')"><img
-                                            class="whitespace_btn_icon" src="assets/lines.png" alt=""></button>
-                                    <button class="whitespace_btn d_flex"
-                                        (click)="showSquare(j, i); checkHeightsInterval('stop')"><img
-                                            class="whitespace_btn_icon" src="assets/square.png" alt=""></button>
+
+                                    <button class="whitespace_btn d_flex_column"
+                                        (click)="showLines(j, i); checkHeightsInterval('stop')">
+                                        <span class="lines"></span>
+                                        <span class="lines"></span>
+                                        <span class="lines is_last"></span>
+                                    </button>
+
+                                    <button class="whitespace_btn d_flex_column"
+                                        (click)="showSquare(j, i); checkHeightsInterval('stop')">
+                                        <div class="square_row is_top d_flex ">
+                                            <span class="squares"></span>
+                                            <span class="squares"></span>
+                                            <span class="squares"></span>
+                                        </div>
+                                        <div class="square_row d_flex">
+                                            <span class="squares border_left"></span>
+                                            <span class="squares"></span>
+                                            <span class="squares"></span>
+                                        </div>
+                                        <div class="square_row d_flex">
+                                            <span class="squares"></span>
+                                            <span class="squares"></span>
+                                            <span class="squares"></span>
+                                        </div>
+                                    </button>
                                 </div>
                             </div>
 
+                            <!-- RESIZE Line -->
                             <div (click)="service.onEvent($event)" (mouseover)="resizeQuestion(j, i)"
                                 (mousedown)="checkHeightsInterval('start')" (mouseup)="checkHeightsInterval('stop')"
                                 (mousemove)="getSquaresAndLines(j, i)" id="resize{{j}}{{i}}"
@@ -626,66 +654,31 @@
                                 <span class="resize_line"></span>
                             </div>
                         </div>
-                        <!-- whitspace SQUARES -->
 
+                        <!-- whitspace SQUARES -->
                         <div id="whitespace_squares{{j}}{{i}}" class="d_flex_column squareWhitespace_wrapper"
                             [ngStyle]="{'display' : data['whitespace'] == 'squares' && !sampleSolution ? 'block' : 'none'}">
                         </div>
                         <!-- whitespace LINES -->
                         <div id="whitespace_lines{{j}}{{i}}" class="d_flex_column linesWhitespace_wrapper"
                             [ngStyle]="{'display' : data['whitespace'] == 'lines' && !sampleSolution  ? 'block' : 'none'}">
-
                         </div>
                     </div>
-
-
                 </div>
-
             </div>
 
+            <!-- BOTTOM BAR test preview-->
             <div class="add_question_container d_flex" [class.d_none]="!preview">
                 <div class="add_question_btn_wrapper">
                     <button class="add_question_btn" (click)="toggleSolutions()">{{!sampleSolution ? 'Lösung' :
                         'Aufgaben'}}</button>
 
-                    <div class="menu_burger" matTooltip="Export" matTooltipPosition="above">
-                        <!-- <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="manage_search"></mat-icon> -->
+                    <div class="menu_burger d_flex" matTooltip="Export" matTooltipPosition="above">
                         <img (click)="printTest()" style="width: 60%;" src="assets/export_icon.png" alt="">
                     </div>
-                    <!-- <div class="menu_burger" matTooltip="Menü" matTooltipPosition="above">
-                        <span class="burger_top">
-                        </span>
-                        <span class="burger_bottom">
-                        </span>
-                    </div> -->
-
                     <button class="add_question_btn">Speichern</button>
-
                 </div>
             </div>
-
-            <!-- <form #rangeSliderForm="ngForm">
-            <div (click)="closeEditQuestionPreview()" [class.d_none]="!editQuestionAtPreview"
-                class="rangebar_wrapper d_flex_column_end">
-                <div (click)="$event.stopPropagation()" class="d_flex_column_start rangbar_container">
-                    <p class="rangebar_text">{{ styleHeight.value }}mm</p>
-                    <input id="height_rangebar" (input)="setHeightQuestion(styleHeight.value)"
-                        (change)="setHeightQuestion(styleHeight.value)" class="range_style" type="range"
-                        orient="vertical" min="0" max="300" step="10" id="styleHeight" #styleHeight name="styleHeight"
-                        ngModel>
-                </div>
-            </div>
-
-            <div (click)="closeRangeToStyleImage()" [class.d_none]="!editImageAtPreview"
-                class="rangebar_wrapper d_flex_column_end">
-                <div (click)="$event.stopPropagation()" class="d_flex_column_start rangbar_container">
-                    <p class="rangebar_text">{{ styleWidth.value }}%</p>
-                    <input (input)="setImageSize(styleWidth.value)" (change)="setImageSize(styleWidth.value)"
-                        class="range_style" type="range" orient="vertical" min="20" max="100" step="5" id="styleWidth"
-                        #styleWidth name="styleWidth" ngModel>
-                </div>
-            </div>
-        </form> -->
         </div>
     </div>
 
