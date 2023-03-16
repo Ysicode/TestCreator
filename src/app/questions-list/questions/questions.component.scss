@@ -440,16 +440,19 @@ style for rendered subjects
 .question_added_leicht {
     border-right: 5px solid #fcc419;
     border-left: 5px solid #fcc419;
+    opacity: 0.7;
 }
 
 .question_added_mittel {
     border-right: 5px solid #339af0;
     border-left: 5px solid #339af0;
+    opacity: 0.7;
 }
 
 .question_added_schwer {
     border-right: 5px solid #fa5252;
     border-left: 5px solid #fa5252;
+    opacity: 0.7;
 }
 
 .question_container {
@@ -556,7 +559,7 @@ style for rendered subjects
     border-left: 2px solid grey;
     width: fit-content;
     padding: 3px 5px;
-    font-size: 2vw;
+    font-size: 13px;
     margin-left: 3%;
 
     a {
@@ -679,9 +682,8 @@ Answer styles
 
 .question_edit_btn {
     border: none;
-    margin-right: 10px;
-    padding: 3px 20px 3px 20px;
-    font-size: calc(100vw * 0.018);
+    padding: 3px 10px 3px 10px;
+    font-size: calc(100vw * 0.015);
     background: none;
     color: black;
 
@@ -691,7 +693,6 @@ Answer styles
     }
 
     &.is_delete {
-
         &:hover {
             cursor: pointer;
             background: #ffcaca;
@@ -1534,9 +1535,12 @@ Styles für die Vorschau sektion
 }
 
 @media (min-width: 725px) {
-    .question_info,
-    .question_edit_btn {
+    .question_info {
         font-size: 13px;
+    }
+
+    .question_edit_btn {
+        font-size: 11px;
     }
 
     .totalQuestionsNumber_wrapper {

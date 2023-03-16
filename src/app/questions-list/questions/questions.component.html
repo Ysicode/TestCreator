@@ -108,7 +108,7 @@
                         <div class="element_margin_doc" style="display: flex;" *ngIf="question['data']['file']">
                             <img loading="lazy" class="question_img" src="{{ question['data']['file']['url'] }}" alt="">
                             <div class="attaches d_flex" *ngIf="question['type'] === 'attaches'">
-                                <img class="attached_icon" src="assets/attaches.png" alt="">
+                                <img class="attached_icon" src="assets/attached.png" alt="">
                                 <a target="_blank" href="{{ question['data']['file']['url'] }}">
                                     Dokument angehängt
                                 </a>
@@ -145,24 +145,23 @@
                     </div>
 
 
-                    <!-- Rendering Answers  -->
+                    <!-- Rendering ANSWERS  -->
                     <div class="answer_btn_container ">
                         <div class="answer_btn_wrapper d_flex_space">
                             <div *ngIf="data.currentUserID == questionData.creatorId" class="d_flex">
                                 <button class="question_edit_btn"
-                                (click)="showEditOverlay(questionData)">Bearbeiten</button> 
+                                    (click)="showEditOverlay(questionData)">Bearbeiten</button>
 
                                 <button class="question_edit_btn is_delete"
-                                (click)="showDeleteOverlay(questionData.id)">Löschen</button> 
-
-                               <div (click)="showDeleteOverlay(questionData.id)">
-                                <img  class="delete_question_icon" src="assets/delete_question_icon.png" alt="">
-                               </div>
-                           
+                                    (click)="showDeleteOverlay(questionData.id)">Löschen</button>
+                                <!-- <div (click)="showDeleteOverlay(questionData.id)">
+                                    <img class="delete_question_icon" src="assets/delete_question_icon.png" alt="">
+                                </div> -->
                             </div>
 
-                            
-                            <button (click)="toggleAnswer(questionData.id)" [class.answer_btn_schwer]="questionData.schwierigkeit == 'Schwer'"
+
+                            <button (click)="toggleAnswer(questionData.id)"
+                                [class.answer_btn_schwer]="questionData.schwierigkeit == 'Schwer'"
                                 [class.answer_btn_mittel]="questionData.schwierigkeit == 'Mittel'"
                                 [class.answer_btn_leicht]="questionData.schwierigkeit == 'Leicht'"
                                 class="answer_btn d_flex"><img
@@ -173,9 +172,9 @@
                         </div>
 
                         <app-info-overlay *ngIf="deleteQuestionOverlay"
-                        (closeQuestionDeleteOverlay)="deleteQuestionOverlay = false"
-                        [questionID]="deleteQuestionID" [deleteQuestionOverlay]="true">
-                    </app-info-overlay>
+                            (closeQuestionDeleteOverlay)="deleteQuestionOverlay = false" [questionID]="deleteQuestionID"
+                            [deleteQuestionOverlay]="true">
+                        </app-info-overlay>
 
 
                         <div *ngIf="currentId == questionData.id" class="answer_wrapper">
@@ -337,7 +336,7 @@
                 </div>
 
                 <div *ngIf="!search" class="add_question_btn_wrapper">
-                    <button (click)="showAddOverlay(); service.windowScrollTop(); " class="add_question_btn">
+                    <button (click)="showAddOverlay()" class="add_question_btn">
                         Hinzufügen</button>
 
                     <div class="menu_burger">
@@ -469,7 +468,8 @@
                                     <div class="element_margin_text" *ngIf="question['data']['file']">
                                         <!-- Images -->
                                         <div class="img_wrapper d_flex_start">
-                                            <div id="img_edit_wrapper{{ j }}{{ i }}{{ k }}"
+                                            <div *ngIf="question['type'] === 'image'"
+                                                id="img_edit_wrapper{{ j }}{{ i }}{{ k }}"
                                                 (mouseover)="resizeImage(j, i, k)"
                                                 (mousedown)="checkHeightsInterval('start')"
                                                 (mouseup)="checkHeightsInterval('stop')" class="img_edit_wrapper d_flex"
@@ -483,8 +483,20 @@
                                                     <span class="resize_image_line"></span>
                                                 </div>
                                             </div>
+
+                                            <!-- ATTACHES -->
+                                            <div class="attaches d_flex_column opacity1_onHover"
+                                                *ngIf="question['type'] === 'attaches'">
+                                                <div class="d_flex">
+                                                    <img class="attached_icon" src="assets/attached.png" alt="">
+                                                    <a target="_blank" href="{{ question['data']['file']['url'] }}">
+                                                        Siehe Anhang {{ question['data']['title'] != '' ?  '/ ' + question['data']['title'] : ''}}
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
+
 
                                     <div class="preview_question_container"
                                         *ngFor="let items of question['data']['items'] let i = index">

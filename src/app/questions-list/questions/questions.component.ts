@@ -35,6 +35,8 @@ export class QuestionsComponent implements OnInit {
   //variables for the preview window
   @ViewChild("rangeSliderForm") rangebars: NgForm;
   addedToTest = [];
+  testAttaches = [];
+  solutionAttaches = [];
   preview = true;
   checkHeightsAndSetQuestionNumberInterval: any;
   editQuestionAtPreview = false;
@@ -100,6 +102,7 @@ export class QuestionsComponent implements OnInit {
   }
 
   getTotalQuestionNumber() {
+    console.log('hello')
     this.totalQuestionsNumber = 0;
     for (let i = 0; i < this.data.loadedQuestions.length; i++) {
       if (!document.getElementById(`questionListView${i}`).classList.contains('d_none')) {
@@ -171,6 +174,9 @@ export class QuestionsComponent implements OnInit {
         if (status == 'add_styling') {
           this.test.pages[this.test.pages.length - 1]['0'].push(this.data.loadedQuestions[i]);
           this.addedToTest.push(this.data.loadedQuestions[i]);
+        //  this.checkQuestionAttachedFiles(i);
+       
+        
           setTimeout(() => {
             this.getDefaultHeightsOfEachAddedQuestions();
           }, 200)
@@ -183,6 +189,26 @@ export class QuestionsComponent implements OnInit {
     this.setQuestionNumber();
     this.addCurrentTestToLocalStorage();
   }
+
+  // Kann gemacht werden wenn alle Anhänge in test angezeigt werden sollen
+
+  // checkQuestionAttachedFiles(i: number) {
+  //   for (let j = 0; j < this.data.loadedQuestions[i].frage.blocks.length; j++) {
+  //     if (this.data.loadedQuestions[i].frage.blocks[j].type === 'attaches') {
+  //       this.testAttaches.push(this.data.loadedQuestions[i].frage.blocks[j].data);
+  //       console.log(this.testAttaches);
+  //       console.log(this.data.loadedQuestions[i])
+  //     }
+  //   }
+
+  //   for (let j = 0; j < this.data.loadedQuestions[i].antwort.blocks.length; j++) {
+  //     if (this.data.loadedQuestions[i].antwort.blocks[j].type === 'attaches') {
+  //       this.solutionAttaches.push(this.data.loadedQuestions[i].antwort.blocks[j].data);
+  //       console.log(this.solutionAttaches);
+  //       console.log(this.data.loadedQuestions[i])
+  //     }
+  //   }
+  // }
 
   getDefaultHeightsOfEachAddedQuestions() {
     let height = (this.getHeight(`question${this.test.pages.length - 1}${this.test.pages[this.test.pages.length - 1]['0'].length - 1}`) * 100) / this.getHeight(`test_dinA4${this.test.pages.length - 1}`);
@@ -832,10 +858,6 @@ export class QuestionsComponent implements OnInit {
     }
   }
 
-  deleteCurrentTets() {
-    this.addedToTest = [];
-  }
-
  /**
   * This function is used to open the app-edit in standard and nor edit mode
   */
@@ -844,11 +866,11 @@ export class QuestionsComponent implements OnInit {
       frage: null,
       antwort: null
     };
+    this.service.windowScrollTop();
     setTimeout(() => {
       this.overlay = true;
-    }, 500);
+    }, 100);
   }
-
   
   /**
    * This function is used to open the app-edit in editMode
@@ -864,18 +886,18 @@ export class QuestionsComponent implements OnInit {
     }, 500);
   }
 
+  /**
+   * This function is used to open the app-info-overlay to delete a question
+   * 
+   * @param questionid - the id of the question want to be deleted from firebase
+   */
   showDeleteOverlay(questionid: string) {
     this.deleteQuestionID = questionid
     this.deleteQuestionOverlay = true;
   }
 
-
   openEditTestHeadComponent() {
     this.editTesthead = true;
-  }
-
-  log(info: any) {
-    console.log(info)
   }
 
   stopLoop = (time: any) => {
