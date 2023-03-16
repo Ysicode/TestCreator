@@ -46,8 +46,9 @@ export class InfoOverlayComponent implements OnInit {
   }
 
   deleteQuestion() {
+    this.data.deleteQuestion(this.questionID);
     this.loading = true;
-    this.data.deletedata(this.questionID);
+    
     this.deleteQuestionOverlay = false;
     setTimeout(() => {
 

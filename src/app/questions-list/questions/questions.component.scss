@@ -552,8 +552,8 @@ style for rendered subjects
 }
 
 .attaches {
-    background: #f1f1f1;
-    border: 1px solid grey;
+    background: #f3f3f3;
+    border-left: 2px solid grey;
     width: fit-content;
     padding: 3px 5px;
     font-size: 2vw;
@@ -565,8 +565,8 @@ style for rendered subjects
     }
 
     .attached_icon {
-        width: 21px;
-        height: 21px;
+        width: 22px;
+        height: 22px;
         margin-right: 5px;
     }
 
@@ -636,7 +636,6 @@ Answer styles
     width: 100%;
     margin-top: 2%;
     &:hover {
-        cursor: pointer;
         .answer_btn {
             opacity: 0.8;
         }
@@ -665,8 +664,42 @@ Answer styles
     color: #fa5252;
 }
 
+.delete_question_icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    padding: 5px;
+    margin-left: 10px;
+
+    &:hover {
+        cursor: pointer;
+        background: #ffcaca;
+    }
+}
+
+.question_edit_btn {
+    border: none;
+    margin-right: 10px;
+    padding: 3px 20px 3px 20px;
+    font-size: calc(100vw * 0.018);
+    background: none;
+    color: black;
+
+    &:hover {
+        cursor: pointer;
+        background: #e3e5e5;
+    }
+
+    &.is_delete {
+
+        &:hover {
+            cursor: pointer;
+            background: #ffcaca;
+        }
+    }
+}
+
 .answer_wrapper {
-    border-top: 1px solid lightgrey;
     padding-top: 2%;
     width: 100%;
 }
@@ -687,19 +720,6 @@ Answer styles
         width: 2.5vw;
         height: 2.5vw;
         transform: rotate(45deg);
-    }
-}
-
-.question_edit_btn {
-    border: none;
-    margin-right: 10px;
-    padding: 3px 20px 3px 20px;
-    font-size: calc(100vw * 0.018);
-    border-top: 1px solid #aaaaaa;
-    background: #f3f3f3;
-    &:hover {
-        cursor: pointer;
-        background: #e3e5e5;
     }
 }
 

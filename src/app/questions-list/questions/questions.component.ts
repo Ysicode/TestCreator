@@ -25,6 +25,7 @@ export class QuestionsComponent implements OnInit {
   questionToEdit: any;
   answerToEdit: any;
   questionId: string;
+  deleteQuestionID: string;
   editQuestionMode: Boolean = false;
 
   //multi used variables
@@ -186,6 +187,14 @@ export class QuestionsComponent implements OnInit {
   getDefaultHeightsOfEachAddedQuestions() {
     let height = (this.getHeight(`question${this.test.pages.length - 1}${this.test.pages[this.test.pages.length - 1]['0'].length - 1}`) * 100) / this.getHeight(`test_dinA4${this.test.pages.length - 1}`);
     this.test.pages[this.test.pages.length - 1][0][this.test.pages[this.test.pages.length - 1]['0'].length - 1]['defaultheight'] = height;
+  }
+
+  forward() {
+    history.forward();
+  }
+
+  back() {
+    history.back();
   }
 
   /**
@@ -851,7 +860,13 @@ export class QuestionsComponent implements OnInit {
     this.editQuestionMode = true;
     setTimeout(() => {
       this.overlay = true;
+      this.service.windowScrollTop();
     }, 500);
+  }
+
+  showDeleteOverlay(questionid: string) {
+    this.deleteQuestionID = questionid
+    this.deleteQuestionOverlay = true;
   }
 
 

@@ -147,8 +147,22 @@
 
                     <!-- Rendering Answers  -->
                     <div class="answer_btn_container ">
-                        <div class="answer_btn_wrapper d_flex_end" (click)="toggleAnswer(questionData.id)">
-                            <button [class.answer_btn_schwer]="questionData.schwierigkeit == 'Schwer'"
+                        <div class="answer_btn_wrapper d_flex_space">
+                            <div *ngIf="data.currentUserID == questionData.creatorId" class="d_flex">
+                                <button class="question_edit_btn"
+                                (click)="showEditOverlay(questionData)">Bearbeiten</button> 
+
+                                <button class="question_edit_btn is_delete"
+                                (click)="showDeleteOverlay(questionData.id)">Löschen</button> 
+
+                               <div (click)="showDeleteOverlay(questionData.id)">
+                                <img  class="delete_question_icon" src="assets/delete_question_icon.png" alt="">
+                               </div>
+                           
+                            </div>
+
+                            
+                            <button (click)="toggleAnswer(questionData.id)" [class.answer_btn_schwer]="questionData.schwierigkeit == 'Schwer'"
                                 [class.answer_btn_mittel]="questionData.schwierigkeit == 'Mittel'"
                                 [class.answer_btn_leicht]="questionData.schwierigkeit == 'Leicht'"
                                 class="answer_btn d_flex"><img
@@ -157,6 +171,11 @@
                                 Antwort
                             </button>
                         </div>
+
+                        <app-info-overlay *ngIf="deleteQuestionOverlay"
+                        (closeQuestionDeleteOverlay)="deleteQuestionOverlay = false"
+                        [questionID]="deleteQuestionID" [deleteQuestionOverlay]="true">
+                    </app-info-overlay>
 
 
                         <div *ngIf="currentId == questionData.id" class="answer_wrapper">
@@ -215,20 +234,7 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
-                            <!-- *ngIf="data.currentUserData.id == question.questioncreator.id" -->
-                            <div *ngIf="data.currentUserID == questionData.creatorId" class="question_edit_btn_wrapper">
-                                <button class="question_edit_btn"
-                                    (click)="showEditOverlay(questionData); service.windowScrollTop();">Edit</button>
-                                <button class="question_edit_btn"
-                                    (click)="deleteQuestionOverlay = true;">Delete</button>
-                            </div>
-
-                            <app-info-overlay *ngIf="deleteQuestionOverlay"
-                                (closeQuestionDeleteOverlay)="deleteQuestionOverlay = false; currentId = ''"
-                                [questionID]="questionData.id" [deleteQuestionOverlay]="true">
-                            </app-info-overlay>
                         </div>
                     </div>
                 </div>

@@ -270,10 +270,10 @@ export class dataTransferService {
 
     /**
     * This function is used to delete a question form firebase
-    * @param id is the firebase id of the question to delete it
+    * @param questionId is the firebase id of the question to delete it
     */
-    deletedata(id: string) {
-        const coll: any = doc(this.firestore, 'users', this.currentSchool, 'fragen', id);
+    deleteQuestion(questionId: string) {
+        const coll: any = doc(this.firestore, 'users', this.currentSchool, 'fragen', questionId);
         deleteDoc(coll);
     }
 
