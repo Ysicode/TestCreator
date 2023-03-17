@@ -465,7 +465,12 @@
                                                 id="img_edit_wrapper{{ j }}{{ i }}{{ k }}"
                                                 (mouseover)="resizeImage(j, i, k)"
                                                 (mousedown)="checkHeightsInterval('start')"
-                                                (mouseup)="checkHeightsInterval('stop')" class="img_edit_wrapper d_flex"
+                                                (mouseup)="checkHeightsInterval('stop')"
+                                                (touchstart)="resizeImageOnTouchStart($event, j, i, k)"
+                                                (touchmove)="resizeImageOnTouchMove($event, j, i)"
+                                                (touchend)="resizeImageOnTouchEnd(j, i, k)"
+                                                (touchmove)="checkHeightOfAllPreviewQuestions(); setQuestionNumber(); getSquaresAndLines(j, i)"
+                                                 class="img_edit_wrapper d_flex"
                                                 [ngStyle]="{'width': question['width'] ? question['width'] : '30%'}">
                                                 <img id="questionImage{{ j }}{{ i }}{{ k }}"
                                                     class="preview_question_img"
@@ -649,8 +654,10 @@
                             <!-- RESIZE Line -->
                             <div (click)="service.onEvent($event)" (mouseover)="resizeQuestion(j, i)"
                                 (mousedown)="checkHeightsInterval('start')" (mouseup)="checkHeightsInterval('stop')"
-                                (mousemove)="getSquaresAndLines(j, i)" id="resize{{j}}{{i}}"
-                                class="height_info_wrapper d_flex show_onHover">
+                                (mousemove)="getSquaresAndLines(j, i)" 
+                                (touchstart)="resizeQuestionOnTouchStart($event, j, i)" (touchmove)="resizeQuestionOnTouchMove($event, j, i)" (touchend)="resizeQuestionOnTouchEnd(j, i)"
+                                (touchmove)="checkHeightOfAllPreviewQuestions(); setQuestionNumber(); getSquaresAndLines(j, i)"
+                                id="resize{{j}}{{i}}" class="height_info_wrapper d_flex show_onHover">
                                 <span class="resize_line"></span>
                             </div>
                         </div>
