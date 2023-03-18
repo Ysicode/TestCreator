@@ -58,6 +58,7 @@
 .save_btn {
     border: 2px solid #339af0 !important;
     color: #424949;
+    background: none;
     border-radius: 30px;
     font-size: 17px;
     padding: 10px 30px 10px 30px;
@@ -70,7 +71,7 @@
 }
 
 .cancel_btn {
-    background-color: #f2f3f4;
+    background: none;
     color: #424949;
     border-radius: 30px;
     font-size: 17px;
@@ -86,6 +87,7 @@
 
 .delete_btn {
     border-radius: 30px;
+    background: none;
     font-size: 10px;
     padding: 10px 30px 10px 30px;
     margin-top: 150px;

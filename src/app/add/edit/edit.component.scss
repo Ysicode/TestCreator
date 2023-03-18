@@ -49,13 +49,13 @@
     height: 20px;
 }
 
-.subject_btn_wrapper { 
+.subject_btn_wrapper {
     width: 100%;
     flex-wrap: wrap;
 }
 
 .add_question_btn {
-    border: 2px solid #339AF0 !important;
+    border: 2px solid #339af0 !important;
 }
 
 .addNew_container {
@@ -67,7 +67,7 @@
 }
 
 .subject_btn {
-    background: #f2f3f4;
+    background: none;
     border: 1px solid grey;
     color: #424949;
     border-radius: 30px;
@@ -81,7 +81,7 @@
 }
 
 .cancel_btn {
-    background: #f2f3f4 !important;
+    background: none !important;
 }
 
 .close_overlay_window_btn {
@@ -113,19 +113,19 @@
 }
 
 .selectedButton {
-    border: 2px solid #339AF0;
+    border: 2px solid #339af0;
 }
 
 .selectedButton_leicht {
-    border: 2px solid #FCC419;
+    border: 2px solid #fcc419;
 }
 
 .selectedButton_mittel {
-    border: 2px solid #339AF0;
+    border: 2px solid #339af0;
 }
 
 .selectedButton_schwer {
-    border: 2px solid #FA5252;
+    border: 2px solid #fa5252;
 }
 
 // .dificulty_leicht_btn {
@@ -237,7 +237,7 @@
 }
 
 .important {
-    color: #FA5252;
+    color: #fa5252;
 }
 
 .keyword_textarea {
@@ -537,13 +537,15 @@ h3 {
 }
 
 @media (min-width: 750px) {
-    .question_container,.answer_btn {
+    .question_container,
+    .answer_btn {
         font-size: 15px;
     }
 }
 
 @media (min-width: 725px) {
-    .question_info, .question_edit_btn {
+    .question_info,
+    .question_edit_btn {
         font-size: 13px;
     }
 }
