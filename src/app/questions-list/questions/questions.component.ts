@@ -144,7 +144,7 @@ export class QuestionsComponent implements OnInit {
       setTimeout(() => {
         this.logedIn = true;
         this.service.loading = false;
-      }, 50);
+      }, 700);
     }
   }
 
@@ -157,9 +157,15 @@ export class QuestionsComponent implements OnInit {
     }
   }
 
+  async addCurrentTestToLocalStorage() {
+    await this.addStateToLocalStorage();
+    localStorage.setItem("currentTest", JSON.stringify(this.states[this.stateIndex]));
+    localStorage.setItem("addedQuestions", JSON.stringify(this.stateOfAddedQuestion[this.stateIndex]));
+  }
+
   async addStateToLocalStorage() {
-    this.states.push(this.test);
-    this.stateOfAddedQuestion.push(this.addedToTest);
+    await this.states.push(this.test);
+    await this.stateOfAddedQuestion.push(this.addedToTest);
 
     try {
       localStorage.setItem("states", JSON.stringify(this.states));
@@ -182,17 +188,8 @@ export class QuestionsComponent implements OnInit {
     this.stateIndex = this.states.length - 1;
   }
 
-
-
-  async addCurrentTestToLocalStorage() {
-    await this.addStateToLocalStorage();
-    localStorage.setItem("currentTest", JSON.stringify(this.states[this.stateIndex]));
-    localStorage.setItem("addedQuestions", JSON.stringify(this.stateOfAddedQuestion[this.stateIndex]));
-  }
-
-  async getCurrentTestFromLocalStorage() {
+  async loadLocalStorageData() {
     if (!localStorage.getItem('currentTest')) return
-    this.service.loading = true;
     let loadedTestFromStorage = localStorage.getItem('currentTest');
     this.test = JSON.parse(loadedTestFromStorage);
 
@@ -205,14 +202,14 @@ export class QuestionsComponent implements OnInit {
       let loadedStatesOfAddedQuestions = localStorage.getItem('statesAddedQuestions');
       this.stateOfAddedQuestion = JSON.parse(loadedStatesOfAddedQuestions);
     }
+  }
 
-    setTimeout(() => {
+  async getCurrentTestFromLocalStorage() {
+    await this.loadLocalStorageData();
       this.setQuestionNumber();
       this.setTestInfo();
       this.renderSquaresAndLinesOfQuestionsInTest();
       this.styleAddedQuestionsInListViewAfterLoadingTestData();
-      this.service.loading = false;
-    }, 1000);
   }
 
 
@@ -311,24 +308,24 @@ export class QuestionsComponent implements OnInit {
     }, 200);
   }
 
-   /**
-   * This function is used to remove added styling of all questions in listview
-   * If a question is added to the test, add styling to the question in listview
-   */
-    styleAddedQuestionsInListViewAfterLoadingTestData() {
-      for (let a = 0; a < this.data.loadedQuestions.length; a++) {
-        for (let i = 0; i < this.test.pages.length; i++) {
-          for (let j = 0; j < this.test.pages[i][0].length; j++) {
-            if (this.test.pages[i][0][j].id == this.data.loadedQuestions[a]['id']) {
-              this.styleAddButton(a, 'add_styling', this.data.loadedQuestions[a]['schwierigkeit']);
-            }
-            if (this.test.pages[i][0][j].id != this.data.loadedQuestions[a]['id']) {
-              this.styleAddButton(a, 'remove_styling', this.data.loadedQuestions[a]['schwierigkeit']);
-            }
+  /**
+  * This function is used to remove added styling of all questions in listview
+  * If a question is added to the test, add styling to the question in listview
+  */
+  styleAddedQuestionsInListViewAfterLoadingTestData() {
+    for (let a = 0; a < this.data.loadedQuestions.length; a++) {
+      for (let i = 0; i < this.test.pages.length; i++) {
+        for (let j = 0; j < this.test.pages[i][0].length; j++) {
+          if (this.test.pages[i][0][j].id == this.data.loadedQuestions[a]['id']) {
+            this.styleAddButton(a, 'add_styling', this.data.loadedQuestions[a]['schwierigkeit']);
+          }
+          if (this.test.pages[i][0][j].id != this.data.loadedQuestions[a]['id']) {
+            this.styleAddButton(a, 'remove_styling', this.data.loadedQuestions[a]['schwierigkeit']);
           }
         }
       }
     }
+  }
 
   /**
    * 
