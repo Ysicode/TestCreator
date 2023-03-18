@@ -100,7 +100,7 @@ export class QuestionsComponent implements OnInit {
       console.log('index', this.stateIndex)
       this.stateIndex--;
       localStorage.setItem("currentTest", JSON.stringify(this.states[this.stateIndex]));
-      localStorage.setItem("statesAddedQuestions", JSON.stringify(this.states[this.stateIndex]));
+      // localStorage.setItem("statesAddedQuestions", JSON.stringify(this.stateOfAddedQuestion[this.stateIndex]));
       setTimeout(() => {
         this.getCurrentTestFromLocalStorage();
         this.styleAddedQuestionsInListViewAfterLoadingTestData();
@@ -112,11 +112,12 @@ export class QuestionsComponent implements OnInit {
   redo(event: KeyboardEvent) {
     event.preventDefault();
 
-    if (this.stateIndex !== this.states.length - 1) {
+    if (this.stateIndex < this.states.length - 1) {
       console.log('length', this.states.length);
       console.log('index', this.stateIndex)
       this.stateIndex++;
       localStorage.setItem("currentTest", JSON.stringify(this.states[this.stateIndex]));
+      // localStorage.setItem("statesAddedQuestions", JSON.stringify(this.stateOfAddedQuestion[this.stateIndex]));
       setTimeout(() => {
         this.getCurrentTestFromLocalStorage();
         this.styleAddedQuestionsInListViewAfterLoadingTestData();
@@ -160,8 +161,17 @@ export class QuestionsComponent implements OnInit {
     this.states.push(this.test);
     this.stateOfAddedQuestion.push(this.addedToTest);
 
-    localStorage.setItem("states", JSON.stringify(this.states));
-    localStorage.setItem("statesAddedQuestions", JSON.stringify(this.states));
+    try {
+      localStorage.setItem("states", JSON.stringify(this.states));
+      localStorage.setItem("statesAddedQuestions", JSON.stringify(this.stateOfAddedQuestion));
+    }
+    catch (e) {
+      this.states.splice(0, 400) // removes the first 400 states of local storage when local storage throws error (Full)
+      this.stateOfAddedQuestion.splice(0, 400); // removes the first 400 stateOfAddedQuestion of local storage throws error (Full)
+
+      localStorage.setItem("states", JSON.stringify(this.states));
+      localStorage.setItem("statesAddedQuestions", JSON.stringify(this.stateOfAddedQuestion));
+    }
 
     let loadedStates = localStorage.getItem('states');
     this.states = JSON.parse(loadedStates);
@@ -176,9 +186,8 @@ export class QuestionsComponent implements OnInit {
 
   async addCurrentTestToLocalStorage() {
     await this.addStateToLocalStorage();
-
     localStorage.setItem("currentTest", JSON.stringify(this.states[this.stateIndex]));
-    localStorage.setItem("addedQuestions", JSON.stringify(this.addedToTest));
+    localStorage.setItem("addedQuestions", JSON.stringify(this.stateOfAddedQuestion[this.stateIndex]));
   }
 
   async getCurrentTestFromLocalStorage() {
@@ -189,13 +198,13 @@ export class QuestionsComponent implements OnInit {
 
     let loadedAddedQuestions = localStorage.getItem('addedQuestions');
     this.addedToTest = JSON.parse(loadedAddedQuestions);
-    // this.stateOfAddedQuestion.push(this.addedToTest);
 
-    let loadedStates = localStorage.getItem('states');
-    this.states = JSON.parse(loadedStates);
-    
-    
-
+    if (localStorage.getItem('states') && localStorage.getItem('statesAddedQuestions')) {
+      let loadedStates = localStorage.getItem('states');
+      this.states = JSON.parse(loadedStates);
+      let loadedStatesOfAddedQuestions = localStorage.getItem('statesAddedQuestions');
+      this.stateOfAddedQuestion = JSON.parse(loadedStatesOfAddedQuestions);
+    }
 
     setTimeout(() => {
       this.setQuestionNumber();
@@ -206,23 +215,8 @@ export class QuestionsComponent implements OnInit {
     }, 1000);
   }
 
-  styleAddedQuestionsInListViewAfterLoadingTestData() {
-    Array.from(document.getElementsByClassName('question')).forEach((question, index) => {
-      question.classList.remove('question_added_leicht');
-      question.classList.remove('question_added_mittel');
-      question.classList.remove('question_added_schwer');
-    });
 
-    for (let a = 0; a < this.data.loadedQuestions.length; a++) {
-      for (let i = 0; i < this.test.pages.length; i++) {
-        for (let j = 0; j < this.test.pages[i][0].length; j++) {
-          if (this.test.pages[i][0][j].id == this.data.loadedQuestions[a]['id']) {
-            this.styleAddButton(a, 'add_styling', this.data.loadedQuestions[a]['schwierigkeit']);
-          }
-        }
-      }
-    }
-  }
+
 
 
   //
@@ -316,6 +310,25 @@ export class QuestionsComponent implements OnInit {
       this.setQuestionNumber();
     }, 200);
   }
+
+   /**
+   * This function is used to remove added styling of all questions in listview
+   * If a question is added to the test, add styling to the question in listview
+   */
+    styleAddedQuestionsInListViewAfterLoadingTestData() {
+      for (let a = 0; a < this.data.loadedQuestions.length; a++) {
+        for (let i = 0; i < this.test.pages.length; i++) {
+          for (let j = 0; j < this.test.pages[i][0].length; j++) {
+            if (this.test.pages[i][0][j].id == this.data.loadedQuestions[a]['id']) {
+              this.styleAddButton(a, 'add_styling', this.data.loadedQuestions[a]['schwierigkeit']);
+            }
+            if (this.test.pages[i][0][j].id != this.data.loadedQuestions[a]['id']) {
+              this.styleAddButton(a, 'remove_styling', this.data.loadedQuestions[a]['schwierigkeit']);
+            }
+          }
+        }
+      }
+    }
 
   /**
    * 
@@ -444,6 +457,10 @@ export class QuestionsComponent implements OnInit {
     this.test.pages[i + 1][0].reverse();
   }
 
+  pageIsEmpty(i: number) {
+    return this.test.pages[i][0].length == 0;
+  }
+
   deleteEmptyPages(i: number) {
     if (this.pageIsEmpty(i) && i != 0) {
       this.test.pages.pop();
@@ -451,8 +468,8 @@ export class QuestionsComponent implements OnInit {
   }
 
   async moveUpQuestionAndDeleteEmptyPages(i: number, paperHeight: number) {
-    if (!this.pageIsEmpty(i) && await this.spaceForFirstQuestion(i, paperHeight)) {
-      const question = this.test.pages[i][0].shift();
+    if (!this.pageIsEmpty(i) && await this.spaceForFirstQuestion(i, paperHeight) && this.currentEditQuestion.toString()[1] != '0') {
+      const question = this.test.pages[i][0].shift(); // 
       setTimeout(() => {
         this.renderSquaresAndLinesOfQuestionsInTest();
       }, 100);
@@ -467,7 +484,7 @@ export class QuestionsComponent implements OnInit {
 
   async spaceForFirstQuestion(i: number, paperHeight: number) {
     let firstQuestion = this.getHeight(`question${i}${0}`);
-    let contentHeight = i == 1 ? this.getHeight('testhead') : 0;
+    let contentHeight = i == 1 ? this.getHeight('testhead') : 0; //Checks if the testpage has the testhead on index 1 and adds the height of it
     for (let j = 0; j < this.test.pages[i - 1][0].length; j++) {
       let height = this.getHeight(`question${i - 1}${j}`);
       contentHeight += Number(height);
@@ -483,18 +500,6 @@ export class QuestionsComponent implements OnInit {
     Array.from(document.getElementsByClassName('test_number')).forEach((number, index) => {
       number.innerHTML = (index + 1).toString();
     });
-
-    // await this.stopLoop(10);
-    // this.question_number = 0;
-    // for (let i = 0; i < this.test.pages.length; i++) {
-    //   for (let j = 0; j < this.test.pages[i][0].length; j++) {
-    //     this.question_number++;
-    //     this.stopLoop(5);
-    //     let questionNumber = this.element(`question_number${i}${j}`)
-    //     questionNumber.innerHTML = `${this.question_number}`;
-    //     questionNumber.classList.add('test_number_opacity_zero');
-    //   }
-    // }
   }
 
   getCurrentQuestion(pageIndex: number, pagePosition: number) {
@@ -675,13 +680,16 @@ export class QuestionsComponent implements OnInit {
    * @param mouse - is a string parameter to either start or stop the interval
    */
   checkHeightsInterval(mode: string) {
+    console.log('triggered beginn')
     if (mode === 'start') {
+      console.log('triggered start')
       this.checkHeightsAndSetQuestionNumberInterval = setInterval(() => {
         this.checkHeightOfAllPreviewQuestions();
         this.setQuestionNumber();
       }, 70)
     }
     if (mode === 'stop') {
+      console.log('triggered dtop')
       clearInterval(this.checkHeightsAndSetQuestionNumberInterval);
     }
   }
@@ -782,10 +790,6 @@ export class QuestionsComponent implements OnInit {
         }
       }
     }
-  }
-
-  pageIsEmpty(i: number) {
-    return this.test.pages[i][0].length == 0;
   }
 
   getHeight(id: string) {

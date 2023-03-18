@@ -352,12 +352,12 @@
         <!-- TEST PREVIEW -->
         <!--  -->
         <div *ngIf="data.loaded" id="test_print" class="test_print" [class.opacity0]="!preview"
-            style="position: relative;" (mouseup)="checkHeightsInterval('stop')">
+            style="position: relative;"  (mouseup)="checkHeightsInterval('stop')">  
             <div id="test_dinA4{{j}}" *ngFor="let pages of test['pages'] let j = index" class="test_dinA4 page_break">
                 <div id="page_number">
                     <p style="margin-bottom: 0px;" class="page_number">{{j + 1}}/{{ test['pages'].length }}</p>
                 </div>
-                <button *ngIf="addedToTest.length != 0 && j == 0" (click)="deleteTestOverlay = true;"
+                <button *ngIf="j == 0" (click)="deleteTestOverlay = true;"
                     class="new_test_btn show_onHover d_flex"><img class="remove_icon" src="assets/x_icon.png" alt="">
                 </button>
 
@@ -653,6 +653,7 @@
 
                             <!-- RESIZE Line -->
                             <div (click)="service.onEvent($event)" (mouseover)="resizeQuestion(j, i)"
+
                                 (mousedown)="checkHeightsInterval('start')" (mouseup)="checkHeightsInterval('stop')"
                                 (mousemove)="getSquaresAndLines(j, i)" 
                                 (touchstart)="resizeQuestionOnTouchStart($event, j, i)" (touchmove)="resizeQuestionOnTouchMove($event, j, i)" (touchend)="resizeQuestionOnTouchEnd(j, i)"
