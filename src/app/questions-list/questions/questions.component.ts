@@ -95,6 +95,23 @@ export class QuestionsComponent implements OnInit {
   @HostListener('document:keydown.meta.z', ['$event'])
   undo(event: KeyboardEvent) {
     event.preventDefault();
+   this.undoState();
+  }
+
+  @HostListener('document:keydown.meta.shift.z', ['$event'])
+  redo(event: KeyboardEvent) {
+    event.preventDefault();
+    this.redoState();
+  }
+
+  constructor(public service: overlaysService, public data: dataTransferService) { }
+  // @HostListener("click", ["$event"]) //Lädt die Seite jedesmal neu wenn geclickt wird Braucht man aktuell nicht
+
+  async ngOnInit(): Promise<void> {
+    this.loadData();
+  }
+
+  undoState() {
     if (this.stateIndex != 0) {
       console.log('length', this.states.length);
       console.log('index', this.stateIndex)
@@ -108,10 +125,7 @@ export class QuestionsComponent implements OnInit {
     }
   }
 
-  @HostListener('document:keydown.meta.shift.z', ['$event'])
-  redo(event: KeyboardEvent) {
-    event.preventDefault();
-
+  redoState() {
     if (this.stateIndex < this.states.length - 1) {
       console.log('length', this.states.length);
       console.log('index', this.stateIndex)
@@ -122,15 +136,7 @@ export class QuestionsComponent implements OnInit {
         this.getCurrentTestFromLocalStorage();
         this.styleAddedQuestionsInListViewAfterLoadingTestData();
       }, 100);
-
     }
-  }
-
-  constructor(public service: overlaysService, public data: dataTransferService) { }
-  // @HostListener("click", ["$event"]) //Lädt die Seite jedesmal neu wenn geclickt wird Braucht man aktuell nicht
-
-  async ngOnInit(): Promise<void> {
-    this.loadData();
   }
 
   async loadData() {
@@ -206,10 +212,10 @@ export class QuestionsComponent implements OnInit {
 
   async getCurrentTestFromLocalStorage() {
     await this.loadLocalStorageData();
-      this.setQuestionNumber();
-      this.setTestInfo();
-      this.renderSquaresAndLinesOfQuestionsInTest();
-      this.styleAddedQuestionsInListViewAfterLoadingTestData();
+    this.setQuestionNumber();
+    this.setTestInfo();
+    this.renderSquaresAndLinesOfQuestionsInTest();
+    this.styleAddedQuestionsInListViewAfterLoadingTestData();
   }
 
 

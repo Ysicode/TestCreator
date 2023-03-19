@@ -324,8 +324,7 @@
 
 
             <!-- BOTTOMBAR Questionslist SEARCH / BUTTONS-->
-            <div class="add_question_container d_flex">
-                <div *ngIf="search" class="add_question_btn_wrapper">
+                <div *ngIf="search" class="bottom_bar_wrapper">
                     <input class="search" #search id="search" type="search" placeholder="Suche"
                         value="{{currentSearch}}" (keyup)="onKeyUpSearchInput($event)"
                         (keyup.enter)="closeSearch(search.value)">
@@ -333,7 +332,7 @@
                             class="search_close_icon" src="assets/search.png" alt=""></button>
                 </div>
 
-                <div *ngIf="!search" class="add_question_btn_wrapper">
+                <div *ngIf="!search" class="bottom_bar_wrapper">
                     <button (click)="showAddOverlay()" class="add_question_btn">
                         Hinzufügen</button>
 
@@ -343,8 +342,7 @@
                     <button class="add_question_btn" (click)="openFilter = true">
                         Filtern <span *ngIf="filters.length != 0" class="filter_number">{{ filters.length
                             }}</span></button>
-                </div>
-            </div>
+                </div>     
         </div>
 
 
@@ -676,8 +674,13 @@
             </div>
 
             <!-- BOTTOM BAR test preview-->
-            <div class="add_question_container d_flex" [class.d_none]="!preview">
-                <div class="add_question_btn_wrapper">
+            <!-- <div class="add_question_container d_flex" [class.d_none]="!preview"> -->
+                <div class="redu_undo_btn_wrapper d_flex_column">
+                    <button (click)="undoState()" class="undo_redo_btn d_flex"><img class="undo_redo_icon" src="assets/redu_undo.png" alt=""></button>
+                    <button (click)="redoState()" class="undo_redo_btn d_flex"><img class="undo_redo_icon is_turned"src="assets/redu_undo.png" alt=""></button>
+                </div>
+            
+                <div class="bottom_bar_wrapper" [class.d_none]="!preview">
                     <button class="add_question_btn" (click)="toggleSolutions()">{{!sampleSolution ? 'Lösung' :
                         'Aufgaben'}}</button>
 
@@ -686,7 +689,7 @@
                     </div>
                     <button class="add_question_btn">Speichern</button>
                 </div>
-            </div>
+            <!-- </div> -->
         </div>
     </div>
 

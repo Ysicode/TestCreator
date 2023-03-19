@@ -736,13 +736,37 @@ Answer styles
     margin-top: 75px;
 }
 
-.add_question_container {
+.redu_undo_btn_wrapper {
     position: fixed;
-    left: 0;
-    right: 0px;
-    bottom: 0px;
-    height: 100px;
-    z-index: 999999;
+    bottom: 25px;
+    left: 25px;
+    height: 70px;
+    box-shadow: 0 24px 24px -18px rgb(69 104 129 / 33%), 0 9px 45px 0 rgb(114 119 160 / 12%);
+    background: #e1e1e1;
+    border: 1px solid grey;
+    width: 35px;
+    border-radius: 50px;
+
+    .undo_redo_btn {
+        background: none;
+        border: none;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        &:hover {
+            cursor: pointer;
+            background: #f3f1f1;
+        }
+
+        .undo_redo_icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .is_turned {
+            transform: rotate(180deg);
+        }
+    }
 }
 
 .search {
@@ -780,9 +804,10 @@ Answer styles
     }
 }
 
-.add_question_btn_wrapper {
+.bottom_bar_wrapper {
+    position: fixed;
+    bottom: 25px;
     box-shadow: 0 24px 24px -18px rgb(69 104 129 / 33%), 0 9px 45px 0 rgb(114 119 160 / 12%);
-    position: relative;
     background: #e1e1e1;
     border: 1px solid grey;
     width: 320px;
@@ -845,7 +870,6 @@ Answer styles
         background: #f3f1f1;
     }
 }
-
 
 /*
 Styles für die Vorschau sektion
@@ -1408,7 +1432,7 @@ Styles für die Vorschau sektion
         margin-bottom: 3%;
     }
 
-    .add_question_btn_wrapper {
+    .bottom_bar_wrapper {
         height: 30px;
         width: 300px;
     }
@@ -1417,9 +1441,6 @@ Styles für die Vorschau sektion
         padding: 0px 25px 0px 25px;
     }
 
-    .add_question_container {
-        height: 60px;
-    }
     .tooltip_btn {
         height: 20px;
         width: 20px;
@@ -1431,18 +1452,18 @@ Styles für die Vorschau sektion
     }
 
     .question_added_leicht {
-        border-right: 3px solid #FCC419;
-        border-left: 3px solid #FCC419;
+        border-right: 3px solid #fcc419;
+        border-left: 3px solid #fcc419;
     }
 
     .question_added_mittel {
-        border-right: 3px solid #339AF0;
-        border-left: 3px solid #339AF0;
+        border-right: 3px solid #339af0;
+        border-left: 3px solid #339af0;
     }
 
     .question_added_schwer {
-        border-right: 3px solid #FA5252;
-        border-left: 3px solid #FA5252;
+        border-right: 3px solid #fa5252;
+        border-left: 3px solid #fa5252;
     }
 }
 
@@ -1563,8 +1584,7 @@ Styles für die Vorschau sektion
 }
 
 @media print {
-    .headline_test_infos,
-    .add_question_container {
+    .headline_test_infos {
         display: none;
     }
 
