@@ -1435,7 +1435,26 @@ Styles für die Vorschau sektion
     .bottom_bar_wrapper {
         height: 30px;
         width: 300px;
+        bottom: 15px;
     }
+
+ 
+.redu_undo_btn_wrapper {
+    bottom: 15px;
+    left: 15px;
+    height: 60px;
+    width: 30px;
+
+    .undo_redo_btn {
+        width: 30px;
+        height: 30px;
+
+        .undo_redo_icon {
+            width: 15px;
+            height: 15px;
+        }
+    }
+}
 
     .add_question_btn {
         padding: 0px 25px 0px 25px;
@@ -1470,6 +1489,10 @@ Styles für die Vorschau sektion
 @media (max-width: 450px) {
     .question_add_btn {
         padding: 2px;
+    }
+
+    .redu_undo_btn_wrapper {
+        display: none;
     }
 
     .answer_btn {

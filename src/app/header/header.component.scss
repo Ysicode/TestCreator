@@ -5,7 +5,7 @@
     left: 0;
     height: 50px;
     padding: 5px;
-    z-index: 99;
+    z-index: 999;
 }
 
 .logo {
@@ -32,7 +32,7 @@
     margin-right: 25px;
     .navlink {
         font-size: 14px;
-        background: #e1e1e1;
+        background: none;
         color: black;
         border: none;
         height: 100%;
@@ -53,7 +53,7 @@
             cursor: pointer;
             // background: #b8b7b7;
             background: #f3f1f1;
-            border: 1px solid #FA5252;
+            border: 1px solid #fa5252;
         }
         .logout_icon {
             width: 20px;
@@ -64,13 +64,125 @@
 
 .is_active {
     text-decoration: underline;
-    text-decoration-color: #339AF0;
+    text-decoration-color: #339af0;
     text-decoration-thickness: 2px;
 }
 
 .margin_zero {
     margin-top: 0px;
     margin-bottom: 0px;
+}
+
+.navbar_bg {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    height: 100vh;
+}
+
+.navbar_burger {
+    display: none;
+    width: 30px;
+    height: 30px;
+
+    &:hover {
+        cursor: pointer;
+        opacity: 0.6;
+
+        &.navbar_burger {
+            &::before {
+                width: 22px;
+            }
+        
+            &::after {
+                width: 22px;
+            }
+        }
+    }
+
+    &::before {
+        content: '';
+        width: 20px;
+        margin-bottom: 4px;
+        height: 2px;
+        background: black;
+    }
+
+    &::after {
+        content: '';
+        width: 20px;
+        height: 2px;
+        background: black;
+    }
+}
+
+.navbar_mobile {
+    width: 80%;
+    max-width: 300px;
+    height: 100%;
+    background: #e1e1e1;
+    justify-content: space-between;
+    border-left: 1px solid grey;
+    box-shadow: 0px 0px 21px 0px lightgrey;
+
+    .navlink_wrapper {
+        margin-top: 50px;
+
+        .navlink {
+            font-size: 14px;
+            color: black;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 19px;
+            background: none;
+            &:hover {
+                opacity: 0.6;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .wrapper_logout {
+        margin-bottom: 50px;
+
+        .navlink {
+            font-size: 14px;
+            color: black;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 19px;
+            background: none;
+        }
+
+        .logout_btn {
+            background: white;
+            border: 1px solid grey;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            &:hover {
+                cursor: pointer;
+                background: #f3f1f1;
+                border: 1px solid #fa5252;
+            }
+            .logout_icon {
+                width: 20px;
+                height: 20px;
+            }
+        }
+    }
+}
+
+@media (max-width: 600px) {
+    .navbar {
+        display: none;
+    }
+
+    .navbar_burger {
+        display: flex;
+    }
 }
 
 @media print {

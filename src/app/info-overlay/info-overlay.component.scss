@@ -36,4 +36,38 @@
 
 .overlay_information {
     text-align: center;
+    width: 90%;
+}
+
+@media (max-width: 850px) {
+    h2 {
+        font-size: 14px !important;
+        text-align: center;
+    }
+
+    .overlay_information {
+        font-size: 11px !important;
+    }
+
+    .btn {
+        font-size: 14px !important;
+        margin: 10px;
+    }
+}
+
+@media (max-width: 600px) {
+    h2 {
+        font-size: 13px !important;
+    }
+
+    .overlay_information {
+        font-size: 10px !important;
+    }
+
+    .btn {
+        font-size: 13px !important;
+    }
+    .section_separator {
+        width: 270px;
+    }
 }

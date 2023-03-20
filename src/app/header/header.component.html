@@ -1,18 +1,42 @@
-<div class="header d_flex_space" >
+<div class="header d_flex_space">
     <div class="d_flex">
         <img class="logo_icon" src="assets/testcreator.png" alt="">
         <h1 class="logo d_flex margin_zero">TestCreator</h1>
     </div>
 
     <nav class="navbar d_flex">
-
         <!-- <img crossorigin="anonymous" class="user_photo" src="assets/simon_weiss.jpg" alt=""> -->
-        <button routerLink="/dashboard" class="navlink margin_zero" [routerLinkActive]="'is_active'">Creator</button>
-        <button routerLink="/ablage" class="navlink margin_zero" [routerLinkActive]="'is_active'">Ablage</button>
-        <button routerLink="/account" class="navlink margin_zero" [routerLinkActive]="'is_active'">Account</button>
-            <div class="d_flex wrapper_logout">
-                <img class="logout_icon" src="assets/logout.png" alt="" *ngIf="data.getUserDataFromLocalStorage()"
-                    (click)="data.logoutUser()">
-            </div>
+        <button (click)="closeMobileNavbar()" routerLink="/dashboard" class="navlink margin_zero" [routerLinkActive]="'is_active'">Creator</button>
+        <button (click)="closeMobileNavbar()" routerLink="/ablage" class="navlink margin_zero" [routerLinkActive]="'is_active'">Ablage</button>
+        <button (click)="closeMobileNavbar()" routerLink="/account" class="navlink margin_zero" [routerLinkActive]="'is_active'">Account</button>
+        <div class="d_flex wrapper_logout">
+            <img class="logout_icon" src="assets/logout.png" alt="" *ngIf="data.getUserDataFromLocalStorage()"
+                (click)="data.logoutUser()">
+        </div>
     </nav>
+
+    <div (click)="showMobileNavbar();" class="navbar_burger d_flex_column">
+
+    </div>
+
+    <div (click)="closeMobileNavbar()" class="navbar_bg d_flex_end" *ngIf="mobileNavbar">
+        <nav (click)="onEvent($event)" class="navbar_mobile d_flex_column">
+            <!-- <img crossorigin="anonymous" class="user_photo" src="assets/simon_weiss.jpg" alt=""> -->
+            <div class="navlink_wrapper d_flex_column">
+                <button routerLink="/dashboard" class="navlink margin_zero"
+                    [routerLinkActive]="'is_active'">Creator</button>
+                <button routerLink="/ablage" class="navlink margin_zero"
+                    [routerLinkActive]="'is_active'">Ablage</button>
+                <button routerLink="/account" class="navlink margin_zero"
+                    [routerLinkActive]="'is_active'">Account</button>
+            </div>
+            <div class="wrapper_logout d_flex">
+                <button class="navlink margin_zero">Abmelden</button>
+                <div class="d_flex logout_btn">
+                    <img class="logout_icon" src="assets/logout.png" alt="" *ngIf="data.getUserDataFromLocalStorage()"
+                        (click)="data.logoutUser()">
+                </div>
+            </div>
+        </nav>
+    </div>
 </div>

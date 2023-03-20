@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { dataTransferService } from '../services/dataTransfer.service';
 
@@ -9,6 +9,8 @@ import { dataTransferService } from '../services/dataTransfer.service';
   providers: [dataTransferService]
 })
 export class HeaderComponent implements OnInit {
+  mobileNavbar: boolean;
+
   constructor(public data: dataTransferService, private router: Router) { }
 
   ngOnInit(): void {
@@ -21,5 +23,17 @@ export class HeaderComponent implements OnInit {
     } else {
       this.router.navigate(['login']);
     }
+  }
+
+  showMobileNavbar() {
+    this.mobileNavbar = true; 
+  }
+
+  closeMobileNavbar() {
+    this.mobileNavbar = false; 
+  }
+
+  onEvent(event: any) {
+    event.stopPropagation();
   }
 }
