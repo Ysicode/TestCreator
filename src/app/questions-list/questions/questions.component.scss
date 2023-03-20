@@ -94,7 +94,7 @@ body {
 .add_question_overlay {
     position: absolute;
     top: 0;
-    z-index: 101;
+    z-index: 9999;
 }
 
 .page_break {
@@ -1010,7 +1010,7 @@ Styles für die Vorschau sektion
 }
 
 .added_questions_empty_container {
-    margin-top: 200px;
+    margin-top: 34%;
 }
 
 .__markerjs2__3_toolbox-button-row_colors::ng-deep {
@@ -1393,6 +1393,18 @@ Styles für die Vorschau sektion
     .subject_btn,
     .keyword_textarea {
         font-size: 13px;
+    }
+
+    .subject_btn {
+        font-size: 13px;
+        padding: 0px 25px 0px 25px;
+        height: 30px;
+        margin: 5px;
+    }
+
+    .margin_top_bottom {
+        margin-top: 40px;
+        margin-bottom: 40px;
     }
 
     .preview_btn {

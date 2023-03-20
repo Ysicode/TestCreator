@@ -120,3 +120,30 @@
     background: grey;
     cursor: pointer;
 }
+
+@media (max-width: 850px) {
+    .input_wrapper {
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    .save_btn,
+    .cancel_btn {
+        font-size: 14px !important;
+        margin: 10px;
+    }
+
+    .inputfield,
+    .timeNumber {
+        font-size: 14px !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .save_btn,
+    .cancel_btn,
+    .inputfield,
+    .timeNumber {
+        font-size: 13px !important;
+    }
+}

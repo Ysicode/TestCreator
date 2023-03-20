@@ -95,7 +95,7 @@
             &::before {
                 width: 22px;
             }
-        
+
             &::after {
                 width: 22px;
             }
@@ -103,7 +103,7 @@
     }
 
     &::before {
-        content: '';
+        content: "";
         width: 20px;
         margin-bottom: 4px;
         height: 2px;
@@ -111,7 +111,7 @@
     }
 
     &::after {
-        content: '';
+        content: "";
         width: 20px;
         height: 2px;
         background: black;
@@ -182,6 +182,14 @@
 
     .navbar_burger {
         display: flex;
+    }
+    .logo {
+        font-size: 15px !important;
+    }
+
+    .logo_icon {
+        width: 25px;
+        height: 25px;
     }
 }
 

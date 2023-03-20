@@ -230,6 +230,7 @@
 }
 
 .keywords_subline {
+    text-align: center;
     margin-top: 20px;
     margin-bottom: 0px;
     font-size: 15px;
@@ -267,7 +268,7 @@
 }
 
 .margin_top_zero {
-    margin-top: 0px;
+    margin-top: 0px !important;
 }
 
 .plus_margin_top {
@@ -377,7 +378,6 @@ h3 {
 
     .rangbar_wrapper {
         margin-top: 50px;
-        margin-bottom: 50px;
     }
 
     .points_number {
@@ -393,8 +393,38 @@ h3 {
         font-size: 13px;
     }
 
+    .subject_btn {
+        font-size: 13px;
+        padding: 0px 25px 0px 25px;
+        height: 30px;
+        margin: 5px;
+    }
+
+    .section {
+        margin-top: 40px;
+        padding-bottom: 40px;
+    }
+
     .section_separator {
         width: 270px;
+    }
+
+    .margin_top_bottom {
+        margin-top: 40px;
+        margin-bottom: 40px;
+    }
+
+    .rangbar_wrapper {
+        padding-bottom: 40px !important;
+        margin-top: 0px !important;
+    }
+
+    .points_wrapper {
+        padding: 5px;
+    }
+
+    .keywords_subline {
+        font-size: 12px;
     }
 
     .preview_btn {
@@ -454,6 +484,10 @@ h3 {
             width: 10px;
             height: 10px;
         }
+    }
+
+    .save_btn_wrapper {
+        margin-bottom: 100px;
     }
 }
 
