@@ -95,7 +95,7 @@ export class QuestionsComponent implements OnInit {
   @HostListener('document:keydown.meta.z', ['$event'])
   undo(event: KeyboardEvent) {
     event.preventDefault();
-   this.undoState();
+    this.undoState();
   }
 
   @HostListener('document:keydown.meta.shift.z', ['$event'])
@@ -537,8 +537,7 @@ export class QuestionsComponent implements OnInit {
     }
 
     function doDrag(e: { clientY: number; }) {
-      // console.log('startheight', startHeight, 'e<Client', e.clientY, 'startY', startY);
-
+      
       let height = ((startHeight + e.clientY - startY) * 102.5) / page;
       question.style.height = height + '%';
       let questionHeight = Number(question.style.height.replace('%', ''));
@@ -554,14 +553,55 @@ export class QuestionsComponent implements OnInit {
       document.documentElement.removeEventListener('mousemove', doDrag, false);
       document.documentElement.removeEventListener('mouseup', stopDrag, false);
     }
+  }
+
+  resizeQuestionOnMouseUp( pageIndex: number, pagePosition: number) {
+    let question = this.element(`question${this.currentEditQuestion}`);
     this.test.pages[pageIndex][0][pagePosition]['questionHeight'] = question.style.height;
     this.addCurrentTestToLocalStorage();
   }
 
-  // ----------------------------------
+    // RESIZE IMAGE MOUSE
+    resizeImage(pageIndex: number, pagePosition: number, questionPosition: number) {
+      this.currentEditImage = `${pageIndex}${pagePosition}${questionPosition}`
+      let startX: number, startWidth: number;
+      let resizer = this.element(`resizeImage${this.currentEditImage}`);
+      let image = this.element(`img_edit_wrapper${this.currentEditImage}`);
+      let question = this.element(`question${pageIndex}${pagePosition}`);
+      let questionWidth = this.getWidth(`question${pageIndex}${pagePosition}`);
+      this.checkMaxHeightOfLastQuestionOfPageIndex(pageIndex, pagePosition, question);
+      resizer.addEventListener('mousedown', initDrag, false);
+  
+      function initDrag(e: { clientX: number; }) {
+        startX = e.clientX;
+        startWidth = parseInt(document.defaultView.getComputedStyle(image).width, 10);
+        document.documentElement.addEventListener('mousemove', doDrag, false);
+        document.documentElement.addEventListener('mouseup', stopDrag, false);
+      }
+  
+      function doDrag(e: { clientX: number; }) {
+        let width = ((startWidth + e.clientX - startX) * 100) / questionWidth;
+        image.style.width = width + '%';
+        // image.style.width = (startWidth + e.clientX - startX) + 'px';
+        question.style.height = 'fit-content';
+      }
+  
+      function stopDrag() {
+        document.documentElement.removeEventListener('mousemove', doDrag, false);
+        document.documentElement.removeEventListener('mouseup', stopDrag, false);
+      }
+    
+    }
+  
+    resizeImageOnMouseUp(pageIndex: number, pagePosition: number, questionPosition: number) {
+      let image = this.element(`img_edit_wrapper${this.currentEditImage}`);
+      this.test.pages[pageIndex][0][pagePosition]['frage']['blocks'][questionPosition]['width'] = image.style.width;
+      this.addCurrentTestToLocalStorage();
+    }
+    /////////////////////////
 
 
-
+  // RESIZE QUESTION TOUCH
   resizeQuestionOnTouchStart(event: TouchEvent, pageIndex: number, pagePosition: number) {
     let question = this.element(`question${this.currentEditQuestion}`);
     this.startHeight = this.getHeight(`question${this.currentEditQuestion}`);
@@ -575,7 +615,6 @@ export class QuestionsComponent implements OnInit {
     // this.startWidth = parseInt(event.target['style'].width, 10);
     // console.log('StartY', this.startY, 'StartHeight',this.startHeight)
   }
-
 
   resizeQuestionOnTouchMove(event: TouchEvent, pageIndex: number, pagePosition: number) {
     let page = this.getHeight(`test_dinA4${pageIndex}`);
@@ -608,42 +647,10 @@ export class QuestionsComponent implements OnInit {
     this.test.pages[pageIndex][0][pagePosition]['questionHeight'] = question.style.height;
     this.addCurrentTestToLocalStorage();
   }
+  ///////////////////////
 
 
-
-  resizeImage(pageIndex: number, pagePosition: number, questionPosition: number) {
-    this.currentEditImage = `${pageIndex}${pagePosition}${questionPosition}`
-    let startX: number, startWidth: number;
-    let resizer = this.element(`resizeImage${this.currentEditImage}`);
-    let image = this.element(`img_edit_wrapper${this.currentEditImage}`);
-    let question = this.element(`question${pageIndex}${pagePosition}`);
-    let questionWidth = this.getWidth(`question${pageIndex}${pagePosition}`);
-    this.checkMaxHeightOfLastQuestionOfPageIndex(pageIndex, pagePosition, question);
-    resizer.addEventListener('mousedown', initDrag, false);
-
-    function initDrag(e: { clientX: number; }) {
-      startX = e.clientX;
-      startWidth = parseInt(document.defaultView.getComputedStyle(image).width, 10);
-      document.documentElement.addEventListener('mousemove', doDrag, false);
-      document.documentElement.addEventListener('mouseup', stopDrag, false);
-    }
-
-    function doDrag(e: { clientX: number; }) {
-      let width = ((startWidth + e.clientX - startX) * 100) / questionWidth;
-      image.style.width = width + '%';
-      // image.style.width = (startWidth + e.clientX - startX) + 'px';
-      question.style.height = 'fit-content';
-    }
-
-    function stopDrag() {
-      document.documentElement.removeEventListener('mousemove', doDrag, false);
-      document.documentElement.removeEventListener('mouseup', stopDrag, false);
-    }
-    this.test.pages[pageIndex][0][pagePosition]['frage']['blocks'][questionPosition]['width'] = image.style.width;
-    this.addCurrentTestToLocalStorage();
-  }
-
-
+  // RESIZE IMAGE TOUCH
   resizeImageOnTouchStart(event: TouchEvent, pageIndex: number, pagePosition: number, questionPosition: number) {
     this.currentEditImage = `${pageIndex}${pagePosition}${questionPosition}`
     let question = this.element(`question${pageIndex}${pagePosition}`);
@@ -662,9 +669,6 @@ export class QuestionsComponent implements OnInit {
 
     const currentX = event.touches[0].clientX;
     const deltaX = currentX - this.startX;
-    // const currentY = event.touches[0].clientY;
-    // const deltaY = currentY - this.startY;
-
     const newWidth = this.startWidth + Number(deltaX);
     const newWidthPercentage = (newWidth / questionWidth) * 100;
 
@@ -677,6 +681,9 @@ export class QuestionsComponent implements OnInit {
     this.test.pages[pageIndex][0][pagePosition]['frage']['blocks'][questionPosition]['width'] = image.style.width;
     this.addCurrentTestToLocalStorage();
   }
+  /////////////////////////
+
+
 
   /**
    * this function is used to set an interval to multiple call 2 functions while resizing a question

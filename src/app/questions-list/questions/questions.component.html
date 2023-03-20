@@ -461,7 +461,7 @@
                                         <div class="img_wrapper d_flex_start">
                                             <div *ngIf="question['type'] === 'image'"
                                                 id="img_edit_wrapper{{ j }}{{ i }}{{ k }}"
-                                                (mouseover)="resizeImage(j, i, k)"
+                                                (mouseover)="resizeImage(j, i, k)" (mouseup)="resizeImageOnMouseUp(j, i, k)"
                                                 (mousedown)="checkHeightsInterval('start')"
                                                 (mouseup)="checkHeightsInterval('stop')"
                                                 (touchstart)="resizeImageOnTouchStart($event, j, i, k)"
@@ -650,11 +650,10 @@
                             </div>
 
                             <!-- RESIZE Line -->
-                            <div (click)="service.onEvent($event)" (mouseover)="resizeQuestion(j, i)"
+                            <div (click)="service.onEvent($event)" 
 
-                                (mousedown)="checkHeightsInterval('start')" (mouseup)="checkHeightsInterval('stop')"
-                                (mousemove)="getSquaresAndLines(j, i)" 
                                 (touchstart)="resizeQuestionOnTouchStart($event, j, i)" (touchmove)="resizeQuestionOnTouchMove($event, j, i)" (touchend)="resizeQuestionOnTouchEnd(j, i)"
+                               (mouseover)="resizeQuestion(j, i)"  (mouseup)="resizeQuestionOnMouseUp(j, i)"
                                 (touchmove)="checkHeightOfAllPreviewQuestions(); setQuestionNumber(); getSquaresAndLines(j, i)"
                                 id="resize{{j}}{{i}}" class="height_info_wrapper d_flex show_onHover">
                                 <span class="resize_line"></span>
