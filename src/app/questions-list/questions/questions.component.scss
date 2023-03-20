@@ -813,6 +813,7 @@ Answer styles
     width: 320px;
     height: 35px;
     border-radius: 50px;
+    z-index: 999999999;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1106,6 +1107,24 @@ Styles für die Vorschau sektion
         .remove_icon {
             width: 15px;
             height: 15px;
+        }
+    }
+
+    .save_edited_question {
+        position: absolute;
+        z-index: 10;
+        width: 100px;
+        font-size: 10px;
+        width: 166px;
+        height: 25px;
+        background: none;
+        top: 0;
+        right: 40px;
+        border: none;
+
+        &:hover {
+            cursor: pointer;
+            background: #e3e5e5;
         }
     }
 }
@@ -1450,23 +1469,22 @@ Styles für die Vorschau sektion
         bottom: 15px;
     }
 
- 
-.redu_undo_btn_wrapper {
-    bottom: 15px;
-    left: 15px;
-    height: 60px;
-    width: 30px;
-
-    .undo_redo_btn {
+    .redu_undo_btn_wrapper {
+        bottom: 15px;
+        left: 15px;
+        height: 60px;
         width: 30px;
-        height: 30px;
 
-        .undo_redo_icon {
-            width: 15px;
-            height: 15px;
+        .undo_redo_btn {
+            width: 30px;
+            height: 30px;
+
+            .undo_redo_icon {
+                width: 15px;
+                height: 15px;
+            }
         }
     }
-}
 
     .add_question_btn {
         padding: 0px 25px 0px 25px;

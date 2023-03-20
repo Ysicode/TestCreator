@@ -125,11 +125,6 @@ export class dataTransferService {
         });
     }
 
-    getName() {
-        return this.loaded
-    }
-
-
     //LOAD ALL QUESTIONS
     async loadQuestions() {
         //gets all questions
@@ -275,6 +270,18 @@ export class dataTransferService {
     deleteQuestion(questionId: string) {
         const coll: any = doc(this.firestore, 'users', this.currentSchool, 'fragen', questionId);
         deleteDoc(coll);
+    }
+
+      /**
+    * This function is used to update firestore with the new data from an input field
+    */
+      async updateQuestion(updatedQuestion: any , questionId: string) {
+        const coll: any = doc(this.firestore, 'users', this.currentSchool, 'fragen', questionId);
+        await updateDoc(coll, {
+           frage: updatedQuestion.frage,
+           questionHeight: updatedQuestion.questionHeight,
+           whitespace: updatedQuestion.whitespace
+        })
     }
 
     log(id: string) {

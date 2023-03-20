@@ -1,6 +1,7 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { EditComponent } from 'src/app/add/edit/edit.component';
+import { AlertService } from 'src/app/services/alert.service';
 import { dataTransferService } from 'src/app/services/dataTransfer.service';
 import { overlaysService } from 'src/app/services/overlays.service';
 
@@ -10,7 +11,7 @@ import { overlaysService } from 'src/app/services/overlays.service';
   host: { class: 'd_flex' },
   templateUrl: './questions.component.html',
   styleUrls: ['./questions.component.scss'],
-  providers: [overlaysService, dataTransferService]
+  providers: [overlaysService, dataTransferService, AlertService]
 })
 
 export class QuestionsComponent implements OnInit {
@@ -104,7 +105,7 @@ export class QuestionsComponent implements OnInit {
     this.redoState();
   }
 
-  constructor(public service: overlaysService, public data: dataTransferService) { }
+  constructor(public service: overlaysService, public data: dataTransferService, public alertService: AlertService) { }
   // @HostListener("click", ["$event"]) //Lädt die Seite jedesmal neu wenn geclickt wird Braucht man aktuell nicht
 
   async ngOnInit(): Promise<void> {
@@ -215,7 +216,10 @@ export class QuestionsComponent implements OnInit {
     this.setQuestionNumber();
     this.setTestInfo();
     this.renderSquaresAndLinesOfQuestionsInTest();
-    this.styleAddedQuestionsInListViewAfterLoadingTestData();
+    setTimeout(() => {
+      this.styleAddedQuestionsInListViewAfterLoadingTestData();
+    }, 1000);
+
   }
 
 
@@ -260,6 +264,7 @@ export class QuestionsComponent implements OnInit {
       }
     }
     this.checkHeightOfAllPreviewQuestions();
+    this.renderSquaresAndLinesOfQuestionsInTest();
     this.setQuestionNumber();
     this.addCurrentTestToLocalStorage();
   }
@@ -319,11 +324,13 @@ export class QuestionsComponent implements OnInit {
   * If a question is added to the test, add styling to the question in listview
   */
   styleAddedQuestionsInListViewAfterLoadingTestData() {
+    console.log(this.data.loadedQuestions)
     for (let a = 0; a < this.data.loadedQuestions.length; a++) {
       for (let i = 0; i < this.test.pages.length; i++) {
         for (let j = 0; j < this.test.pages[i][0].length; j++) {
           if (this.test.pages[i][0][j].id == this.data.loadedQuestions[a]['id']) {
             this.styleAddButton(a, 'add_styling', this.data.loadedQuestions[a]['schwierigkeit']);
+            console.log(this.test.pages[i][0][j].id )
           }
           if (this.test.pages[i][0][j].id != this.data.loadedQuestions[a]['id']) {
             this.styleAddButton(a, 'remove_styling', this.data.loadedQuestions[a]['schwierigkeit']);
@@ -537,7 +544,7 @@ export class QuestionsComponent implements OnInit {
     }
 
     function doDrag(e: { clientY: number; }) {
-      
+
       let height = ((startHeight + e.clientY - startY) * 102.5) / page;
       question.style.height = height + '%';
       let questionHeight = Number(question.style.height.replace('%', ''));
@@ -555,51 +562,62 @@ export class QuestionsComponent implements OnInit {
     }
   }
 
-  resizeQuestionOnMouseUp( pageIndex: number, pagePosition: number) {
+  resizeQuestionOnMouseUp(pageIndex: number, pagePosition: number) {
     let question = this.element(`question${this.currentEditQuestion}`);
     this.test.pages[pageIndex][0][pagePosition]['questionHeight'] = question.style.height;
     this.addCurrentTestToLocalStorage();
   }
 
-    // RESIZE IMAGE MOUSE
-    resizeImage(pageIndex: number, pagePosition: number, questionPosition: number) {
-      this.currentEditImage = `${pageIndex}${pagePosition}${questionPosition}`
-      let startX: number, startWidth: number;
-      let resizer = this.element(`resizeImage${this.currentEditImage}`);
-      let image = this.element(`img_edit_wrapper${this.currentEditImage}`);
-      let question = this.element(`question${pageIndex}${pagePosition}`);
-      let questionWidth = this.getWidth(`question${pageIndex}${pagePosition}`);
-      this.checkMaxHeightOfLastQuestionOfPageIndex(pageIndex, pagePosition, question);
-      resizer.addEventListener('mousedown', initDrag, false);
-  
-      function initDrag(e: { clientX: number; }) {
-        startX = e.clientX;
-        startWidth = parseInt(document.defaultView.getComputedStyle(image).width, 10);
-        document.documentElement.addEventListener('mousemove', doDrag, false);
-        document.documentElement.addEventListener('mouseup', stopDrag, false);
-      }
-  
-      function doDrag(e: { clientX: number; }) {
-        let width = ((startWidth + e.clientX - startX) * 100) / questionWidth;
-        image.style.width = width + '%';
-        // image.style.width = (startWidth + e.clientX - startX) + 'px';
-        question.style.height = 'fit-content';
-      }
-  
-      function stopDrag() {
-        document.documentElement.removeEventListener('mousemove', doDrag, false);
-        document.documentElement.removeEventListener('mouseup', stopDrag, false);
-      }
-    
-    }
-  
-    resizeImageOnMouseUp(pageIndex: number, pagePosition: number, questionPosition: number) {
-      let image = this.element(`img_edit_wrapper${this.currentEditImage}`);
-      this.test.pages[pageIndex][0][pagePosition]['frage']['blocks'][questionPosition]['width'] = image.style.width;
-      this.addCurrentTestToLocalStorage();
-    }
-    /////////////////////////
+  // RESIZE IMAGE MOUSE
+  resizeImage(pageIndex: number, pagePosition: number, questionPosition: number) {
+    this.currentEditImage = `${pageIndex}${pagePosition}${questionPosition}`
+    let startX: number, startWidth: number;
+    let resizer = this.element(`resizeImage${this.currentEditImage}`);
+    let image = this.element(`img_edit_wrapper${this.currentEditImage}`);
+    let question = this.element(`question${pageIndex}${pagePosition}`);
+    let questionWidth = this.getWidth(`question${pageIndex}${pagePosition}`);
+    this.checkMaxHeightOfLastQuestionOfPageIndex(pageIndex, pagePosition, question);
+    resizer.addEventListener('mousedown', initDrag, false);
 
+    function initDrag(e: { clientX: number; }) {
+      startX = e.clientX;
+      startWidth = parseInt(document.defaultView.getComputedStyle(image).width, 10);
+      document.documentElement.addEventListener('mousemove', doDrag, false);
+      document.documentElement.addEventListener('mouseup', stopDrag, false);
+    }
+
+    function doDrag(e: { clientX: number; }) {
+      let width = ((startWidth + e.clientX - startX) * 100) / questionWidth;
+      image.style.width = width + '%';
+      // image.style.width = (startWidth + e.clientX - startX) + 'px';
+      question.style.height = 'fit-content';
+    }
+
+    function stopDrag() {
+      document.documentElement.removeEventListener('mousemove', doDrag, false);
+      document.documentElement.removeEventListener('mouseup', stopDrag, false);
+    }
+  }
+
+  resizeImageOnMouseUp(pageIndex: number, pagePosition: number, questionPosition: number) {
+    let image = this.element(`img_edit_wrapper${this.currentEditImage}`);
+    this.test.pages[pageIndex][0][pagePosition]['frage']['blocks'][questionPosition]['width'] = image.style.width;
+    console.log(this.test.pages[pageIndex][0][pagePosition])
+    this.addCurrentTestToLocalStorage();
+  }
+  /////////////////////////
+
+  saveEditedQuestionAsDefault(pageIndex: number, pagePosition: number, questionId: string) {
+    let updatedQuestion = this.test.pages[pageIndex][0][pagePosition];
+    this.data.updateQuestion(updatedQuestion, questionId)
+    this.alertService.showAlert('Hallo')
+    this.alertService.alert = true;
+    let alert = document.getElementById('alert');
+    alert.innerHTML = this.alertService.showAlert('Aktuelles Layout als Standard gespeichert');
+    setTimeout(() => {
+      this.alertService.alert = false;
+    }, 3000);
+  }
 
   // RESIZE QUESTION TOUCH
   resizeQuestionOnTouchStart(event: TouchEvent, pageIndex: number, pagePosition: number) {
@@ -690,16 +708,13 @@ export class QuestionsComponent implements OnInit {
    * @param mouse - is a string parameter to either start or stop the interval
    */
   checkHeightsInterval(mode: string) {
-    console.log('triggered beginn')
     if (mode === 'start') {
-      console.log('triggered start')
       this.checkHeightsAndSetQuestionNumberInterval = setInterval(() => {
         this.checkHeightOfAllPreviewQuestions();
         this.setQuestionNumber();
       }, 70)
     }
     if (mode === 'stop') {
-      console.log('triggered dtop')
       clearInterval(this.checkHeightsAndSetQuestionNumberInterval);
     }
   }
@@ -793,8 +808,9 @@ export class QuestionsComponent implements OnInit {
 
   async renderSquaresAndLinesOfQuestionsInTest() {
     for (let i = 0; i < this.test.pages.length; i++) {
+      await this.stopLoop(500)
       for (let j = 0; j < this.test.pages[i][0].length; j++) {
-        await this.stopLoop(100)
+        await this.stopLoop(500)
         if (this.test.pages[i][0][j]['whitespace']) {
           await this.getSquaresAndLines(i, j);
         }

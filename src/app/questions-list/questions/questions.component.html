@@ -324,25 +324,24 @@
 
 
             <!-- BOTTOMBAR Questionslist SEARCH / BUTTONS-->
-                <div *ngIf="search" class="bottom_bar_wrapper">
-                    <input class="search" #search id="search" type="search" placeholder="Suche"
-                        value="{{currentSearch}}" (keyup)="onKeyUpSearchInput($event)"
-                        (keyup.enter)="closeSearch(search.value)">
-                    <button class="shot_search_btn d_flex" (click)="closeSearch(search.value)"><img
-                            class="search_close_icon" src="assets/search.png" alt=""></button>
+            <div *ngIf="search" class="bottom_bar_wrapper">
+                <input class="search" #search id="search" type="search" placeholder="Suche" value="{{currentSearch}}"
+                    (keyup)="onKeyUpSearchInput($event)" (keyup.enter)="closeSearch(search.value)">
+                <button class="shot_search_btn d_flex" (click)="closeSearch(search.value)"><img
+                        class="search_close_icon" src="assets/search.png" alt=""></button>
+            </div>
+
+            <div *ngIf="!search" class="bottom_bar_wrapper">
+                <button (click)="showAddOverlay()" class="add_question_btn">
+                    Hinzufügen</button>
+
+                <div class="menu_burger d_flex">
+                    <img (click)="openSearch()" style="width: 60%;" src="assets/search.png" alt="">
                 </div>
-
-                <div *ngIf="!search" class="bottom_bar_wrapper">
-                    <button (click)="showAddOverlay()" class="add_question_btn">
-                        Hinzufügen</button>
-
-                    <div class="menu_burger d_flex">
-                        <img (click)="openSearch()" style="width: 60%;" src="assets/search.png" alt="">
-                    </div>
-                    <button class="add_question_btn" (click)="openFilter = true">
-                        Filtern <span *ngIf="filters.length != 0" class="filter_number">{{ filters.length
-                            }}</span></button>
-                </div>     
+                <button class="add_question_btn" (click)="openFilter = true">
+                    Filtern <span *ngIf="filters.length != 0" class="filter_number">{{ filters.length
+                        }}</span></button>
+            </div>
         </div>
 
 
@@ -350,13 +349,13 @@
         <!-- TEST PREVIEW -->
         <!--  -->
         <div *ngIf="data.loaded" id="test_print" class="test_print" [class.opacity0]="!preview"
-            style="position: relative;"  (mouseup)="checkHeightsInterval('stop')">  
+            style="position: relative;" (mouseup)="checkHeightsInterval('stop')">
             <div id="test_dinA4{{j}}" *ngFor="let pages of test['pages'] let j = index" class="test_dinA4 page_break">
                 <div id="page_number">
                     <p style="margin-bottom: 0px;" class="page_number">{{j + 1}}/{{ test['pages'].length }}</p>
                 </div>
-                <button *ngIf="j == 0" (click)="deleteTestOverlay = true;"
-                    class="new_test_btn show_onHover d_flex"><img class="remove_icon" src="assets/x_icon.png" alt="">
+                <button *ngIf="j == 0" (click)="deleteTestOverlay = true;" class="new_test_btn show_onHover d_flex"><img
+                        class="remove_icon" src="assets/x_icon.png" alt="">
                 </button>
 
                 <app-info-overlay *ngIf="deleteTestOverlay" (closeTestDeleteOverlay)="deleteTestOverlay = false"
@@ -432,6 +431,9 @@
                                         /{{ data['punktzahl'] }}
                                     </div>
                                 </div>
+                                <button (click)="saveEditedQuestionAsDefault(j, i, data['id'])"
+                                    style="margin-right: 40px;" class="save_edited_question show_onHover d_flex">Layout
+                                    als Standard speichern</button>
                                 <button id="{{ 'remove_btn' + i }}"
                                     (click)="removeFromTest(data['id'], data['schwierigkeit']); deleteEmptyPages(j)"
                                     class="remove_from_test_btn show_onHover d_flex"><img class="remove_icon"
@@ -461,14 +463,15 @@
                                         <div class="img_wrapper d_flex_start">
                                             <div *ngIf="question['type'] === 'image'"
                                                 id="img_edit_wrapper{{ j }}{{ i }}{{ k }}"
-                                                (mouseover)="resizeImage(j, i, k)" (mouseup)="resizeImageOnMouseUp(j, i, k)"
+                                                (mouseover)="resizeImage(j, i, k)"
+                                                (mouseup)="resizeImageOnMouseUp(j, i, k)"
                                                 (mousedown)="checkHeightsInterval('start')"
                                                 (mouseup)="checkHeightsInterval('stop')"
                                                 (touchstart)="resizeImageOnTouchStart($event, j, i, k)"
                                                 (touchmove)="resizeImageOnTouchMove($event, j, i)"
                                                 (touchend)="resizeImageOnTouchEnd(j, i, k)"
                                                 (touchmove)="checkHeightOfAllPreviewQuestions(); setQuestionNumber(); getSquaresAndLines(j, i)"
-                                                 class="img_edit_wrapper d_flex"
+                                                class="img_edit_wrapper d_flex"
                                                 [ngStyle]="{'width': question['width'] ? question['width'] : '30%'}">
                                                 <img id="questionImage{{ j }}{{ i }}{{ k }}"
                                                     class="preview_question_img"
@@ -650,47 +653,59 @@
                             </div>
 
                             <!-- RESIZE Line -->
-                            <div (click)="service.onEvent($event)" 
-
-                                (touchstart)="resizeQuestionOnTouchStart($event, j, i)" (touchmove)="resizeQuestionOnTouchMove($event, j, i)" (touchend)="resizeQuestionOnTouchEnd(j, i)"
-                               (mouseover)="resizeQuestion(j, i)"  (mouseup)="resizeQuestionOnMouseUp(j, i)"
+                            <div (click)="service.onEvent($event)" (mousedown)="checkHeightsInterval('start')"
+                                (mouseup)="checkHeightsInterval('stop')"
+                                (touchstart)="resizeQuestionOnTouchStart($event, j, i)"
+                                (touchmove)="resizeQuestionOnTouchMove($event, j, i)"
+                                (touchend)="resizeQuestionOnTouchEnd(j, i)" (mouseover)="resizeQuestion(j, i)"
+                                (mouseup)="resizeQuestionOnMouseUp(j, i)"
+                                (mousemove)="setQuestionNumber(); getSquaresAndLines(j, i)"
                                 (touchmove)="checkHeightOfAllPreviewQuestions(); setQuestionNumber(); getSquaresAndLines(j, i)"
                                 id="resize{{j}}{{i}}" class="height_info_wrapper d_flex show_onHover">
                                 <span class="resize_line"></span>
                             </div>
                         </div>
 
-                        <!-- whitspace SQUARES -->
-                        <div id="whitespace_squares{{j}}{{i}}" class="d_flex_column squareWhitespace_wrapper"
-                            [ngStyle]="{'display' : data['whitespace'] == 'squares' && !sampleSolution ? 'block' : 'none'}">
-                        </div>
-                        <!-- whitespace LINES -->
-                        <div id="whitespace_lines{{j}}{{i}}" class="d_flex_column linesWhitespace_wrapper"
-                            [ngStyle]="{'display' : data['whitespace'] == 'lines' && !sampleSolution  ? 'block' : 'none'}">
-                        </div>
+           
+                            <!-- whitspace SQUARES -->
+                            <div id="whitespace_squares{{j}}{{i}}" class="d_flex_column squareWhitespace_wrapper"
+                                [ngStyle]="{'display' : data['whitespace'] == 'squares' && !sampleSolution ? 'block' : 'none'}">
+                            </div>
+                            <!-- whitespace LINES -->
+                            <div id="whitespace_lines{{j}}{{i}}" class="d_flex_column linesWhitespace_wrapper"
+                                [ngStyle]="{'display' : data['whitespace'] == 'lines' && !sampleSolution  ? 'block' : 'none'}">
+                            </div>
+                     
+
                     </div>
                 </div>
             </div>
 
             <!-- BOTTOM BAR test preview-->
             <!-- <div class="add_question_container d_flex" [class.d_none]="!preview"> -->
-                <div class="redu_undo_btn_wrapper d_flex_column">
-                    <button (click)="undoState()" class="undo_redo_btn d_flex"><img class="undo_redo_icon" src="assets/redu_undo.png" alt=""></button>
-                    <button (click)="redoState()" class="undo_redo_btn d_flex"><img class="undo_redo_icon is_turned"src="assets/redu_undo.png" alt=""></button>
-                </div>
-            
-                <div class="bottom_bar_wrapper" [class.d_none]="!preview">
-                    <button class="add_question_btn" (click)="toggleSolutions()">{{!sampleSolution ? 'Lösung' :
-                        'Aufgaben'}}</button>
+            <div class="redu_undo_btn_wrapper d_flex_column">
+                <button (click)="undoState()" class="undo_redo_btn d_flex"><img class="undo_redo_icon"
+                        src="assets/redu_undo.png" alt=""></button>
+                <button (click)="redoState()" class="undo_redo_btn d_flex"><img class="undo_redo_icon is_turned"
+                        src="assets/redu_undo.png" alt=""></button>
+            </div>
 
-                    <div class="menu_burger d_flex" matTooltip="Export" matTooltipPosition="above">
-                        <img (click)="printTest()" style="width: 60%;" src="assets/export_icon.png" alt="">
-                    </div>
-                    <button class="add_question_btn">Speichern</button>
+            <div class="bottom_bar_wrapper" [class.d_none]="!preview">
+                <button class="add_question_btn" (click)="toggleSolutions()">{{!sampleSolution ? 'Lösung' :
+                    'Aufgaben'}}</button>
+
+                <div class="menu_burger d_flex" matTooltip="Export" matTooltipPosition="above">
+                    <img (click)="printTest()" style="width: 60%;" src="assets/export_icon.png" alt="">
                 </div>
+                <button class="add_question_btn">Speichern</button>
+            </div>
             <!-- </div> -->
         </div>
     </div>
 
     <app-edit-testhead *ngIf="editTesthead" (closeEditTestHeadOverlay)="editTesthead = false;">
     </app-edit-testhead>
+
+    <div [class.d_none]="!alertService.alert" class="alert alert_border_green d_flex" id="alert">
+
+    </div>

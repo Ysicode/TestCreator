@@ -301,6 +301,8 @@ export class EditComponent implements OnInit, AfterViewInit {
           keywords: questionFormData.keywords.split(','),
           creatorId: this.data.currentUserID,
           schoolType: this.data.currentSchoolType,
+          whitespace: '',
+          questionHeight: '',
           creationDate: Date.now(),
           lastEditDate: ''
         }).then(() => {
