@@ -1637,7 +1637,9 @@ Styles für die Vorschau sektion
 }
 
 @media print {
-    .headline_test_infos {
+    .headline_test_infos,
+    .bottom_bar_wrapper,
+    .redu_undo_btn_wrapper {
         display: none;
     }
 
