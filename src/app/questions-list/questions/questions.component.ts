@@ -118,10 +118,9 @@ export class QuestionsComponent implements OnInit {
       console.log('index', this.stateIndex)
       this.stateIndex--;
       localStorage.setItem("currentTest", JSON.stringify(this.states[this.stateIndex]));
-      // localStorage.setItem("statesAddedQuestions", JSON.stringify(this.stateOfAddedQuestion[this.stateIndex]));
+      localStorage.setItem("addedQuestions", JSON.stringify(this.stateOfAddedQuestion[this.stateIndex]));
       setTimeout(() => {
         this.getCurrentTestFromLocalStorage();
-        this.styleAddedQuestionsInListViewAfterLoadingTestData();
       }, 100);
     }
   }
@@ -132,10 +131,9 @@ export class QuestionsComponent implements OnInit {
       console.log('index', this.stateIndex)
       this.stateIndex++;
       localStorage.setItem("currentTest", JSON.stringify(this.states[this.stateIndex]));
-      // localStorage.setItem("statesAddedQuestions", JSON.stringify(this.stateOfAddedQuestion[this.stateIndex]));
+      localStorage.setItem("addedQuestions", JSON.stringify(this.stateOfAddedQuestion[this.stateIndex]));
       setTimeout(() => {
         this.getCurrentTestFromLocalStorage();
-        this.styleAddedQuestionsInListViewAfterLoadingTestData();
       }, 100);
     }
   }
@@ -215,14 +213,18 @@ export class QuestionsComponent implements OnInit {
     await this.loadLocalStorageData();
     this.setQuestionNumber();
     this.setTestInfo();
-    this.renderSquaresAndLinesOfQuestionsInTest();
     setTimeout(() => {
-      this.styleAddedQuestionsInListViewAfterLoadingTestData();
+      this.styleTestOnLoad();
     }, 1000);
-
   }
 
-
+  styleTestOnLoad() {
+    for (let i = 0; i < 5; i++) {
+      this.stopLoop(1000);
+      this.styleAddedQuestionsInListViewAfterLoadingTestData();
+      this.renderSquaresAndLinesOfQuestionsInTest();
+    }
+  }
 
 
 
@@ -323,18 +325,12 @@ export class QuestionsComponent implements OnInit {
   * This function is used to remove added styling of all questions in listview
   * If a question is added to the test, add styling to the question in listview
   */
-  styleAddedQuestionsInListViewAfterLoadingTestData() {
-    console.log(this.data.loadedQuestions)
+  async styleAddedQuestionsInListViewAfterLoadingTestData() {
     for (let a = 0; a < this.data.loadedQuestions.length; a++) {
-      for (let i = 0; i < this.test.pages.length; i++) {
-        for (let j = 0; j < this.test.pages[i][0].length; j++) {
-          if (this.test.pages[i][0][j].id == this.data.loadedQuestions[a]['id']) {
-            this.styleAddButton(a, 'add_styling', this.data.loadedQuestions[a]['schwierigkeit']);
-            console.log(this.test.pages[i][0][j].id )
-          }
-          if (this.test.pages[i][0][j].id != this.data.loadedQuestions[a]['id']) {
-            this.styleAddButton(a, 'remove_styling', this.data.loadedQuestions[a]['schwierigkeit']);
-          }
+      this.styleAddButton(a, 'remove_styling', this.data.loadedQuestions[a]['schwierigkeit']);
+      for (let i = 0; i < this.addedToTest.length; i++) {
+        if (this.addedToTest[i].id == this.data.loadedQuestions[a]['id']) {
+          this.styleAddButton(a, 'add_styling', this.data.loadedQuestions[a]['schwierigkeit']);
         }
       }
     }
@@ -614,8 +610,10 @@ export class QuestionsComponent implements OnInit {
     this.alertService.alert = true;
     let alert = document.getElementById('alert');
     alert.innerHTML = this.alertService.showAlert('Aktuelles Layout als Standard gespeichert');
+   
     setTimeout(() => {
       this.alertService.alert = false;
+      this.styleTestOnLoad();
     }, 3000);
   }
 
@@ -808,9 +806,7 @@ export class QuestionsComponent implements OnInit {
 
   async renderSquaresAndLinesOfQuestionsInTest() {
     for (let i = 0; i < this.test.pages.length; i++) {
-      await this.stopLoop(500)
       for (let j = 0; j < this.test.pages[i][0].length; j++) {
-        await this.stopLoop(500)
         if (this.test.pages[i][0][j]['whitespace']) {
           await this.getSquaresAndLines(i, j);
         }

@@ -113,37 +113,80 @@ export class EditComponent implements OnInit, AfterViewInit {
     if (!this.selectedSubjectButton) {
       this.alertService.alert = true;
       let alert = document.getElementById('alert');
-      alert.innerHTML = this.alertService.showAlert('Bitte ein Fach wählen');
+      alert.innerHTML = this.alertService.showAlert('Bitte ein Fach wählen!');
       return false
     }
     if (!this.selectedClassButton) {
       this.alertService.alert = true;
       let alert = document.getElementById('alert');
-      alert.innerHTML = this.alertService.showAlert('Bitte eine Klasse wählen');
-      return false
-    }
-    if (!this.selectedDifficulty) {
-      this.alertService.alert = true;
-      let alert = document.getElementById('alert');
-      alert.innerHTML = this.alertService.showAlert('Bitte eine Schwierigkeit wählen');
-      return false
-    }
-    if (this.currentAnswer.blocks.length == 0) {
-      this.alertService.alert = true;
-      let alert = document.getElementById('alert');
-      alert.innerHTML = this.alertService.showAlert('Bitte eine Lösung erstellen');
+      alert.innerHTML = this.alertService.showAlert('Bitte eine Klasse wählen!');
       return false
     }
     if (this.currentQuestion.blocks.length == 0) {
       this.alertService.alert = true;
       let alert = document.getElementById('alert');
-      alert.innerHTML = this.alertService.showAlert('Bitte eine Aufgabe erstellen');
+      alert.innerHTML = this.alertService.showAlert('Bitte eine Aufgabe erstellen!');
+      return false
+    }
+    if (this.currentAnswer.blocks.length == 0) {
+      this.alertService.alert = true;
+      let alert = document.getElementById('alert');
+      alert.innerHTML = this.alertService.showAlert('Bitte eine Lösung erstellen!');
+      return false
+    }
+    if (this.multipleChoiceEditor && !this.checklistIsSelected()) {
+      this.alertService.alert = true;
+      let alert = document.getElementById('alert');
+      alert.innerHTML = this.alertService.showAlert('Bitte eine Multiple Choice Aufgabe erstellen!');
+      return false
+    }
+    if (this.multipleChoiceEditor && !this.checklistIsChecked()) {
+      this.alertService.alert = true;
+      let alert = document.getElementById('alert');
+      alert.innerHTML = this.alertService.showAlert('Bitte eine Lösung anklicken!');
+      return false
+    }
+    if (!this.selectedDifficulty) {
+      this.alertService.alert = true;
+      let alert = document.getElementById('alert');
+      alert.innerHTML = this.alertService.showAlert('Bitte eine Schwierigkeit wählen!');
       return false
     }
     else {
       return true
     }
+  }
 
+  /**
+   * This function is used to check when multiple choice editor is selceted, if a block is a checklist
+   * 
+   * @returns boolean 
+   */
+  checklistIsSelected() {
+    for (let i = 0; i < this.currentAnswer.blocks.length; i++) {
+      if (this.currentAnswer.blocks[i].type == 'checklist') {
+        return true
+      }
+    }
+    return false
+  }
+
+  /**
+   * This function is used to check when multiple choice editor is sselected, if one item of the checklist is CHECKED
+   * 
+   * @returns boolean
+   */
+  checklistIsChecked() {
+    for (let i = 0; i < this.currentAnswer.blocks.length; i++) {
+      if (this.currentAnswer.blocks[i].type == 'checklist') {
+        for (let j = 0; j < this.currentAnswer.blocks[i].data.items.length; j++) {
+          if (this.currentAnswer.blocks[i].data.items[j].checked == true) {
+            return true;
+          }
+        }
+      }
+    }
+    return false
   }
 
   /**
@@ -317,10 +360,7 @@ export class EditComponent implements OnInit, AfterViewInit {
           this.editMode = false;
         })
       }
-      setTimeout(() => {
-        console.log(this.currentQuestion)
-      }, 500);
-    }, 700);
+    }, 1000);
   }
 
   /**
@@ -357,30 +397,31 @@ export class EditComponent implements OnInit, AfterViewInit {
           this.editMode = false;
         })
       }
-    }, 700);
+    }, 1000);
   }
 
 
   /**
    * As firebase cant save nested arrays, this function is used transform a table [Array] in an object with key-values as Array
    */
-  async saveEditorData(): Promise<void> {
+  async saveEditorData() {
     if (this.multipleChoiceEditor) {
       this.multiChoiceEditor.save().then(data => {
         this.currentQuestion = data;
         this.currentAnswer = data;
-        return
       });
+    } else {
+      await this.transformQuestionToFirebaseFormat();
+      await this.transformAnswerToFirebaseFormat();
     }
-    this.transformQuestionToFirebaseFormat();
-    this.transformAnswerToFirebaseFormat();
+
   }
 
-/**
- * This function is used to check if a question has a table 
- * => transform the question table as object with keys and each array as value
- */
-  transformQuestionToFirebaseFormat() {
+  /**
+   * This function is used to check if a question has a table 
+   * => transform the question table as object with keys and each array as value
+   */
+  async transformQuestionToFirebaseFormat() {
     this.questionEditor.save().then(data => {
       this.currentQuestion = data;
 
@@ -401,8 +442,8 @@ export class EditComponent implements OnInit, AfterViewInit {
    * This function is used to check if an answer has a table 
    * => transform the question table as object with keys and each array as value
    */
-  transformAnswerToFirebaseFormat() {
-    this.answerEditor.save().then(data => {
+  async transformAnswerToFirebaseFormat() {
+    await this.answerEditor.save().then(data => {
       this.currentAnswer = data;
 
       for (let i = 0; i < data.blocks.length; i++) { //If a table was in use of the editor nested array cannot saved in firestore
@@ -418,11 +459,11 @@ export class EditComponent implements OnInit, AfterViewInit {
     });
   }
 
-/**
- * ONLY ON EDIT MODE - This function is used to check if a loaded question has a table format 
- * => The values of each table Object keys will be pushed into content array 
- * => nested Array
- */
+  /**
+   * ONLY ON EDIT MODE - This function is used to check if a loaded question has a table format 
+   * => The values of each table Object keys will be pushed into content array 
+   * => nested Array
+   */
   async reTransformAnswerToEditorFormat() {
     for (let i = 0; i < this.editQuestion.antwort.blocks.length; i++) { //If a table was in use of the editor nested array cannot saved in firestore
       if (this.editQuestion.antwort.blocks[i].data.table) {
@@ -438,11 +479,11 @@ export class EditComponent implements OnInit, AfterViewInit {
     }
   }
 
-/**
- * * ONLY ON EDIT MODE - This function is used to check if a loaded answer has a table format 
- * => The values of each table Object keys will be pushed into content array 
- * => nested Array
- */
+  /**
+   * * ONLY ON EDIT MODE - This function is used to check if a loaded answer has a table format 
+   * => The values of each table Object keys will be pushed into content array 
+   * => nested Array
+   */
   async reTransformQuestionToEditorFormat() {
     for (let i = 0; i < this.editQuestion.frage.blocks.length; i++) { //If a table was in use of the editor nested array cannot saved in firestore
       if (this.editQuestion.frage.blocks[i].data.table) {

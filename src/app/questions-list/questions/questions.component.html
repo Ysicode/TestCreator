@@ -92,6 +92,7 @@
                     </div>
 
                     <div *ngFor="let question of questionData['frage']['blocks']">
+                        <!-- Text -->
                         <div class="question_container" [innerHTML]="question['data']['text'] ">
                         </div>
 
@@ -105,6 +106,7 @@
                             </div>
                         </div>
 
+                        <!-- Attaches -->
                         <div class="element_margin_doc" style="display: flex;" *ngIf="question['data']['file']">
                             <img loading="lazy" class="question_img" src="{{ question['data']['file']['url'] }}" alt="">
                             <div class="attaches d_flex" *ngIf="question['type'] === 'attaches'">
@@ -116,6 +118,7 @@
                             </div>
                         </div>
 
+                        <!-- List -->
                         <div class="question_container" *ngFor="let items of question['data']['items'] let i = index">
                             <div class="margin_left element_margin_text" *ngIf="question['data']['style'] == 'ordered'">
                                 <ol class="d_flex_start">
@@ -130,7 +133,7 @@
                                 </ul>
                             </div>
                         </div>
-
+                        <!-- Table -->
                         <div class="question_container element_margin_text" *ngIf="question['data']['table']">
                             <div [class.bold]="i == 0 && question['data']['withHeadings'] == true "
                                 class="d_flex_start tableRow"
@@ -196,10 +199,15 @@
                                         </div>
                                     </div>
 
-                                    <div class="element_margin_text" *ngIf="question['data']['file']">
-                                        <img loading="lazy" class="question_img"
-                                            src="{{ question['data']['file']['url'] }}" alt="">
-
+                                    <div class="element_margin_doc" style="display: flex;" *ngIf="question['data']['file']">
+                                        <img loading="lazy" class="question_img" src="{{ question['data']['file']['url'] }}" alt="">
+                                        <div class="attaches d_flex" *ngIf="question['type'] === 'attaches'">
+                                            <img class="attached_icon" src="assets/attached.png" alt="">
+                                            <a target="_blank" href="{{ question['data']['file']['url'] }}">
+                                                Dokument angehängt
+                                            </a>
+                                            <img class="link_icon" src="assets/external_link.png" alt="">
+                                        </div>
                                     </div>
 
                                     <div class="question_container"
@@ -414,9 +422,9 @@
 
                     <!-- QUESTION AND SOLUTION TEST PREVIEW -->
                     <div id="question{{ j }}{{ i }}" class="question_wrapper d_flex_column"
-                        [class.solution_wrapper]="sampleSolution" *ngFor="let data of pages[0] let i = index"
+                        [class.solution_wrapper]="sampleSolution" *ngFor="let testquestion of pages[0] let i = index"
                         (mouseover)="getCurrentQuestion(j, i)" (click)="getCurrentQuestion(j, i)"
-                        [ngStyle]="{'height': data['questionHeight'] && !sampleSolution ? data['questionHeight'] : 'fit-content'}">
+                        [ngStyle]="{'height': testquestion['questionHeight'] && !sampleSolution ? testquestion['questionHeight'] : 'fit-content'}">
                         <div id="questionContent{{j}}{{i}}" class="question_test">
                             <div class="question_head_container">
                                 <div class="question_info d_flex_start">
@@ -428,21 +436,30 @@
                                 </div>
                                 <div class="question_add d_flex">
                                     <div class="question_test_points">
-                                        /{{ data['punktzahl'] }}
+                                        /{{ testquestion['punktzahl'] }}
                                     </div>
                                 </div>
-                                <button (click)="saveEditedQuestionAsDefault(j, i, data['id'])"
+
+                                <button *ngIf="j != 0 && test.pages[j - 1][0].length == 1 && i == 0"
+                                    (click)="saveEditedQuestionAsDefault(j, i, testquestion['id'])"
+                                    style="margin-right: 300px;"
+                                    class="save_edited_question show_onHover d_flex">Verschieben|| {{
+                                    test.pages[j][0].length }}</button>
+
+
+                                <button *ngIf="data.currentUserID == testquestion['creatorId']"
+                                    (click)="saveEditedQuestionAsDefault(j, i, testquestion['id'])"
                                     style="margin-right: 40px;" class="save_edited_question show_onHover d_flex">Layout
                                     als Standard speichern</button>
                                 <button id="{{ 'remove_btn' + i }}"
-                                    (click)="removeFromTest(data['id'], data['schwierigkeit']); deleteEmptyPages(j)"
+                                    (click)="removeFromTest(testquestion['id'], testquestion['schwierigkeit']); deleteEmptyPages(j)"
                                     class="remove_from_test_btn show_onHover d_flex"><img class="remove_icon"
                                         src="assets/x_icon.png" alt=""></button>
                             </div>
 
                             <!-- QUESTION -->
                             <ng-container *ngIf="!sampleSolution">
-                                <div *ngFor="let question of data['frage']['blocks'] let k = index">
+                                <div *ngFor="let question of testquestion['frage']['blocks'] let k = index">
 
                                     <div class="preview_question_container" [innerHTML]="question['data']['text'] ">
                                         <!-- Text -->
@@ -536,7 +553,7 @@
 
                             <!-- SOLUTION -->
                             <ng-container *ngIf="sampleSolution">
-                                <div *ngFor="let question of data['antwort']['blocks'] let k = index">
+                                <div *ngFor="let question of testquestion['antwort']['blocks'] let k = index">
 
                                     <div class="preview_question_container" [innerHTML]="question['data']['text'] ">
                                         <!-- Text -->
@@ -557,7 +574,7 @@
                                     <div class="element_margin_text" *ngIf="question['data']['file']">
                                         <!-- Images -->
                                         <div class="img_wrapper d_flex_start">
-                                            <div id="img_edit_wrapper{{j}}{{i}}{{k}}" class="img_edit_wrapper d_flex"
+                                            <div *ngIf="question['type'] === 'image'" id="img_edit_wrapper{{j}}{{i}}{{k}}" class="img_edit_wrapper d_flex"
                                                 [ngStyle]="{'width': question['width'] ? question['width'] : '30%'}">
                                                 <img id="questionImage{{ j }}{{ i }}{{k}}" class="preview_question_img"
                                                     src="{{ question['data']['file']['url'] }}" alt="">
@@ -666,16 +683,16 @@
                             </div>
                         </div>
 
-           
-                            <!-- whitspace SQUARES -->
-                            <div id="whitespace_squares{{j}}{{i}}" class="d_flex_column squareWhitespace_wrapper"
-                                [ngStyle]="{'display' : data['whitespace'] == 'squares' && !sampleSolution ? 'block' : 'none'}">
-                            </div>
-                            <!-- whitespace LINES -->
-                            <div id="whitespace_lines{{j}}{{i}}" class="d_flex_column linesWhitespace_wrapper"
-                                [ngStyle]="{'display' : data['whitespace'] == 'lines' && !sampleSolution  ? 'block' : 'none'}">
-                            </div>
-                     
+
+                        <!-- whitspace SQUARES -->
+                        <div id="whitespace_squares{{j}}{{i}}" class="d_flex_column squareWhitespace_wrapper"
+                            [ngStyle]="{'display' : testquestion['whitespace'] == 'squares' && !sampleSolution ? 'block' : 'none'}">
+                        </div>
+                        <!-- whitespace LINES -->
+                        <div id="whitespace_lines{{j}}{{i}}" class="d_flex_column linesWhitespace_wrapper"
+                            [ngStyle]="{'display' : testquestion['whitespace'] == 'lines' && !sampleSolution  ? 'block' : 'none'}">
+                        </div>
+
 
                     </div>
                 </div>
