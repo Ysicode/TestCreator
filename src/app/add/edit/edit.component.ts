@@ -346,6 +346,7 @@ export class EditComponent implements OnInit, AfterViewInit {
           schoolType: this.data.currentSchoolType,
           whitespace: '',
           questionHeight: '',
+          defaultHeight: '',
           creationDate: Date.now(),
           lastEditDate: ''
         }).then(() => {
@@ -383,6 +384,7 @@ export class EditComponent implements OnInit, AfterViewInit {
           punktzahl: Number(questionFormData.punktzahl),
           bearbeitungszeit: Number(questionFormData.bearbeitungszeit),
           kindOf: this.selectedKind,
+          defaultHeight: '',
           keywords: questionFormData.keywords.split(','),
           lastEditDate: Date.now()
         }).then(() => {

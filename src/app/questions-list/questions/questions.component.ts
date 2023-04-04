@@ -250,6 +250,7 @@ export class QuestionsComponent implements OnInit {
    * @param status is a given string (add_styling) as an argument to add styling to the button
    */
   addToTest(id: string, status: string, difficulty: string) {
+    console.log(id)
     for (let i = 0; i < this.data.loadedQuestions.length; i++) {
       if (this.data.loadedQuestions[i]['id'] == id) {
         if (status == 'add_styling') {
@@ -258,15 +259,17 @@ export class QuestionsComponent implements OnInit {
           //  this.checkQuestionAttachedFiles(i);
 
           setTimeout(() => {
-            this.getDefaultHeightsOfEachAddedQuestions();
+            this.getDefaultHeightsOfLastAddedQuestions(id);
+            this.renderSquaresAndLinesOfQuestionsInTest();
           }, 200)
         }
         this.styleAddButton(i, status, difficulty);
         this.setTestInfo();
       }
     }
+
     this.checkHeightOfAllPreviewQuestions();
-    this.renderSquaresAndLinesOfQuestionsInTest();
+ 
     this.setQuestionNumber();
     this.addCurrentTestToLocalStorage();
   }
@@ -291,9 +294,12 @@ export class QuestionsComponent implements OnInit {
   //   }
   // }
 
-  getDefaultHeightsOfEachAddedQuestions() {
+  getDefaultHeightsOfLastAddedQuestions(id: string) {
     let height = (this.getHeight(`question${this.test.pages.length - 1}${this.test.pages[this.test.pages.length - 1]['0'].length - 1}`) * 100) / this.getHeight(`test_dinA4${this.test.pages.length - 1}`);
-    this.test.pages[this.test.pages.length - 1][0][this.test.pages[this.test.pages.length - 1]['0'].length - 1]['defaultheight'] = height;
+    if (this.test.pages[this.test.pages.length - 1][0][this.test.pages[this.test.pages.length - 1]['0'].length - 1]['defaultHeight'] == '') {
+      this.test.pages[this.test.pages.length - 1][0][this.test.pages[this.test.pages.length - 1]['0'].length - 1]['defaultHeight'] = height;
+      this.data.addDefaultHeightOfQuestion(id, height)
+    }
   }
 
   /**
@@ -526,7 +532,7 @@ export class QuestionsComponent implements OnInit {
     let question = this.element(`question${this.currentEditQuestion}`);
     let page = this.getHeight(`test_dinA4${pageIndex}`);
     let editWhitespace = this.element(`edit_whitespace${pageIndex}${pagePosition}`);
-    question.style.minHeight = this.test.pages[pageIndex][0][pagePosition]['defaultheight'] + '%';
+    question.style.minHeight = this.test.pages[pageIndex][0][pagePosition]['defaultHeight'] + '%';
     let questionContentHeight = Number(question.style.minHeight.replace('%', ''));
 
     this.checkMaxHeightOfLastQuestionOfPageIndex(pageIndex, pagePosition, question);
@@ -561,6 +567,7 @@ export class QuestionsComponent implements OnInit {
   resizeQuestionOnMouseUp(pageIndex: number, pagePosition: number) {
     let question = this.element(`question${this.currentEditQuestion}`);
     this.test.pages[pageIndex][0][pagePosition]['questionHeight'] = question.style.height;
+    console.log(this.test.pages[pageIndex][0][pagePosition]['questionHeight'])
     this.addCurrentTestToLocalStorage();
   }
 
@@ -605,8 +612,9 @@ export class QuestionsComponent implements OnInit {
 
   saveEditedQuestionAsDefault(pageIndex: number, pagePosition: number, questionId: string) {
     let updatedQuestion = this.test.pages[pageIndex][0][pagePosition];
+    console.log(updatedQuestion)
     this.data.updateQuestion(updatedQuestion, questionId)
-    this.alertService.showAlert('Hallo')
+    this.alertService.showAlert('Hallo');
     this.alertService.alert = true;
     let alert = document.getElementById('alert');
     alert.innerHTML = this.alertService.showAlert('Aktuelles Layout als Standard gespeichert');
@@ -622,7 +630,7 @@ export class QuestionsComponent implements OnInit {
     let question = this.element(`question${this.currentEditQuestion}`);
     this.startHeight = this.getHeight(`question${this.currentEditQuestion}`);
     this.questionContentHeight = Number(question.style.minHeight.replace('%', ''));
-    question.style.minHeight = this.test.pages[pageIndex][0][pagePosition]['defaultheight'] + '%';
+    question.style.minHeight = this.test.pages[pageIndex][0][pagePosition]['defaultHeight'] + '%';
 
     this.checkMaxHeightOfLastQuestionOfPageIndex(pageIndex, pagePosition, question);
     this.startY = event.touches[0].clientY;

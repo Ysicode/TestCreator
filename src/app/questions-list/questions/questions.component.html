@@ -161,6 +161,9 @@
                                     <img class="delete_question_icon" src="assets/delete_question_icon.png" alt="">
                                 </div> -->
                             </div>
+                            <div *ngIf="data.currentUserID != questionData.creatorId">
+
+                            </div>
 
 
                             <button (click)="toggleAnswer(questionData.id)"
@@ -424,7 +427,8 @@
                     <div id="question{{ j }}{{ i }}" class="question_wrapper d_flex_column"
                         [class.solution_wrapper]="sampleSolution" *ngFor="let testquestion of pages[0] let i = index"
                         (mouseover)="getCurrentQuestion(j, i)" (click)="getCurrentQuestion(j, i)"
-                        [ngStyle]="{'height': testquestion['questionHeight'] && !sampleSolution ? testquestion['questionHeight'] : 'fit-content'}">
+                        [ngStyle]="{'height': testquestion['questionHeight'] && !sampleSolution ? testquestion['questionHeight'] : 'fit-content',
+                        'min-height': testquestion['defaultHeight'] && !sampleSolution ? testquestion['defaultHeight'] + '%' : 'none'}">
                         <div id="questionContent{{j}}{{i}}" class="question_test">
                             <div class="question_head_container">
                                 <div class="question_info d_flex_start">

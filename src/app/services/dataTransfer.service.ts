@@ -284,6 +284,13 @@ export class dataTransferService {
         })
     }
 
+   addDefaultHeightOfQuestion(questionId:string, height: number) {
+        const coll: any = doc(this.firestore, 'users', this.currentSchool, 'fragen', questionId);
+       updateDoc(coll, {
+           defaultHeight: height
+        })
+    }
+
     log(id: string) {
         console.log(id);
     }
