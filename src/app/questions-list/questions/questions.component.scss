@@ -491,27 +491,62 @@ style for rendered subjects
 
 .question_add {
     z-index: 3;
-}
 
-.question_add_btn {
-    background: #e1e1e1;
-    border: 1px solid grey;
-    border-radius: 50px;
-    padding: 7px;
-    &:hover {
-        opacity: 0.8;
-        cursor: pointer;
-    }
+    .btn {
+        position: relative;
+        background: #e1e1e1;
+        border: 1px solid #424949;
+        border-radius: 50px;
+        padding: 7px;
+        width: 40px;
+        height: 40px;
+        transition: all 300ms ease-in-out;
 
-    .add_icon {
-        width: 20px;
-        height: 20px;
-    }
+        &:hover {
+            opacity: 0.8;
+            cursor: pointer;
+        }
 
-    .remove_icon {
-        width: 20px;
-        height: 20px;
-        transform: rotate(45deg);
+        &:before,
+        &:after {
+            content: "";
+            position: absolute;
+            background: #424949;
+            transform: translate(-50%, -50%);
+            left: 50%;
+            top: 50%;
+            border-radius: 5px;
+        }
+
+        &.is--add {
+            &:before {
+                width: 22px;
+                height: 2px;
+            }
+
+            &:after {
+                height: 22px;
+                width: 2px;
+            }
+        }
+
+        &.is--remove {
+            &:before {
+                transform: rotate(45deg);
+                left: 9px;
+                top: 18px;
+                width: 22px;
+                height: 2px;
+            }
+
+            &:after {
+                transform: rotate(45deg);
+                left: 19px;
+                top: 8px;
+                width: 2px;
+                height: 22px;
+            }
+        }
     }
 }
 

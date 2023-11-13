@@ -221,7 +221,6 @@ export class QuestionsComponent implements OnInit {
   styleTestOnLoad() {
     for (let i = 0; i < 5; i++) {
       this.stopLoop(1000);
-      this.styleAddedQuestionsInListViewAfterLoadingTestData();
       this.renderSquaresAndLinesOfQuestionsInTest();
     }
   }
@@ -256,22 +255,21 @@ export class QuestionsComponent implements OnInit {
         if (status == 'add_styling') {
           this.test.pages[this.test.pages.length - 1]['0'].push(this.data.loadedQuestions[i]);
           this.addedToTest.push(this.data.loadedQuestions[i]);
-          //  this.checkQuestionAttachedFiles(i);
 
           setTimeout(() => {
             this.getDefaultHeightsOfLastAddedQuestions(id);
             this.renderSquaresAndLinesOfQuestionsInTest();
           }, 200)
         }
-        this.styleAddButton(i, status, difficulty);
         this.setTestInfo();
       }
     }
 
     this.checkHeightOfAllPreviewQuestions();
- 
+
     this.setQuestionNumber();
     this.addCurrentTestToLocalStorage();
+    console.log(this.addedToTest)
   }
 
   // Kann gemacht werden wenn alle Anhänge in test angezeigt werden sollen
@@ -318,7 +316,6 @@ export class QuestionsComponent implements OnInit {
         if (this.test.pages[i][0][j].id == id) {
           this.test.pages[i][0].splice(j, 1);
           this.setTestInfo();
-          this.addToTest(id, 'remove_styling', difficulty);
         }
       }
     }
@@ -327,64 +324,27 @@ export class QuestionsComponent implements OnInit {
     }, 200);
   }
 
-  /**
-  * This function is used to remove added styling of all questions in listview
-  * If a question is added to the test, add styling to the question in listview
-  */
-  async styleAddedQuestionsInListViewAfterLoadingTestData() {
-    for (let a = 0; a < this.data.loadedQuestions.length; a++) {
-      this.styleAddButton(a, 'remove_styling', this.data.loadedQuestions[a]['schwierigkeit']);
-      for (let i = 0; i < this.addedToTest.length; i++) {
-        if (this.addedToTest[i].id == this.data.loadedQuestions[a]['id']) {
-          this.styleAddButton(a, 'add_styling', this.data.loadedQuestions[a]['schwierigkeit']);
-        }
+
+  /*  ADD REMOVE BUTTON STYLING   */
+  getAddButtonStyle(questionID: string) {
+    for (let i = 0; i < this.addedToTest.length; i++) {
+      if (this.addedToTest[i].id == questionID) {
+        return true
       }
     }
+
+    return false
   }
 
-  /**
-   * 
-   * @param i index of the question in the array loadedQuestions
-   * @param status is a given string (add_styling or remove_styling) as an argument to style the button
-   */
-  styleAddButton(i: number, status: string, difficulty: string) {
-    if (difficulty == 'Leicht') {
-      status == 'add_styling'
-        ?
-        (this.service.addClasslist('add_btn' + i, 'd_none'),
-          this.service.addClasslist('question_list' + i, 'question_added_leicht'),
-          this.service.removeClasslist('remove_btn' + i, 'd_none'))
-        :
-        (this.service.addClasslist('remove_btn' + i, 'd_none'),
-          this.service.removeClasslist('question_list' + i, 'question_added_leicht'),
-          this.service.removeClasslist('add_btn' + i, 'd_none'))
+  getRemoveButtonStyle(questionID: string) {
+    for (let i = 0; i < this.addedToTest.length; i++) {
+      if (this.addedToTest[i].id == questionID) {
+        return false
+      }
     }
 
-    if (difficulty == 'Mittel') {
-      status == 'add_styling'
-        ?
-        (this.service.addClasslist('add_btn' + i, 'd_none'),
-          this.service.addClasslist('question_list' + i, 'question_added_mittel'),
-          this.service.removeClasslist('remove_btn' + i, 'd_none'))
-        :
-        (this.service.addClasslist('remove_btn' + i, 'd_none'),
-          this.service.removeClasslist('question_list' + i, 'question_added_mittel'),
-          this.service.removeClasslist('add_btn' + i, 'd_none'))
-    }
-
-    if (difficulty == 'Schwer') {
-      status == 'add_styling'
-        ?
-        (this.service.addClasslist('add_btn' + i, 'd_none'),
-          this.service.addClasslist('question_list' + i, 'question_added_schwer'),
-          this.service.removeClasslist('remove_btn' + i, 'd_none'))
-        :
-        (this.service.addClasslist('remove_btn' + i, 'd_none'),
-          this.service.removeClasslist('question_list' + i, 'question_added_schwer'),
-          this.service.removeClasslist('add_btn' + i, 'd_none'))
-    }
+    return true
   }
-
 
   /**
    * This function is used to update the test information like totaltime, total questions and total points
@@ -618,7 +578,7 @@ export class QuestionsComponent implements OnInit {
     this.alertService.alert = true;
     let alert = document.getElementById('alert');
     alert.innerHTML = this.alertService.showAlert('Aktuelles Layout als Standard gespeichert');
-   
+
     setTimeout(() => {
       this.alertService.alert = false;
       this.styleTestOnLoad();
@@ -718,10 +678,12 @@ export class QuestionsComponent implements OnInit {
       this.checkHeightsAndSetQuestionNumberInterval = setInterval(() => {
         this.checkHeightOfAllPreviewQuestions();
         this.setQuestionNumber();
+        console.log('start');
       }, 70)
     }
     if (mode === 'stop') {
       clearInterval(this.checkHeightsAndSetQuestionNumberInterval);
+      console.log('stop');
     }
   }
 

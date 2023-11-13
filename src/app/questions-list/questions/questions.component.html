@@ -51,7 +51,10 @@
             </div>
             <div id="questionListView{{i}}" class="question_wrapper_listview d_flex_column"
                 *ngFor="let questionData of data.loadedQuestions let i = index">
-                <div id="question_list{{ i }}" class="question">
+                <div  id="question_list{{ i }}" class="question" 
+                [class.question_added_leicht]="getAddButtonStyle(questionData.id) && questionData.schwierigkeit == 'Leicht'"
+                [class.question_added_mittel]="getAddButtonStyle(questionData.id) && questionData.schwierigkeit == 'Mittel'"
+                [class.question_added_schwer]="getAddButtonStyle(questionData.id) && questionData.schwierigkeit == 'Schwer'">
                     <div class="question_head_container">
                         <div class="question_info d_flex_start">
                             <div class="question_info__difficulty_btn d_flex"
@@ -79,14 +82,15 @@
 
 
                         <div class="question_add">
-                            <button id="{{ 'add_btn' + i }}"
+                            <button [class.d_none]="getAddButtonStyle(questionData.id)" id="{{ 'add_btn' + i }}"
                                 (click)="addToTest(questionData.id, 'add_styling', questionData.schwierigkeit)"
-                                class="question_add_btn d_flex"><img class="add_icon" src="assets/plus_icon.png" alt="">
+                                class="btn is--add">
+                                <!-- <img class="add_icon" src="assets/plus_icon.png" alt=""> -->
                             </button>
-                            <button id="{{ 'remove_btn' + i }}"
+                            <button [class.d_none]="getRemoveButtonStyle(questionData.id)" id="{{ 'remove_btn' + i }}"
                                 (click)="removeFromTest(questionData.id, questionData.schwierigkeit)"
-                                class="question_add_btn d_none d_flex"><img class="remove_icon"
-                                    src="assets/plus_icon.png" alt="">
+                                class="btn is--remove">
+                                <!-- <img class="remove_icon" src="assets/plus_icon.png" alt=""> -->
                             </button>
                         </div>
                     </div>
@@ -465,7 +469,7 @@
                             <ng-container *ngIf="!sampleSolution">
                                 <div *ngFor="let question of testquestion['frage']['blocks'] let k = index">
 
-                                    <div class="preview_question_container" [innerHTML]="question['data']['text'] ">
+                                    <div class="preview_question_container" [innerHTML]="question['data']['text'] " contenteditable="true">
                                         <!-- Text -->
                                     </div>
 
