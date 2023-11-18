@@ -20,7 +20,7 @@ export class dataTransferService {
 
     currentTestHead: any;
     currentUserID: any;
-    currentSchool: string = 'JonasWeiss';
+    currentSchool: string;
     currentSchoolType: string;
     currentUserData$: Observable<any>;
     currentUserData: any;
@@ -40,8 +40,8 @@ export class dataTransferService {
             this.currentSchool = docSnap.id;
             this.currentSchoolType = docSnap.data()['schoolType'];
             localStorage.setItem('school', JSON.stringify({
-              school: this.currentSchool,
-              schoolType: this.currentSchoolType
+                school: this.currentSchool,
+                schoolType: this.currentSchoolType
             }));
             return true;
         } else {
@@ -103,6 +103,7 @@ export class dataTransferService {
 
         this.currentSchool = school;
         this.currentUserID = sessionId;
+        console.log(this.currentSchool, this.currentUserID)
         this.saveUserDataToLocalStorage();
         return true;
     }
@@ -156,6 +157,7 @@ export class dataTransferService {
 
     // ADD SUBUSER
     async addNewSubUser(newUser: any) {
+        console.log(this.currentSchool, this.currentUserID);
         const coll: any = collection(this.firestore, 'users', this.currentSchool, 'subusers');
         setDoc(doc(coll), {
             email: newUser.email,
@@ -259,7 +261,6 @@ export class dataTransferService {
         const docRef: any = doc(this.firestore, 'users', this.currentSchool); // muss variabel sein je nachdem welche Schule ausgewählt wird
         const schoolData = await getDoc(docRef);
         this.loadedSchoolData = schoolData.data();
-        console.log("Document data:", this.loadedSchoolData);
     }
 
 
@@ -272,36 +273,144 @@ export class dataTransferService {
         deleteDoc(coll);
     }
 
-      /**
-    * This function is used to update firestore with the new data from an input field
-    */
-      async updateQuestion(updatedQuestion: any , questionId: string) {
+    /**
+  * This function is used to update firestore with the new data from an input field
+  */
+    async updateQuestion(updatedQuestion: any, questionId: string) {
         const coll: any = doc(this.firestore, 'users', this.currentSchool, 'fragen', questionId);
         await updateDoc(coll, {
-           frage: updatedQuestion.frage,
-           questionHeight: updatedQuestion.questionHeight,
-           whitespace: updatedQuestion.whitespace
+            frage: updatedQuestion.frage,
+            questionHeight: updatedQuestion.questionHeight,
+            whitespace: updatedQuestion.whitespace
         })
     }
 
-   addDefaultHeightOfQuestion(questionId:string, height: number) {
+    addDefaultHeightOfQuestion(questionId: string, height: number) {
         const coll: any = doc(this.firestore, 'users', this.currentSchool, 'fragen', questionId);
-       updateDoc(coll, {
-           defaultHeight: height
+        updateDoc(coll, {
+            defaultHeight: height
         })
     }
 
-    log(id: string) {
-        console.log(id);
+    // log(id: string) {
+    //     console.log(id);
+    // }
+
+    // logID(id: string) {
+    //     console.log(id)
+    // }
+
+
+
+    //ADD NEW SCHOOL
+    async addNewSchool(data: any) {
+        console.log(data)
+        const collectionRef = collection(this.firestore, 'users');
+        const documentRef = doc(collectionRef, data.schoolname.replace(/\s/g, ''));
+
+        await setDoc(documentRef, {
+            administratorEmail: data.email,
+            administratorPassword: data.password,
+            adress: {
+                city: data.city,
+                postcode: data.postcode,
+                state: data.state,
+                street: data.street,
+            },
+            schoolKey: data.schoolkey,
+            schoolName: data.schoolname,
+            schoolType: data.schooltype
+        });
+
+        // Add subcollections
+        await this.addSubcollection(documentRef, 'subusers', {
+            classes: [],
+            email: data.email,
+            firstname: data.adminfirstname,
+            lastname: data.adminlastname,
+            password: data.password,
+            subjects: [],
+            testhead: {
+                schoolname: data.schoolname,
+                slogan: 'Viel Erfolg',
+                testname: 'Testname',
+                totaltime: 45
+            },
+            usertype: 'admin'
+        });
+
+        await this.addSubcollection(documentRef, 'fragen', {
+            type: 'muster',
+            frage: {
+                time: 1700077243861,
+                blocks: [
+                    {
+                        id: "LFgZlyNhHD",
+                        type: "paragraph",
+                        data: {
+                            text: "<b>Willkommen bei JOSI</b>"
+                        }
+                    },
+                    {
+                        id: "eUTLCUMpMe",
+                        type: "paragraph",
+                        data: {
+                            text: "Das ist eine <b>Musteraufgabe!</b>"
+                        }
+                    },
+                    {
+                        id: "1zFLR_7Vfp",
+                        type: "paragraph",
+                        data: {
+                            text: "Lege gleich los und erstelle Aufgaben für deine Schultests."
+                        }
+                    }
+                ],
+                version: "2.25.0",
+            },
+            antwort: {
+
+                time: 1700077243862,
+                blocks: [
+                    {
+                        "id": "f0LnIWRHqE",
+                        "type": "paragraph",
+                        "data": {
+                            "text": "Hier wird die Antwort auf ihre Aufgabe angezeigt."
+                        }
+                    }
+                ],
+                version: "2.25.0"
+            },
+            bearbeitungszeit: 5,
+            creationDate: Date.now(),
+            creatorId: '',
+            defaultHeight: '',
+            keywords: [],
+            kindOf: 'standard',
+            klasse: 'Musterklasse',
+            fach: 'Musterfach2',
+            lastEditDate: '',
+            punktzahl: 4,
+            questionHeight: '',
+            schoolType: data.schooltype,
+            schwierigkeit: 'Mittel',
+            whitespace: ''
+        });
+
+        await this.addSubcollection(documentRef, 'subjects', {
+            classes: [],
+            subjects: []
+        });
     }
 
+    private async addSubcollection(parentDocRef: any, subcollectionName: string, data: any) {
+        // Reference to the subcollection
+        const subcollectionRef = collection(parentDocRef, subcollectionName);
 
-
-    logID(id: string) {
-        console.log(id)
+        // Add a document to the subcollection
+        await setDoc(doc(subcollectionRef), data);
     }
-
-
 
 
 

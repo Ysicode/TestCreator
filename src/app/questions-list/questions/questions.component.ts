@@ -19,7 +19,7 @@ export class QuestionsComponent implements OnInit {
   // Variables for the app Edit comp when edit mode
   currentQuestion: any;
   currentAnswer: any;
-  currentId: string;
+  currentId: string; 
 
   // variables for the new question window
   overlay: boolean = false;
@@ -248,11 +248,9 @@ export class QuestionsComponent implements OnInit {
    * @param id is the firebase id of the question
    * @param status is a given string (add_styling) as an argument to add styling to the button
    */
-  addToTest(id: string, status: string, difficulty: string) {
-    console.log(id)
+  addToTest(id: string) {
     for (let i = 0; i < this.data.loadedQuestions.length; i++) {
       if (this.data.loadedQuestions[i]['id'] == id) {
-        if (status == 'add_styling') {
           this.test.pages[this.test.pages.length - 1]['0'].push(this.data.loadedQuestions[i]);
           this.addedToTest.push(this.data.loadedQuestions[i]);
 
@@ -260,7 +258,6 @@ export class QuestionsComponent implements OnInit {
             this.getDefaultHeightsOfLastAddedQuestions(id);
             this.renderSquaresAndLinesOfQuestionsInTest();
           }, 200)
-        }
         this.setTestInfo();
       }
     }
@@ -269,7 +266,6 @@ export class QuestionsComponent implements OnInit {
 
     this.setQuestionNumber();
     this.addCurrentTestToLocalStorage();
-    console.log(this.addedToTest)
   }
 
   // Kann gemacht werden wenn alle Anhänge in test angezeigt werden sollen
@@ -305,7 +301,7 @@ export class QuestionsComponent implements OnInit {
    * executes setTestInfo & addToTest
    * @param id is the firebase id of the question
    */
-  removeFromTest(id: string, difficulty: string) {
+  removeFromTest(id: string) {
     for (let i = 0; i < this.addedToTest.length; i++) {
       if (this.addedToTest[i]['id'] == id) {
         this.addedToTest.splice(i, 1);
@@ -318,10 +314,16 @@ export class QuestionsComponent implements OnInit {
           this.setTestInfo();
         }
       }
+      if (this.pageIsEmpty(i) && i != 0) {
+        this.test.pages.splice(i, 1)
+      }
+      this.checkHeightOfAllPreviewQuestions();
     }
+
     setTimeout(() => {
       this.setQuestionNumber();
-    }, 200);
+      this.addCurrentTestToLocalStorage();
+    }, 100);
   }
 
 
@@ -415,6 +417,8 @@ export class QuestionsComponent implements OnInit {
         }
       }
     }, 30);
+
+    this.deleteEmptyPages();
   }
 
   addNewPageAndpushLastQuestion(i: number) {
@@ -433,24 +437,26 @@ export class QuestionsComponent implements OnInit {
     return this.test.pages[i][0].length == 0;
   }
 
-  deleteEmptyPages(i: number) {
-    if (this.pageIsEmpty(i) && i != 0) {
-      this.test.pages.pop();
+  deleteEmptyPages() {
+    if (this.test.pages.length !== 1) {
+      if (this.pageIsEmpty(this.test.pages.length - 1)) {
+        this.test.pages.pop();
+      } 
     }
   }
 
   async moveUpQuestionAndDeleteEmptyPages(i: number, paperHeight: number) {
-    if (!this.pageIsEmpty(i) && await this.spaceForFirstQuestion(i, paperHeight) && this.currentEditQuestion.toString()[1] != '0') {
-      const question = this.test.pages[i][0].shift(); // 
+    if (!this.pageIsEmpty(i) && await this.spaceForFirstQuestion(i, paperHeight)) {
+      const question = this.test.pages[i][0].shift();
       setTimeout(() => {
         this.renderSquaresAndLinesOfQuestionsInTest();
       }, 100);
       this.test.pages[i - 1][0].push(question)
-      setTimeout(() => {
-        if (this.pageIsEmpty(i)) {
-          this.test.pages.pop();
-        }
-      }, 5);
+      // setTimeout(() => {
+      //   if (this.pageIsEmpty(i)) {
+      //     this.test.pages.pop();
+      //   }
+      // }, 5);
     }
   }
 
@@ -678,12 +684,12 @@ export class QuestionsComponent implements OnInit {
       this.checkHeightsAndSetQuestionNumberInterval = setInterval(() => {
         this.checkHeightOfAllPreviewQuestions();
         this.setQuestionNumber();
-        console.log('start');
+        console.log('Check Heights INterval START');
       }, 70)
     }
     if (mode === 'stop') {
       clearInterval(this.checkHeightsAndSetQuestionNumberInterval);
-      console.log('stop');
+      console.log('Check Heights INterval STOP');
     }
   }
 

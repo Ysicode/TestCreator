@@ -16,9 +16,9 @@
 .logo_icon {
     margin-left: 30px;
     transform: rotate(-15deg);
-    margin-right: -5px;
-    width: 35px;
-    height: 35px;
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
 }
 
 .user_photo {
@@ -182,14 +182,17 @@
 
     .navbar_burger {
         display: flex;
+        margin-right: 15px;
     }
+
     .logo {
         font-size: 15px !important;
     }
 
     .logo_icon {
-        width: 25px;
-        height: 25px;
+        width: 15px;
+        height: 15px;
+        margin-left: 15px;
     }
 }
 

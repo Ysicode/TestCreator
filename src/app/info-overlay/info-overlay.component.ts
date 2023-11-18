@@ -28,6 +28,7 @@ export class InfoOverlayComponent implements OnInit {
   @Input() deleteSubuserId: string;
 
   ngOnInit(): void {
+    this.data.getUserDataFromLocalStorage();
   }
 
   closeDeleteQuestionOverlay() {

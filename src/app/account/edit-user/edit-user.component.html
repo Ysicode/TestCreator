@@ -21,7 +21,7 @@
                 <p id="email_adress" class="input_info">Verifizierte Emailadresse</p>
             </div>
 
-            <div class="input_wrapper d_flex_column">
+            <!-- <div class="input_wrapper d_flex_column">
                 <input placeholder="Passwort" #password class="inputfield" type="password" maxlength="30"
                     name="password" ngModel (keyup)="checkPasswordValue(password.value)">
                 <div class="d_flex">
@@ -30,11 +30,25 @@
                     <p id="password_number" class="input_info password">1 Zahl</p>
                     <p id="password_uppercase" class="input_info password">1 Großbuchstabe</p>
                 </div>
+            </div> -->
+
+            <div class="input_wrapper d_flex_column"> 
+                <label class="input_wrapper_label" for="#password">
+                    <input placeholder="Passwort" #password class="inputfield" [type]="passwordVisible ? 'text' : 'password'" maxlength="30" name="password"
+                    ngModel (change)="checkPasswordValue(password.value)" (keyup)="checkPasswordValue(password.value)">
+                    <button [class.is--active]="passwordVisible" type="button" (click)="showPassword(); $event.stopPropagation()">Zeigen</button>
+                </label>
+                    <div class="d_flex">
+                        <p class="input_info password">Min</p>
+                        <p id="password_length" class="input_info password">8 Zeichen</p>
+                        <p id="password_number" class="input_info password">1 Zahl</p>
+                        <p id="password_uppercase" class="input_info password">1 Großbuchstabe</p>
+                    </div>
             </div>
 
             <div class="d_flex">
-                <button class="cancel_btn" (click)="closeEditUser()">Abbrechen</button>
-                <button disabled #submit_btn class="save_btn" type="submit">Speichern</button>
+                <button class="btn_large is_cancel" (click)="closeEditUser()">Abbrechen</button>
+                <button disabled #submit_btn class="btn_large is_submit" type="submit">Speichern</button>
             </div>
         </form>
         <div *ngIf="userEdit.currentUserType === 'admin'" class="checkbox_wrapper d_flex">

@@ -1,11 +1,12 @@
 <div class="header d_flex_space">
     <div class="d_flex">
         <img class="logo_icon" src="assets/testcreator.png" alt="">
-        <h1 class="logo d_flex margin_zero">TestCreator</h1>
+        <h1 class="logo d_flex margin_zero">Josi Software</h1>
     </div>
 
     <nav class="navbar d_flex">
         <!-- <img crossorigin="anonymous" class="user_photo" src="assets/simon_weiss.jpg" alt=""> -->
+        <button *ngIf="data.currentSchool === 'JosiMasterschool2023!'" (click)="closeMobileNavbar()" routerLink="/backlog" class="navlink margin_zero" [routerLinkActive]="'is_active'">Backlog</button>
         <button (click)="closeMobileNavbar()" routerLink="/dashboard" class="navlink margin_zero" [routerLinkActive]="'is_active'">Creator</button>
         <button (click)="closeMobileNavbar()" routerLink="/ablage" class="navlink margin_zero" [routerLinkActive]="'is_active'">Ablage</button>
         <button (click)="closeMobileNavbar()" routerLink="/account" class="navlink margin_zero" [routerLinkActive]="'is_active'">Account</button>
@@ -23,6 +24,8 @@
         <nav (click)="onEvent($event)" class="navbar_mobile d_flex_column">
             <!-- <img crossorigin="anonymous" class="user_photo" src="assets/simon_weiss.jpg" alt=""> -->
             <div class="navlink_wrapper d_flex_column">
+                <button *ngIf="data.currentSchool === 'JosiMasterschool2023!'" routerLink="/backlog" class="navlink margin_zero"
+                [routerLinkActive]="'is_active'">Backlog</button>
                 <button routerLink="/dashboard" class="navlink margin_zero"
                     [routerLinkActive]="'is_active'">Creator</button>
                 <button routerLink="/ablage" class="navlink margin_zero"

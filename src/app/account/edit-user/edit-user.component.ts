@@ -23,11 +23,12 @@ export class EditUserComponent implements OnInit {
   validPassword: Boolean;
   validEmailFormat: Boolean;
   public deleteSubuserOverlay: Boolean;
+  passwordVisible: Boolean = false;
 
   constructor(public alertService: AlertService, public data: dataTransferService) { }
 
   ngOnInit(): void {
-    this.loadDataFromLocalStorage();
+    this.data.getUserDataFromLocalStorage();
     setTimeout(() => {
       this.setForm();
     }, 800);
@@ -37,12 +38,12 @@ export class EditUserComponent implements OnInit {
     }, 1000);
   }
 
-  async loadDataFromLocalStorage() {
-    const data = localStorage.getItem('session');
-    const { school, sessionId } = JSON.parse(data);
-    this.data.currentSchool = school;
-    this.data.currentUserID = sessionId;
-  }
+  // async loadDataFromLocalStorage() {
+  //   const data = localStorage.getItem('session');
+  //   const { school, sessionId } = JSON.parse(data);
+  //   this.data.currentSchool = school;
+  //   this.data.currentUserID = sessionId;
+  // }
 
   closeEditUser() {
     this.closeEditUserOverlay.emit();
@@ -57,7 +58,7 @@ export class EditUserComponent implements OnInit {
       password: this.userEdit.password
     });
     if (this.userEdit.usertype === 'admin') {
-      this.newAdminIsChecked = true; 
+      this.newAdminIsChecked = true;
     }
   }
 
@@ -149,6 +150,10 @@ export class EditUserComponent implements OnInit {
     this.checkbox.nativeElement.checked = true;
     console.log('hello');
     console.log(this.checkbox.nativeElement.checked)
+  }
+
+  showPassword() {
+    this.passwordVisible = !this.passwordVisible
   }
 
 

@@ -15,7 +15,7 @@
 .inputs_wrapper {
     width: 100%;
     height: 100%;
-    background-color: #f2f3f4;
+    background-color: var(--bg-color-primary);
     cursor: auto;
 }
 
@@ -49,36 +49,6 @@
     text-align: center;
 }
 
-.save_btn {
-    border: 2px solid #339af0 !important;
-    background: none;
-    color: #424949;
-    border-radius: 30px;
-    font-size: 17px;
-    padding: 10px 30px 10px 30px;
-    margin: 15px;
-
-    &:hover {
-        opacity: 0.8;
-        cursor: pointer;
-    }
-}
-
-.cancel_btn {
-    background: none;
-    color: #424949;
-    border-radius: 30px;
-    font-size: 17px;
-    padding: 10px 30px 10px 30px;
-    margin: 15px;
-    border: none;
-
-    &:hover {
-        opacity: 0.8;
-        cursor: pointer;
-    }
-}
-
 .timeNumber {
     font-size: 20px;
     font-weight: bold;
@@ -100,7 +70,7 @@
 }
 
 .rangebar:hover {
-    opacity: 0.9;
+    opacity: 0.8;
 }
 
 .rangebar::-webkit-slider-thumb {
@@ -127,23 +97,15 @@
         margin-bottom: 15px;
     }
 
-    .save_btn,
-    .cancel_btn {
-        font-size: 14px !important;
-        margin: 10px;
-    }
-
-    .inputfield,
-    .timeNumber {
-        font-size: 14px !important;
-    }
+    // .inputfield,
+    // .timeNumber {
+    //     font-size: 14px !important;
+    // }
 }
 
 @media (max-width: 600px) {
-    .save_btn,
-    .cancel_btn,
     .inputfield,
     .timeNumber {
-        font-size: 13px !important;
+        font-size: 15px !important;
     }
 }

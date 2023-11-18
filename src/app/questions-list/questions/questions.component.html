@@ -43,15 +43,20 @@
                 {{ totalQuestionsNumber == 1 ? totalQuestionsNumber + ' Aufgabe' : totalQuestionsNumber + ' Aufgaben' }}
                 {{filters.length != 0 ? '/ ' + filters.length + ' Filter' : ''}}
             </div>
-            <div *ngIf="totalQuestionsNumber == 0" class="question_wrapper_listview d_flex_column">
+            <div *ngIf="totalQuestionsNumber == 0 && data.loadedQuestions.length != 0" class="question_wrapper_listview d_flex_column">
                 <div class="question">
                     Keine passende Aufgabe gefunden!
                 </div>
+            </div>
 
+            <div style="cursor: pointer;" *ngIf="data.loadedQuestions.length == 0" class="question_wrapper_listview d_flex_column" (click)="showAddOverlay()">
+                <div class="question">
+                    Lege deine erste Aufgabe an!
+                </div>
             </div>
             <div id="questionListView{{i}}" class="question_wrapper_listview d_flex_column"
                 *ngFor="let questionData of data.loadedQuestions let i = index">
-                <div  id="question_list{{ i }}" class="question" 
+                <div id="question_list{{ i }}" class="question" 
                 [class.question_added_leicht]="getAddButtonStyle(questionData.id) && questionData.schwierigkeit == 'Leicht'"
                 [class.question_added_mittel]="getAddButtonStyle(questionData.id) && questionData.schwierigkeit == 'Mittel'"
                 [class.question_added_schwer]="getAddButtonStyle(questionData.id) && questionData.schwierigkeit == 'Schwer'">
@@ -83,14 +88,14 @@
 
                         <div class="question_add">
                             <button [class.d_none]="getAddButtonStyle(questionData.id)" id="{{ 'add_btn' + i }}"
-                                (click)="addToTest(questionData.id, 'add_styling', questionData.schwierigkeit)"
-                                class="btn is--add">
-                                <!-- <img class="add_icon" src="assets/plus_icon.png" alt=""> -->
+                                (click)="addToTest(questionData.id)"
+                                class="btn is_add">
+                               
                             </button>
                             <button [class.d_none]="getRemoveButtonStyle(questionData.id)" id="{{ 'remove_btn' + i }}"
-                                (click)="removeFromTest(questionData.id, questionData.schwierigkeit)"
-                                class="btn is--remove">
-                                <!-- <img class="remove_icon" src="assets/plus_icon.png" alt=""> -->
+                                (click)="removeFromTest(questionData.id); $event.stopPropagation()"
+                                class="btn is_remove">
+                            
                             </button>
                         </div>
                     </div>
@@ -155,7 +160,7 @@
                     <!-- Rendering ANSWERS  -->
                     <div class="answer_btn_container ">
                         <div class="answer_btn_wrapper d_flex_space">
-                            <div *ngIf="data.currentUserID == questionData.creatorId" class="d_flex">
+                            <div *ngIf="data.currentUserID == questionData.creatorId || questionData.type == 'muster'" class="d_flex">
                                 <button class="question_edit_btn"
                                     (click)="showEditOverlay(questionData)">Bearbeiten</button>
 
@@ -170,7 +175,7 @@
                             </div>
 
 
-                            <button (click)="toggleAnswer(questionData.id)"
+                            <button (click)="toggleAnswer(questionData.id); $event.stopPropagation()"
                                 [class.answer_btn_schwer]="questionData.schwierigkeit == 'Schwer'"
                                 [class.answer_btn_mittel]="questionData.schwierigkeit == 'Mittel'"
                                 [class.answer_btn_leicht]="questionData.schwierigkeit == 'Leicht'"
@@ -256,8 +261,18 @@
 
             <!-- FILTER -->
             <div *ngIf="openFilter" class="filter_overlay">
+                <button type="button" (click)="openFilter = false"
+                    class="btn is_remove is_closing">
+                </button>
                 <div class="main_wrapper d_flex_column ">
-                    <div class="d_flex_column">
+                    <div style="text-align: center; text-align: center;
+                    width: 100%;
+                    position: fixed;
+                    top: 0px;
+                    padding: 20px;
+                    background: #f2f3f4;" *ngIf="filters.length != 0">{{ filters.length }} Filter ausgewählt</div>
+
+                    <div class="d_flex_column" style="margin-top: 5vh">
                         <h2>Nach Fach filtern</h2>
                         <div class="subject_btn_wrapper d_flex">
                             <div *ngIf="data.currentUserData.subjects == 0" class="d_flex_column">
@@ -320,21 +335,15 @@
 
                         </div>
                     </div>
-                    <div class="section_separator margin_top_bottom"></div>
+                    <!-- <div class="section_separator margin_top_bottom"></div> -->
 
-                    <div class="subject_btn_wrapper d_flex">
-                        <button type="button" class="subject_btn cancel_btn border_none"
-                            (click)="openFilter = false">Abbrechen</button>
-                        <button class="subject_btn addNew_btn" (click)="openFilter = false">
-                            Filter anwenden</button>
-                    </div>
-
+                    <!-- <div class="subject_btn_wrapper d_flex"> -->
+                        <!-- <button type="button" class="btn_large is_cancel"
+                            (click)="openFilter = false">Abbrechen</button> -->
+                        <button class="btn_fixed_fullwidth" (click)="openFilter = false">Zeige Aufgaben ({{ totalQuestionsNumber}})
+                            </button>
+                    <!-- </div> -->
                 </div>
-                <button type="button" (click)="openFilter = false"
-                    class="question_add_btn d_flex close_overlay_window_btn"><img class="remove_icon"
-                        src="assets/plus_icon.png">
-                </button>
-
             </div>
 
 
@@ -421,8 +430,7 @@
                     <!-- Noch keien Aufgabe hinzugefügt INFO-->
                     <div class="added_questions_empty_container d_flex_column"
                         *ngIf="test['pages'][0][0].length == 0 && j == 0 && test['pages'].length < 2 ">
-                        <button (click)="openPreview()" class="question_add_btn d_flex"><img class="add_icon"
-                                src="assets/add.png" alt=""></button>
+                        <button (click)="openPreview()" class="btn is_start"></button>
                         <p class="added_questions_empty_info">Noch keine Aufgaben hinzugefügt</p>
                     </div>
 
@@ -460,7 +468,7 @@
                                     style="margin-right: 40px;" class="save_edited_question show_onHover d_flex">Layout
                                     als Standard speichern</button>
                                 <button id="{{ 'remove_btn' + i }}"
-                                    (click)="removeFromTest(testquestion['id'], testquestion['schwierigkeit']); deleteEmptyPages(j)"
+                                    (click)="removeFromTest(testquestion['id'])"
                                     class="remove_from_test_btn show_onHover d_flex"><img class="remove_icon"
                                         src="assets/x_icon.png" alt=""></button>
                             </div>

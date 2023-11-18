@@ -361,6 +361,7 @@ export class EditComponent implements OnInit, AfterViewInit {
           this.editMode = false;
         })
       }
+      console.log(this.currentQuestion, this.currentAnswer)
     }, 1000);
   }
 

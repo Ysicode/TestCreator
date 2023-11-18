@@ -26,7 +26,7 @@ export class AccountComponent implements OnInit {
 
   async loadData() {
     this.loading = true;
-    await this.loadDataFromLocalStorage();
+    this.data.getUserDataFromLocalStorage();
     await this.data.loadSubjectsAndClasses();
     await this.data.loadSubUserData();
     await this.data.loadSubUsers();
@@ -39,12 +39,12 @@ export class AccountComponent implements OnInit {
     }, 500);
   }
 
-  async loadDataFromLocalStorage() {
-    const data = localStorage.getItem('session');
-    const { school, sessionId } = JSON.parse(data);
-    this.data.currentSchool = school;
-    this.data.currentUserID = sessionId;
-  }
+  // async loadDataFromLocalStorage() {
+  //   // const data = localStorage.getItem('session');
+  //   // const { school, sessionId } = JSON.parse(data);
+  //   // this.data.currentSchool = school;
+  //   // this.data.currentUserID = sessionId;
+  // }
 
   choiceSubject(subject: any) {
     let userSubjects = this.data.currentUserData['subjects'];

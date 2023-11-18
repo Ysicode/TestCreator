@@ -1,12 +1,18 @@
+:root {
+    --color-primary: #339af0;
+    --bg-color-primary: #dfe2e6; /* Define your root color */
+    --color-grey-dark: #424949;
+}
+
 body {
     margin: 0;
-    background: #e1e1e1;
+    background: var(--bg-color-primary);
     font-family: "Montserrat", sans-serif;
 }
+
 mark {
     background: #f5af197d !important;
-    
-  }
+}
 
 .mat-tooltip {
     font-size: 15px !important;
@@ -82,12 +88,12 @@ ul {
 }
 
 h2 {
-    font-size: 17px !important;
+    font-size: 19px !important;
     font-weight: bold !important;
 }
 
 h1 {
-    font-size: 20px !important;
+    font-size: 21px !important;
     font-weight: bold !important;
 }
 
@@ -118,7 +124,7 @@ h3 {
 }
 
 .alert_border_red {
-    border-left: 3px solid #FA5252;
+    border-left: 3px solid #fa5252;
 }
 
 .alert_border_green {
@@ -129,29 +135,74 @@ h3 {
     display: none;
 }
 
+// Kann Global definiert werden
+.btn_large {
+    border: 1px solid var(--color-primary);
+    text-transform: uppercase;
+    background: none;
+    color: var(--color-grey-dark);
+    border-radius: 30px;
+    font-size: 17px;
+    padding: 10px 30px 10px 30px;
+    margin: 15px;
+
+    &:hover {
+        opacity: 0.8;
+        cursor: pointer;
+    }
+
+    &.is_submit {
+        border: 2px solid var(--color-primary) !important;
+    }
+
+    &.is_cancel {
+        border: none !important;
+        text-transform: none;
+    }
+}
+
+.btn_fixed_fullwidth {
+    position: fixed;
+    bottom: 0px;
+    background: var(--color-primary);
+    color: #fff;
+    width: 100%;
+    font-size: 17px;
+    padding: 25px;
+    border: none;
+
+    &:hover {
+        cursor: pointer;
+        opacity: 0.9;
+    }
+}
+
 @media (max-width: 850px) {
     h2 {
-        font-size: 14px !important;
+        font-size: 17px !important;
         text-align: center;
     }
 }
 
 @media (max-width: 600px) {
     h2 {
-        font-size: 13px !important;
+        font-size: 16px !important;
     }
 
     .section_separator {
         width: 270px;
     }
+
+    .btn_large {
+        font-size: 15px;
+    }
 }
 
 @media print {
-
     body *:not(.test_print) :not(.test_print *) {
         visibility: hidden;
     }
-   
+
     @page {
         margin-top: 0;
         margin-bottom: 0;

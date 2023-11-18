@@ -23,6 +23,8 @@ export class HeaderComponent implements OnInit {
     } else {
       this.router.navigate(['login']);
     }
+
+    console.log(this.data.currentSchool)
   }
 
   showMobileNavbar() {

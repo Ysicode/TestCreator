@@ -1,0 +1,91 @@
+<app-header></app-header>
+
+<div class="main_wrapper d_flex_column">
+
+    <h1>Backlog</h1>
+
+    <div (click)="$event.stopPropagation()" class="inputs_wrapper d_flex_column">
+        <h2>Neue Schule anlegen</h2>
+        <form #addUserForm="ngForm" class="form_wrapper d_flex_column"
+            (ngSubmit)="data.addNewSchool(addUserForm.value);">
+
+            <!-- Schoolname -->
+            <div class="input_wrapper d_flex_column">
+                <input placeholder="Schulname" #schoolname class="inputfield" type="text" maxlength="30"
+                    name="schoolname" ngModel>
+                <p class="input_info">Min 2 / Noch {{30 - schoolname.value.length}} Zeichen</p>
+            </div>
+
+             <!-- Admin Vorname -->
+             <div class="input_wrapper d_flex_column">
+                <input placeholder="Admin Vorname" #adminfirstname class="inputfield" type="text" maxlength="30"
+                    name="adminfirstname" ngModel>
+                <p class="input_info">Min 2 / Noch {{30 - schoolname.value.length}} Zeichen</p>
+            </div>
+
+             <!-- Admin Nachname -->
+             <div class="input_wrapper d_flex_column">
+                <input placeholder="Admin Nachname" #adminlastname class="inputfield" type="text" maxlength="30"
+                    name="adminlastname" ngModel>
+                <p class="input_info">Min 2 / Noch {{30 - schoolname.value.length}} Zeichen</p>
+            </div>
+
+
+            <!-- Admin Email Adress -->
+            <div class="input_wrapper d_flex_column">
+                <input placeholder="Email" #email class="inputfield" type="text" maxlength="50" name="email" ngModel>
+                <p id="email_adress" class="input_info">Verifizierte Emailadresse</p>
+            </div>
+
+            <!-- Admin Password -->
+            <div class="input_wrapper d_flex_column">
+                <input placeholder="Passwort" #password class="inputfield" type="password" maxlength="30"
+                    name="password" ngModel>
+                <div class="d_flex">
+                    <p class="input_info password">Min</p>
+                    <p id="password_length" class="input_info password">8 Zeichen</p>
+                    <p id="password_number" class="input_info password">1 Zahl</p>
+                    <p id="password_uppercase" class="input_info password">1 Großbuchstabe</p>
+                </div>
+            </div>
+
+            <!-- School Adress -->
+            <div class="input_wrapper d_flex_column">
+                <!-- City -->
+                <input placeholder="Stadt" #city class="inputfield" type="text" maxlength="30" name="city" ngModel>
+                <!-- Postcode -->
+                <input placeholder="Postleitzahl" #postcode class="inputfield" type="text" maxlength="30"
+                    name="postcode" ngModel>
+                <!-- State -->
+                <input placeholder="Bundesland" #state class="inputfield" type="text" maxlength="30" name="state"
+                    ngModel>
+                <!-- Stree -->
+                <input placeholder="Straße" #street class="inputfield" type="text" maxlength="30" name="street" ngModel>
+            </div>
+
+            <!-- SchoolKey -->
+            <div class="input_wrapper d_flex_column">
+                <input placeholder="Schule ID/ Schlüssel" #schoolkey class="inputfield" type="text" maxlength="30"
+                    name="schoolkey" ngModel>
+            </div>
+
+            <!-- SchoolTyp -->
+            <div class="input_wrapper d_flex_column">
+                <input placeholder="SchulTyp / Art" #schooltype class="inputfield" type="text" maxlength="30"
+                    name="schooltype" ngModel>
+            </div>
+
+
+
+            <div class="d_flex">
+                <button class="cancel_btn">Abbrechen</button>
+                <button #submit_btn class="save_btn" type="submit">Speichern</button>
+            </div>
+        </form>
+        <!-- <div [class.d_none]="!alertService.alert" class="alert alert_border_red d_flex" id="alert">
+
+        </div> -->
+    </div>
+
+
+</div>

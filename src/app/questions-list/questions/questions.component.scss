@@ -64,7 +64,7 @@ body {
     padding-bottom: 100px;
     position: fixed;
     bottom: 20%;
-    z-index: 9999999;
+    z-index: 9999999999;
     background: #f2f3f4;
     top: 0;
     bottom: 0;
@@ -147,18 +147,22 @@ body {
 
 .selectedButton {
     border: 2px solid #339af0;
+    font-weight: 600;
 }
 
 .selectedButton_leicht {
     border: 2px solid #fcc419;
+    font-weight: 600;
 }
 
 .selectedButton_mittel {
     border: 2px solid #339af0;
+    font-weight: 600;
 }
 
 .selectedButton_schwer {
     border: 2px solid #fa5252;
+    font-weight: 600;
 }
 
 .dificulty_leicht_btn {
@@ -361,7 +365,7 @@ style for rendered subjects
     margin-top: 100px;
     width: 100vw;
     max-width: 100%;
-    background: #e1e1e1;
+    background: var(--bg-color-primary);
     position: sticky;
     margin-bottom: 15px;
     top: 0;
@@ -379,13 +383,15 @@ style for rendered subjects
 }
 
 .preview_btn {
-    background: #e1e1e1;
-    border: 1px solid #339af0;
-    color: #424949;
+    text-transform: uppercase;
+    background: var(--bg-color-primary);
+    border: 2px solid var(--color-primary);
+    color: var(--color-grey-dark);
     border-radius: 50px;
     font-size: 14px;
     padding: 10px 30px 10px 30px;
     margin-left: 40px;
+
     &:hover {
         cursor: pointer;
         opacity: 0.8;
@@ -395,7 +401,6 @@ style for rendered subjects
 .question_wrapper {
     cursor: pointer;
     width: 84%;
-
     min-height: auto;
     position: relative;
     justify-content: flex-start;
@@ -441,18 +446,21 @@ style for rendered subjects
     border-right: 5px solid #fcc419;
     border-left: 5px solid #fcc419;
     opacity: 0.7;
+    transition: all 150ms ease-in-out;
 }
 
 .question_added_mittel {
     border-right: 5px solid #339af0;
     border-left: 5px solid #339af0;
     opacity: 0.7;
+    transition: all 150ms ease-in-out;
 }
 
 .question_added_schwer {
     border-right: 5px solid #fa5252;
     border-left: 5px solid #fa5252;
     opacity: 0.7;
+    transition: all 150ms ease-in-out;
 }
 
 .question_container {
@@ -491,61 +499,87 @@ style for rendered subjects
 
 .question_add {
     z-index: 3;
+}
 
-    .btn {
-        position: relative;
-        background: #e1e1e1;
-        border: 1px solid #424949;
-        border-radius: 50px;
-        padding: 7px;
-        width: 40px;
-        height: 40px;
-        transition: all 300ms ease-in-out;
+.btn {
+    position: relative;
+    background: #e1e1e1;
+    border: 1px solid #424949;
+    border-radius: 50px;
+    padding: 7px;
+    width: 40px;
+    height: 40px;
+    transition: all 300ms ease-in-out;
 
-        &:hover {
-            opacity: 0.8;
-            cursor: pointer;
+    &:hover {
+        opacity: 0.8;
+        cursor: pointer;
+    }
+
+    &:before,
+    &:after {
+        content: "";
+        position: absolute;
+        background: #424949;
+        transform: translate(-50%, -50%);
+        left: 50%;
+        top: 50%;
+        border-radius: 5px;
+    }
+
+    &.is_add {
+        &:before {
+            width: 18px;
+            height: 3px;
         }
 
-        &:before,
         &:after {
-            content: "";
-            position: absolute;
-            background: #424949;
-            transform: translate(-50%, -50%);
-            left: 50%;
-            top: 50%;
-            border-radius: 5px;
+            height: 18px;
+            width: 3px;
+        }
+    }
+
+    &.is_remove {
+        &:before {
+            transform: rotate(45deg);
+            left: 10px;
+            top: 18px;
+            width: 18px;
+            height: 3px;
         }
 
-        &.is--add {
-            &:before {
-                width: 22px;
-                height: 2px;
-            }
+        &:after {
+            transform: rotate(45deg);
+            left: 18px;
+            top: 10px;
+            width: 3px;
+            height: 18px;
+        }
+    }
 
-            &:after {
-                height: 22px;
-                width: 2px;
-            }
+    &.is_closing {
+        position: fixed;
+        right: 20px;
+        top: 20px;
+        z-index: 9;
+    }
+
+    &.is_start {
+        width: 45px;
+        height: 45px;
+
+        &:before {
+            top: 22px;
+            left: 22px;
+            width: 25px;
+            height: 5px;
         }
 
-        &.is--remove {
-            &:before {
-                transform: rotate(45deg);
-                left: 9px;
-                top: 18px;
-                width: 22px;
-                height: 2px;
-            }
-
-            &:after {
-                transform: rotate(45deg);
-                left: 19px;
-                top: 8px;
-                width: 2px;
-                height: 22px;
-            }
+        &:after {
+            top: 22px;
+            left: 22px;
+            height: 25px;
+            width: 5px;
         }
     }
 }
@@ -848,7 +882,7 @@ Answer styles
     width: 320px;
     height: 35px;
     border-radius: 50px;
-    z-index: 999999999;
+    z-index: 9999999;
     display: flex;
     align-items: center;
     justify-content: space-between;

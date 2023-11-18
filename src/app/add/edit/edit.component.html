@@ -139,19 +139,16 @@
 
 
                 <div class="d_flex save_btn_wrapper">
-                    <button type="button" class="subject_btn cancel_btn border--none"
+                    <button type="button" class="btn_large is_cancel"
                         (click)="closeEditComponent()">Abbrechen</button>
-                    <button class="subject_btn add_question_btn" type="submit">
-                        {{editMode ? 'Änderungen Speichern' : 'Frage Speichern'}}</button>
-
-                    <button type="button" (click)="closeEditComponent()"
-                        class="question_add_btn d_flex close_overlay_window_btn"><img class="remove_icon"
-                            src="assets/plus_icon.png" crossorigin="anonymous">
-                    </button>
+                    <button class="btn_large is_submit" type="submit">
+                        {{editMode ? 'Änderungen Speichern' : 'Speichern'}}</button>
                 </div>
             </div>
-
         </form>
+
+        <button type="button" (click)="closeEditComponent()" class="btn is_remove is_closing">
+        </button>
     </div>
 
     <div [class.d_none]="!alertService.alert" class="alert alert_border_red d_flex" id="alert">

@@ -22,7 +22,13 @@ export class AddUserComponent implements AfterViewInit {
   validLastname: Boolean;
   validFirstname: Boolean;
 
+  passwordVisible: Boolean = false;
+
   constructor(public alertService: AlertService, public data: dataTransferService) { }
+
+  ngOnInit() {
+    this.data.getUserDataFromLocalStorage();
+  }
 
   ngAfterViewInit(): void {
     this.checkEmailInputValue(this.email.nativeElement.value);
@@ -126,6 +132,11 @@ export class AddUserComponent implements AfterViewInit {
       this.submit_btn.nativeElement.disabled = true;
       this.submit_btn.nativeElement.style.opacity = '0.5';
     }
+  }
+
+  showPassword() {
+    console.log(this.passwordVisible)
+    this.passwordVisible = !this.passwordVisible;
   }
 
 }

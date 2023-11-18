@@ -34,7 +34,7 @@
 }
 
 .overlay_bg {
-    background-color: #f2f3f4;
+    background-color: var(--bg-color-primary);
     width: 100vw;
     max-width: 100%;
     padding-bottom: 200px;
@@ -44,27 +44,12 @@
     width: 100%;
 }
 
-.lesson_button {
-    width: 100px;
-    height: 20px;
-}
 
 .subject_btn_wrapper {
     width: 100%;
     flex-wrap: wrap;
 }
 
-.add_question_btn {
-    border: 2px solid #339af0 !important;
-}
-
-.addNew_container {
-    margin-top: 30px;
-}
-
-.border--none {
-    border: none !important;
-}
 
 .subject_btn {
     background: none;
@@ -74,58 +59,82 @@
     font-size: 15px;
     padding: 10px 30px 10px 30px;
     margin: 15px;
+
     &:hover {
         cursor: pointer;
         opacity: 0.8;
     }
 }
 
-.cancel_btn {
-    background: none !important;
-}
-
-.close_overlay_window_btn {
-    position: fixed;
-    right: 20px;
-    top: 20px;
-}
-
-.question_add_btn {
+.btn {
+    position: relative;
     background: #e1e1e1;
-    border: 1px solid grey;
+    border: 1px solid #424949;
     border-radius: 50px;
     padding: 7px;
+    width: 40px;
+    height: 40px;
+    transition: all 300ms ease-in-out;
+
     &:hover {
         opacity: 0.8;
         cursor: pointer;
     }
 
-    .add_icon {
-        width: 20px;
-        height: 20px;
+    &:before,
+    &:after {
+        content: "";
+        position: absolute;
+        background: #424949;
+        transform: translate(-50%, -50%);
+        left: 50%;
+        top: 50%;
+        border-radius: 5px;
     }
 
-    .remove_icon {
-        width: 20px;
-        height: 20px;
-        transform: rotate(45deg);
+    &.is_remove {
+        &:before {
+            transform: rotate(45deg);
+            left: 10px;
+            top: 18px;
+            width: 18px;
+            height: 3px;
+        }
+
+        &:after {
+            transform: rotate(45deg);
+            left: 18px;
+            top: 10px;
+            width: 3px;
+            height: 18px;
+        }
+    }
+
+    &.is_closing {
+        position: fixed;
+        right: 20px;
+        top: 20px;
     }
 }
 
 .selectedButton {
-    border: 2px solid #339af0;
+    border: 2px solid var(--color-primary);
+    font-weight: 600;
 }
 
 .selectedButton_leicht {
     border: 2px solid #fcc419;
+    font-weight: 600;
 }
 
 .selectedButton_mittel {
-    border: 2px solid #339af0;
+    border: 2px solid var(--color-primary);
+    font-weight: 600;
 }
 
 .selectedButton_schwer {
     border: 2px solid #fa5252;
+    font-weight: 600;
 }
 
 .inputfield {
@@ -192,7 +201,7 @@
 }
 
 .rangebar:hover {
-    opacity: 0.9;
+    opacity: 0.8;
 }
 
 .rangebar::-webkit-slider-thumb {
@@ -259,79 +268,79 @@
     margin-top: 0px !important;
 }
 
-.plus_margin_top {
-    margin-top: 150px;
-}
+// .plus_margin_top {
+//     margin-top: 150px;
+// }
 
-.d_none {
-    display: none;
-}
+// .d_none {
+//     display: none;
+// }
 
-.d_flex_column {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-}
+// .d_flex_column {
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     flex-direction: column;
+// }
 
-.d_flex_space {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
+// .d_flex_space {
+//     display: flex;
+//     align-items: center;
+//     justify-content: space-between;
+// }
 
-.d_flex {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+// .d_flex {
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+// }
 
-.d_flex_start {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-}
+// .d_flex_start {
+//     display: flex;
+//     align-items: center;
+//     justify-content: flex-start;
+// }
 
-.d_flex_column_start {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    flex-direction: column;
-}
+// .d_flex_column_start {
+//     display: flex;
+//     align-items: center;
+//     justify-content: flex-start;
+//     flex-direction: column;
+// }
 
-.d_flex_column_end {
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    flex-direction: column;
-}
+// .d_flex_column_end {
+//     display: flex;
+//     align-items: flex-end;
+//     justify-content: center;
+//     flex-direction: column;
+// }
 
-.d_flex_end {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-}
+// .d_flex_end {
+//     display: flex;
+//     align-items: center;
+//     justify-content: flex-end;
+// }
 
-.d_flex_end_end {
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-end;
-}
+// .d_flex_end_end {
+//     display: flex;
+//     align-items: flex-end;
+//     justify-content: flex-end;
+// }
 
-h2 {
-    font-size: 17px !important;
-    font-weight: bold !important;
-}
+// h2 {
+//     font-size: 17px !important;
+//     font-weight: bold !important;
+// }
 
-h1 {
-    font-size: 23px !important;
-    font-weight: bold !important;
-}
+// h1 {
+//     font-size: 23px !important;
+//     font-weight: bold !important;
+// }
 
-h3 {
-    font-size: 17px !important;
-    font-weight: bold !important;
-}
+// h3 {
+//     font-size: 17px !important;
+//     font-weight: bold !important;
+// }
 
 .section_separator {
     max-width: 500px;
@@ -430,10 +439,10 @@ h3 {
         margin-right: 7px;
     }
 
-    .question_arrow {
-        height: 13px;
-        width: 13px;
-    }
+    // .question_arrow {
+    //     height: 13px;
+    //     width: 13px;
+    // }
 
     .added_questions_empty_info {
         font-size: 15px;
@@ -480,18 +489,18 @@ h3 {
 }
 
 @media (max-width: 450px) {
-    .question_add_btn {
-        padding: 2px;
-    }
+    // .question_add_btn {
+    //     padding: 2px;
+    // }
 
-    .answer_btn {
-        font-size: 10px;
-    }
+    // .answer_btn {
+    //     font-size: 10px;
+    // }
 
-    .question_arrow {
-        height: 10px;
-        width: 10px;
-    }
+    // .question_arrow {
+    //     height: 10px;
+    //     width: 10px;
+    // }
 
     .added_questions_empty_info {
         font-size: 13px;

@@ -39,7 +39,7 @@
             <div class="subject_btn_wrapper d_flex" *ngIf="loaded">
                 <div *ngIf="data.loadedUserdata[0].classes == 0" class="d_flex_column">
                     <p>{{ 'Es wurde noch keine Klasse ausgewählt!'}}</p>
-                    <button routerLink="/account" class="subject_btn">Klasse auswählen</button>
+                    <!-- <button routerLink="/account" class="subject_btn">Klasse auswählen</button> -->
                 </div>
                 <div *ngFor="let schoolclass of data.loadedUserdata[0].classes; let i = index">
                     <button class="subject_btn" [class.selectedButton]="findSelectedClasses(schoolclass)"
