@@ -1,13 +1,25 @@
 <div class="header d_flex_space">
-    <div class="d_flex">
-        <img class="logo_icon" src="assets/testcreator.png" alt="">
-        <h1 class="logo d_flex margin_zero">Josi Software</h1>
+    <div class="d_flex" style="margin-left: 15px;">
+        <!-- <img class="logo_icon" src="assets/testcreator.png" alt=""> -->
+        <div class="d_flex_column" style="margin-right: 7px;">
+            <span style="background: var(--color-primary);
+            width: 23px;
+            border-radius: 5px;
+            height: 15px;"></span>
+            <span style="border: 2px solid black;
+            width: 19px;
+            margin-top: 1px;
+            height: 3px;
+            border-radius: 5px;"></span>
+        </div>
+       
+        <h1 class="logo d_flex margin_zero">Bib</h1>
     </div>
 
     <nav class="navbar d_flex">
         <!-- <img crossorigin="anonymous" class="user_photo" src="assets/simon_weiss.jpg" alt=""> -->
         <button *ngIf="data.currentSchool === 'JosiMasterschool2023!'" (click)="closeMobileNavbar()" routerLink="/backlog" class="navlink margin_zero" [routerLinkActive]="'is_active'">Backlog</button>
-        <button (click)="closeMobileNavbar()" routerLink="/dashboard" class="navlink margin_zero" [routerLinkActive]="'is_active'">Creator</button>
+        <button (click)="closeMobileNavbar()" routerLink="/dashboard" class="navlink margin_zero" [routerLinkActive]="'is_active'">Editor</button>
         <button (click)="closeMobileNavbar()" routerLink="/ablage" class="navlink margin_zero" [routerLinkActive]="'is_active'">Ablage</button>
         <button (click)="closeMobileNavbar()" routerLink="/account" class="navlink margin_zero" [routerLinkActive]="'is_active'">Account</button>
         <div class="d_flex wrapper_logout">
@@ -27,7 +39,7 @@
                 <button *ngIf="data.currentSchool === 'JosiMasterschool2023!'" routerLink="/backlog" class="navlink margin_zero"
                 [routerLinkActive]="'is_active'">Backlog</button>
                 <button routerLink="/dashboard" class="navlink margin_zero"
-                    [routerLinkActive]="'is_active'">Creator</button>
+                    [routerLinkActive]="'is_active'">Editor</button>
                 <button routerLink="/ablage" class="navlink margin_zero"
                     [routerLinkActive]="'is_active'">Ablage</button>
                 <button routerLink="/account" class="navlink margin_zero"

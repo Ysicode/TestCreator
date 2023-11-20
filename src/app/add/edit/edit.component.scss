@@ -4,6 +4,51 @@
     margin-top: 50px;
 }
 
+.overlay_navbar {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    height: 53px;
+    background: #f2f3f4;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+    .btn_reset {
+        position: absolute;
+        left: 7px;
+        border: none;
+        background: none;
+
+        &:hover {
+            cursor: pointer;
+            opacity: 0.8;
+        }
+    }
+
+    .overlay_headline {
+        width: 100%;
+        text-align: center;
+    }
+
+    .btn_cancel {
+        position: absolute;
+        right: 7px;
+        padding-right: 15px;
+        height: 30px;
+        width: 30px;
+        background: none;
+        border: none;
+        font-size: 17px;
+
+        &:hover {
+            cursor: pointer;
+            opacity: 0.8;
+        }
+    }
+}
+
 .d_none {
     display: none;
 }

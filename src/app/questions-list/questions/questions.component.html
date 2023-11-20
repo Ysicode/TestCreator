@@ -43,23 +43,25 @@
                 {{ totalQuestionsNumber == 1 ? totalQuestionsNumber + ' Aufgabe' : totalQuestionsNumber + ' Aufgaben' }}
                 {{filters.length != 0 ? '/ ' + filters.length + ' Filter' : ''}}
             </div>
-            <div *ngIf="totalQuestionsNumber == 0 && data.loadedQuestions.length != 0" class="question_wrapper_listview d_flex_column">
+            <div *ngIf="totalQuestionsNumber == 0 && data.loadedQuestions.length != 0"
+                class="question_wrapper_listview d_flex_column">
                 <div class="question">
                     Keine passende Aufgabe gefunden!
                 </div>
             </div>
 
-            <div style="cursor: pointer;" *ngIf="data.loadedQuestions.length == 0" class="question_wrapper_listview d_flex_column" (click)="showAddOverlay()">
+            <div style="cursor: pointer;" *ngIf="data.loadedQuestions.length == 0"
+                class="question_wrapper_listview d_flex_column" (click)="showAddOverlay()">
                 <div class="question">
                     Lege deine erste Aufgabe an!
                 </div>
             </div>
             <div id="questionListView{{i}}" class="question_wrapper_listview d_flex_column"
                 *ngFor="let questionData of data.loadedQuestions let i = index">
-                <div id="question_list{{ i }}" class="question" 
-                [class.question_added_leicht]="getAddButtonStyle(questionData.id) && questionData.schwierigkeit == 'Leicht'"
-                [class.question_added_mittel]="getAddButtonStyle(questionData.id) && questionData.schwierigkeit == 'Mittel'"
-                [class.question_added_schwer]="getAddButtonStyle(questionData.id) && questionData.schwierigkeit == 'Schwer'">
+                <div id="question_list{{ i }}" class="question"
+                    [class.question_added_leicht]="getAddButtonStyle(questionData.id) && questionData.schwierigkeit == 'Leicht'"
+                    [class.question_added_mittel]="getAddButtonStyle(questionData.id) && questionData.schwierigkeit == 'Mittel'"
+                    [class.question_added_schwer]="getAddButtonStyle(questionData.id) && questionData.schwierigkeit == 'Schwer'">
                     <div class="question_head_container">
                         <div class="question_info d_flex_start">
                             <div class="question_info__difficulty_btn d_flex"
@@ -88,14 +90,13 @@
 
                         <div class="question_add">
                             <button [class.d_none]="getAddButtonStyle(questionData.id)" id="{{ 'add_btn' + i }}"
-                                (click)="addToTest(questionData.id)"
-                                class="btn is_add">
-                               
+                                (click)="addToTest(questionData.id)" class="btn is_add">
+
                             </button>
                             <button [class.d_none]="getRemoveButtonStyle(questionData.id)" id="{{ 'remove_btn' + i }}"
                                 (click)="removeFromTest(questionData.id); $event.stopPropagation()"
                                 class="btn is_remove">
-                            
+
                             </button>
                         </div>
                     </div>
@@ -160,7 +161,8 @@
                     <!-- Rendering ANSWERS  -->
                     <div class="answer_btn_container ">
                         <div class="answer_btn_wrapper d_flex_space">
-                            <div *ngIf="data.currentUserID == questionData.creatorId || questionData.type == 'muster'" class="d_flex">
+                            <div *ngIf="data.currentUserID == questionData.creatorId || questionData.type == 'muster'"
+                                class="d_flex">
                                 <button class="question_edit_btn"
                                     (click)="showEditOverlay(questionData)">Bearbeiten</button>
 
@@ -211,8 +213,10 @@
                                         </div>
                                     </div>
 
-                                    <div class="element_margin_doc" style="display: flex;" *ngIf="question['data']['file']">
-                                        <img loading="lazy" class="question_img" src="{{ question['data']['file']['url'] }}" alt="">
+                                    <div class="element_margin_doc" style="display: flex;"
+                                        *ngIf="question['data']['file']">
+                                        <img loading="lazy" class="question_img"
+                                            src="{{ question['data']['file']['url'] }}" alt="">
                                         <div class="attaches d_flex" *ngIf="question['type'] === 'attaches'">
                                             <img class="attached_icon" src="assets/attached.png" alt="">
                                             <a target="_blank" href="{{ question['data']['file']['url'] }}">
@@ -260,89 +264,89 @@
             </div>
 
             <!-- FILTER -->
-            <div *ngIf="openFilter" class="filter_overlay">
-                <button type="button" (click)="openFilter = false"
-                    class="btn is_remove is_closing">
-                </button>
-                <div class="main_wrapper d_flex_column ">
-                    <div style="text-align: center; text-align: center;
-                    width: 100%;
-                    position: fixed;
-                    top: 0px;
-                    padding: 20px;
-                    background: #f2f3f4;" *ngIf="filters.length != 0">{{ filters.length }} Filter ausgewählt</div>
+            <div *ngIf="openFilter" class="filter_overlay_bg" (click)="openFilter = false">
+                <div class="filter_overlay" (click)="$event.stopPropagation()">
+                    <div class="overlay_navbar">
+                        <button class="btn_reset" (click)="filters = []">zurücksetzen</button>
+                        <h1 class="overlay_headline">Aufgaben Filtern</h1>
+                        <button type="button" (click)="openFilter = false" class="btn_cancel">X</button>
+                    </div>
 
-                    <div class="d_flex_column" style="margin-top: 5vh">
-                        <h2>Nach Fach filtern</h2>
-                        <div class="subject_btn_wrapper d_flex">
-                            <div *ngIf="data.currentUserData.subjects == 0" class="d_flex_column">
-                                <p>{{ 'Es wurde noch kein Fach ausgewählt!' }}</p>
-                                <button routerLink="/account" class="subject_btn">Schulfach auswählen</button>
+
+                    <div class="main_wrapper d_flex_column ">
+                        <div class="d_flex_column" style="margin-top: 5vh">
+                            <h2>Fach</h2>
+                            <div class="subject_btn_wrapper d_flex">
+                                <div *ngIf="data.currentUserData.subjects == 0" class="d_flex_column">
+                                    <p>{{ 'Es wurde noch kein Fach ausgewählt!' }}</p>
+                                    <button routerLink="/account" class="subject_btn">Schulfach auswählen</button>
+                                </div>
+
+                                <button *ngFor="let subject of data.currentUserData.subjects; let i = index"
+                                    (click)="setSubjectFilter(subject, i)" class="subject_btn"
+                                    [class.selectedButton]="i == selectedSubjectButton">{{ subject }}</button>
                             </div>
-
-                            <button *ngFor="let subject of data.currentUserData.subjects; let i = index"
-                                (click)="setSubjectFilter(subject, i)" class="subject_btn"
-                                [class.selectedButton]="i == selectedSubjectButton">{{ subject }}</button>
                         </div>
-                    </div>
 
-                    <div class="section_separator margin_top_bottom"></div>
+                        <div class="section_separator margin_top_bottom"></div>
 
-                    <div class="d_flex_column">
-                        <h2>Nach Klasse filtern</h2>
-                        <div class="subject_btn_wrapper d_flex">
-                            <div *ngIf="data.currentUserData.classes == 0" class="d_flex_column">
-                                <p>{{ 'Es wurde noch keine Klasse ausgewählt!'}}</p>
-                                <button routerLink="/account" class="subject_btn">Klasse auswählen</button>
+                        <div class="d_flex_column">
+                            <h2>Klasse</h2>
+                            <div class="subject_btn_wrapper d_flex">
+                                <div *ngIf="data.currentUserData.classes == 0" class="d_flex_column">
+                                    <p>{{ 'Es wurde noch keine Klasse ausgewählt!'}}</p>
+                                    <button routerLink="/account" class="subject_btn">Klasse auswählen</button>
+                                </div>
+
+                                <button *ngFor="let class of data.currentUserData.classes; let i = index"
+                                    (click)="setClassFilter(class, i)" class="subject_btn"
+                                    [class.selectedButton]="i == selectedClassButton">{{class}}</button>
                             </div>
-
-                            <button *ngFor="let class of data.currentUserData.classes; let i = index"
-                                (click)="setClassFilter(class, i)" class="subject_btn"
-                                [class.selectedButton]="i == selectedClassButton">{{class}}</button>
                         </div>
-                    </div>
 
-                    <div class="section_separator margin_top_bottom"></div>
+                        <div class="section_separator margin_top_bottom"></div>
 
-                    <div class="d_flex_column">
-                        <h2>Nach Schwierigkeit filtern</h2>
-                        <div class="subject_btn_wrapper d_flex">
-                            <button (click)="setDifficultyFilter('Leicht')" class="subject_btn"
-                                [class.selectedButton_leicht]="filteredDifficulty == 'Leicht'">Leicht</button>
-                            <button (click)="setDifficultyFilter('Mittel')" class="subject_btn"
-                                [class.selectedButton_mittel]="filteredDifficulty == 'Mittel'">Mittel</button>
-                            <button (click)="setDifficultyFilter('Schwer')" class="subject_btn"
-                                [class.selectedButton_schwer]="filteredDifficulty == 'Schwer'">Schwer</button>
+                        <div class="d_flex_column">
+                            <h2>Schwierigkeit</h2>
+                            <div class="subject_btn_wrapper d_flex">
+                                <button (click)="setDifficultyFilter('Leicht')" class="subject_btn"
+                                    [class.selectedButton_leicht]="filteredDifficulty == 'Leicht'">Leicht</button>
+                                <button (click)="setDifficultyFilter('Mittel')" class="subject_btn"
+                                    [class.selectedButton_mittel]="filteredDifficulty == 'Mittel'">Mittel</button>
+                                <button (click)="setDifficultyFilter('Schwer')" class="subject_btn"
+                                    [class.selectedButton_schwer]="filteredDifficulty == 'Schwer'">Schwer</button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="section_separator margin_top_bottom"></div>
+                        <div class="section_separator margin_top_bottom"></div>
 
-                    <div class="d_flex_column">
-                        <h2>Nach Art filtern</h2>
-                        <div class="d_flex subject_btn_wrapper">
+                        <div class="d_flex_column">
+                            <h2>Art</h2>
+                            <div class="d_flex subject_btn_wrapper">
 
-                            <button (click)="setKindOfQuestionFilter('standard')" class="subject_btn"
-                                [class.selectedButton]="filteredKind == 'standard'">Standard</button>
-
-
-                            <button (click)="setKindOfQuestionFilter('multipleChoice')" class="subject_btn"
-                                [class.selectedButton]="filteredKind == 'multipleChoice'">Multiple Choice</button>
+                                <button (click)="setKindOfQuestionFilter('standard')" class="subject_btn"
+                                    [class.selectedButton]="filteredKind == 'standard'">Standard</button>
 
 
-                            <!-- <button (click)="setKindOfQuestionFilter('unteraufgaben')"
+                                <button (click)="setKindOfQuestionFilter('multipleChoice')" class="subject_btn"
+                                    [class.selectedButton]="filteredKind == 'multipleChoice'">Multiple Choice</button>
+
+
+                                <!-- <button (click)="setKindOfQuestionFilter('unteraufgaben')"
                                 class="subject_btn"
                                 [class.selectedButton]="filteredKind == 'unteraufgaben'">Unteraufgaben</button> -->
 
+                            </div>
                         </div>
-                    </div>
-                    <!-- <div class="section_separator margin_top_bottom"></div> -->
+                        <!-- <div class="section_separator margin_top_bottom"></div> -->
 
-                    <!-- <div class="subject_btn_wrapper d_flex"> -->
+                        <!-- <div class="subject_btn_wrapper d_flex"> -->
                         <!-- <button type="button" class="btn_large is_cancel"
                             (click)="openFilter = false">Abbrechen</button> -->
-                        <button class="btn_fixed_fullwidth" (click)="openFilter = false">Zeige Aufgaben ({{ totalQuestionsNumber}})
-                            </button>
-                    <!-- </div> -->
+                        <button *ngIf="filters.length != 0" class="btn_fixed_fullwidth" (click)="openFilter = false">
+                            {{ totalQuestionsNumber != 1  ? totalQuestionsNumber + ' Aufgaben gefunden' : totalQuestionsNumber + ' Aufgabe gefunden' }}
+                        </button>
+                        <!-- </div> -->
+                    </div>
                 </div>
             </div>
 
@@ -467,8 +471,7 @@
                                     (click)="saveEditedQuestionAsDefault(j, i, testquestion['id'])"
                                     style="margin-right: 40px;" class="save_edited_question show_onHover d_flex">Layout
                                     als Standard speichern</button>
-                                <button id="{{ 'remove_btn' + i }}"
-                                    (click)="removeFromTest(testquestion['id'])"
+                                <button id="{{ 'remove_btn' + i }}" (click)="removeFromTest(testquestion['id'])"
                                     class="remove_from_test_btn show_onHover d_flex"><img class="remove_icon"
                                         src="assets/x_icon.png" alt=""></button>
                             </div>
@@ -477,7 +480,8 @@
                             <ng-container *ngIf="!sampleSolution">
                                 <div *ngFor="let question of testquestion['frage']['blocks'] let k = index">
 
-                                    <div class="preview_question_container" [innerHTML]="question['data']['text'] " contenteditable="true">
+                                    <div class="preview_question_container" [innerHTML]="question['data']['text'] "
+                                        contenteditable="true">
                                         <!-- Text -->
                                     </div>
 
@@ -590,7 +594,8 @@
                                     <div class="element_margin_text" *ngIf="question['data']['file']">
                                         <!-- Images -->
                                         <div class="img_wrapper d_flex_start">
-                                            <div *ngIf="question['type'] === 'image'" id="img_edit_wrapper{{j}}{{i}}{{k}}" class="img_edit_wrapper d_flex"
+                                            <div *ngIf="question['type'] === 'image'"
+                                                id="img_edit_wrapper{{j}}{{i}}{{k}}" class="img_edit_wrapper d_flex"
                                                 [ngStyle]="{'width': question['width'] ? question['width'] : '30%'}">
                                                 <img id="questionImage{{ j }}{{ i }}{{k}}" class="preview_question_img"
                                                     src="{{ question['data']['file']['url'] }}" alt="">

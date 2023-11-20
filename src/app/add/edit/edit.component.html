@@ -3,6 +3,12 @@
 
     </app-spinner>
 
+    <div class="overlay_navbar">
+        <button class="btn_reset">zurücksetzen</button>
+        <h1 class="overlay_headline">{{editMode ? 'Aufgabe bearbeiten' : 'Neue Aufgabe'}}</h1>
+        <button type="button" (click)="closeEditComponent()" class="btn_cancel">X</button>
+    </div>
+
     <div class="main_wrapper d_flex_column ">
         <div class="subject_wrapper d_flex_column">
             <div class="d_flex_column section">
@@ -147,8 +153,8 @@
             </div>
         </form>
 
-        <button type="button" (click)="closeEditComponent()" class="btn is_remove is_closing">
-        </button>
+        <!-- <button type="button" (click)="closeEditComponent()" class="btn is_remove is_closing">
+        </button> -->
     </div>
 
     <div [class.d_none]="!alertService.alert" class="alert alert_border_red d_flex" id="alert">

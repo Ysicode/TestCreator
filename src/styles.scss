@@ -161,21 +161,7 @@ h3 {
     }
 }
 
-.btn_fixed_fullwidth {
-    position: fixed;
-    bottom: 0px;
-    background: var(--color-primary);
-    color: #fff;
-    width: 100%;
-    font-size: 17px;
-    padding: 25px;
-    border: none;
 
-    &:hover {
-        cursor: pointer;
-        opacity: 0.9;
-    }
-}
 
 @media (max-width: 850px) {
     h2 {
