@@ -698,10 +698,10 @@ style for rendered subjects
 
 .attaches {
     background: #f3f3f3;
-    border-left: 2px solid grey;
     width: fit-content;
-    padding: 3px 5px;
+    padding: 8px 14px 8px 8px;
     font-size: calc(100vw * 0.018);
+    border-radius: 20px;
     margin-left: 3%;
 
     a {
@@ -713,6 +713,9 @@ style for rendered subjects
         width: 20px;
         height: 20px;
         margin-right: 5px;
+        padding: 3px;
+        border: 1px solid grey;
+        border-radius: 50%;
     }
 
     .link_icon {
@@ -765,6 +768,23 @@ style for rendered subjects
 .d_none {
     display: none;
 }
+
+.dragged {
+      transition: all 300ms ease-in-out;
+      animation: color 5s infinite linear;
+      padding: 0px 15px;
+      transform: translateY(5px);
+
+      @keyframes color {
+        0%   { background: #ebebeb; }
+        25%  { background: #f8f6f6; }
+        50%  { background: #ebebeb; }
+        75%  { background: #f8f6f6; }
+        100%  { background: #ebebeb; }
+      }
+}
+
+
 
 /*
 Answer styles

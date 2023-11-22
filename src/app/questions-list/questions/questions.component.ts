@@ -19,7 +19,7 @@ export class QuestionsComponent implements OnInit {
   // Variables for the app Edit comp when edit mode
   currentQuestion: any;
   currentAnswer: any;
-  currentId: string; 
+  currentId: string;
 
   // variables for the new question window
   overlay: boolean = false;
@@ -69,7 +69,7 @@ export class QuestionsComponent implements OnInit {
   currentSearch = '';
 
   //Filter Variables
-  filteredQuestions = [];
+
   filters = []
   filteredDifficulty: any = null;
   filteredSubject: any = null
@@ -89,9 +89,14 @@ export class QuestionsComponent implements OnInit {
   startHeight: number;
   questionContentHeight: any;
 
+  //State Variables
   stateIndex: number = 0;
   states: any = [];
   stateOfAddedQuestion: any = [];
+
+  // Drag and Drop variables
+  currentDragedQuestion: number;
+  currentDragedPage: number;
 
   @HostListener('document:keydown.meta.z', ['$event'])
   undo(event: KeyboardEvent) {
@@ -121,6 +126,7 @@ export class QuestionsComponent implements OnInit {
       localStorage.setItem("addedQuestions", JSON.stringify(this.stateOfAddedQuestion[this.stateIndex]));
       setTimeout(() => {
         this.getCurrentTestFromLocalStorage();
+        this.renderCurrentTest();
       }, 100);
     }
   }
@@ -134,6 +140,7 @@ export class QuestionsComponent implements OnInit {
       localStorage.setItem("addedQuestions", JSON.stringify(this.stateOfAddedQuestion[this.stateIndex]));
       setTimeout(() => {
         this.getCurrentTestFromLocalStorage();
+        this.renderCurrentTest();
       }, 100);
     }
   }
@@ -146,11 +153,20 @@ export class QuestionsComponent implements OnInit {
       await this.data.loadQuestions();
       await this.getCurrentTestFromLocalStorage();
       await this.addStateToLocalStorage();
+
       setTimeout(() => {
         this.logedIn = true;
         this.service.loading = false;
+        this.renderCurrentTest();
       }, 700);
     }
+  }
+
+  renderCurrentTest() {
+    this.checkHeightsInterval('start');
+    setTimeout(() => {
+      this.checkHeightsInterval('stop');
+    }, 500);
   }
 
   getTotalQuestionNumber() {
@@ -251,13 +267,14 @@ export class QuestionsComponent implements OnInit {
   addToTest(id: string) {
     for (let i = 0; i < this.data.loadedQuestions.length; i++) {
       if (this.data.loadedQuestions[i]['id'] == id) {
-          this.test.pages[this.test.pages.length - 1]['0'].push(this.data.loadedQuestions[i]);
-          this.addedToTest.push(this.data.loadedQuestions[i]);
+        this.test.pages[this.test.pages.length - 1]['0'].push(this.data.loadedQuestions[i]);
+        this.addedToTest.push(this.data.loadedQuestions[i]);
 
-          setTimeout(() => {
-            this.getDefaultHeightsOfLastAddedQuestions(id);
-            this.renderSquaresAndLinesOfQuestionsInTest();
-          }, 200)
+        setTimeout(() => {
+          this.getDefaultHeightsOfLastAddedQuestions(id);
+          this.renderSquaresAndLinesOfQuestionsInTest();
+          console.log(this.addedToTest)
+        }, 200)
         this.setTestInfo();
       }
     }
@@ -441,7 +458,7 @@ export class QuestionsComponent implements OnInit {
     if (this.test.pages.length !== 1) {
       if (this.pageIsEmpty(this.test.pages.length - 1)) {
         this.test.pages.pop();
-      } 
+      }
     }
   }
 
@@ -950,6 +967,21 @@ export class QuestionsComponent implements OnInit {
     return false
   }
 
+  resetAllFilters() {
+    this.filters = [];
+    this.filteredDifficulty = null;
+    this.filteredSubject = null
+    this.selectedSubjectButton = null;
+    this.filteredClass = null;
+    this.selectedClassButton = null;
+    this.filteredKind = null;
+    this.filteredOnlyMyQuestion = null;
+    this.filteredBearbeitungszeit = null;
+    this.filteredPunktzahl = null
+
+    this.searchForNameTypeId('');
+  }
+
 
   doSearch(search: string, i: number) {
     for (let j = 0; j < this.data.loadedQuestions[i].keywords.length; j++) {
@@ -1069,8 +1101,56 @@ export class QuestionsComponent implements OnInit {
     window.print();
   }
 
+  log(input: any) {
+    console.log(input)
+  }
 
 
+  questionOnDragStart(event: DragEvent, questionIndex: number, pageIndex: number) {
+
+    console.log(this.currentEditQuestion[1])
+
+
+    event.dataTransfer!.setData('text/plain', 'Dragging the element');
+    event.dataTransfer!.effectAllowed = 'move';
+  }
+
+  questionDragEnd(event: DragEvent, pageIndex: number, questionIndex: number) {
+    event.preventDefault();
+
+    this.currentDragedQuestion = questionIndex;
+    this.currentDragedPage = pageIndex;
+
+    console.log(this.currentDragedQuestion, this.currentDragedPage)
+  }
+
+  dropQuestion(event: DragEvent, newPageIndex: number, newQuestionIndex: number) {
+    event.preventDefault();
+    console.log(newPageIndex, newQuestionIndex)
+
+    // let array = [1, 2, 3, 4, 5];
+    // const oldIndex = 2; // Index of the element to move
+    // const newIndex = 4; // New index for the element
+
+    // const element = array.splice(oldIndex, 1)[0];
+    // array = array.slice(0, newIndex).concat(element, array.slice(newIndex));
+
+    // console.log(array); 
+
+    const oldPageIndex = this.currentEditQuestion[0]; // Index of the element to move
+    const oldQuestionIndex = this.currentEditQuestion[1];
+
+
+    const element = this.test.pages[oldPageIndex][0].splice(oldQuestionIndex, 1)[0];
+
+    this.test.pages[newPageIndex][0] = this.test.pages[newPageIndex][0].slice(0, newQuestionIndex).concat(element, this.test.pages[newPageIndex][0].slice(newQuestionIndex));
+
+
+      this.currentDragedQuestion = null;
+      this.currentDragedPage = null;
+      this.renderCurrentTest();
+
+  }
 
 }
 

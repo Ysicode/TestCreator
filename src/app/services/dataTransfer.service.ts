@@ -103,7 +103,7 @@ export class dataTransferService {
 
         this.currentSchool = school;
         this.currentUserID = sessionId;
-        console.log(this.currentSchool, this.currentUserID)
+        // console.log(this.currentSchool, this.currentUserID)
         this.saveUserDataToLocalStorage();
         return true;
     }

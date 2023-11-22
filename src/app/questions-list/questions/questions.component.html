@@ -124,7 +124,7 @@
                                 <a target="_blank" href="{{ question['data']['file']['url'] }}">
                                     Dokument angehängt
                                 </a>
-                                <img class="link_icon" src="assets/external_link.png" alt="">
+                                <!-- <img class="link_icon" src="assets/external_link.png" alt=""> -->
                             </div>
                         </div>
 
@@ -222,7 +222,7 @@
                                             <a target="_blank" href="{{ question['data']['file']['url'] }}">
                                                 Dokument angehängt
                                             </a>
-                                            <img class="link_icon" src="assets/external_link.png" alt="">
+                                            <!-- <img class="link_icon" src="assets/external_link.png" alt=""> -->
                                         </div>
                                     </div>
 
@@ -267,7 +267,7 @@
             <div *ngIf="openFilter" class="filter_overlay_bg" (click)="openFilter = false">
                 <div class="filter_overlay" (click)="$event.stopPropagation()">
                     <div class="overlay_navbar">
-                        <button class="btn_reset" (click)="filters = []">zurücksetzen</button>
+                        <button class="btn_reset" (click)="resetAllFilters()">zurücksetzen</button>
                         <h1 class="overlay_headline">Aufgaben Filtern</h1>
                         <button type="button" (click)="openFilter = false" class="btn_cancel">X</button>
                     </div>
@@ -343,7 +343,8 @@
                         <!-- <button type="button" class="btn_large is_cancel"
                             (click)="openFilter = false">Abbrechen</button> -->
                         <button *ngIf="filters.length != 0" class="btn_fixed_fullwidth" (click)="openFilter = false">
-                            {{ totalQuestionsNumber != 1  ? totalQuestionsNumber + ' Aufgaben gefunden' : totalQuestionsNumber + ' Aufgabe gefunden' }}
+                            {{ totalQuestionsNumber != 1 ? totalQuestionsNumber + ' Aufgaben gefunden' :
+                            totalQuestionsNumber + ' Aufgabe gefunden' }}
                         </button>
                         <!-- </div> -->
                     </div>
@@ -378,7 +379,7 @@
         <!--  -->
         <div *ngIf="data.loaded" id="test_print" class="test_print" [class.opacity0]="!preview"
             style="position: relative;" (mouseup)="checkHeightsInterval('stop')">
-            <div id="test_dinA4{{j}}" *ngFor="let pages of test['pages'] let j = index" class="test_dinA4 page_break">
+            <div  id="test_dinA4{{j}}" *ngFor="let pages of test['pages'] let j = index" class="test_dinA4 page_break">
                 <div id="page_number">
                     <p style="margin-bottom: 0px;" class="page_number">{{j + 1}}/{{ test['pages'].length }}</p>
                 </div>
@@ -441,8 +442,8 @@
 
                     <!-- QUESTION AND SOLUTION TEST PREVIEW -->
                     <div id="question{{ j }}{{ i }}" class="question_wrapper d_flex_column"
-                        [class.solution_wrapper]="sampleSolution" *ngFor="let testquestion of pages[0] let i = index"
-                        (mouseover)="getCurrentQuestion(j, i)" (click)="getCurrentQuestion(j, i)"
+                    [class.dragged]="currentDragedPage == j && currentDragedQuestion == i"  [class.solution_wrapper]="sampleSolution" *ngFor="let testquestion of pages[0] let i = index"
+                        (drop)="dropQuestion($event, j, i)"  (dragover)="questionDragEnd($event, j, i)" (mouseover)="getCurrentQuestion(j, i)" (click)="getCurrentQuestion(j, i)"
                         [ngStyle]="{'height': testquestion['questionHeight'] && !sampleSolution ? testquestion['questionHeight'] : 'fit-content',
                         'min-height': testquestion['defaultHeight'] && !sampleSolution ? testquestion['defaultHeight'] + '%' : 'none'}">
                         <div id="questionContent{{j}}{{i}}" class="question_test">
@@ -460,9 +461,8 @@
                                     </div>
                                 </div>
 
-                                <button *ngIf="j != 0 && test.pages[j - 1][0].length == 1 && i == 0"
-                                    (click)="saveEditedQuestionAsDefault(j, i, testquestion['id'])"
-                                    style="margin-right: 300px;"
+                                <!-- *ngIf="j != 0 && test.pages[j - 1][0].length == 1 && i == 0" -->
+                                <button style="margin-right: 300px;"
                                     class="save_edited_question show_onHover d_flex">Verschieben|| {{
                                     test.pages[j][0].length }}</button>
 
@@ -478,94 +478,99 @@
 
                             <!-- QUESTION -->
                             <ng-container *ngIf="!sampleSolution">
-                                <div *ngFor="let question of testquestion['frage']['blocks'] let k = index">
 
-                                    <div class="preview_question_container" [innerHTML]="question['data']['text'] "
-                                        contenteditable="true">
-                                        <!-- Text -->
-                                    </div>
+                                <!-- //DRAGAble Content  Line wurde am Start hinzugefügt => EVTL. Probleme-->
+                                <div draggable="true" (dragstart)="questionOnDragStart($event, i, j)" >
 
-                                    <div *ngIf="question['type'] == 'checklist'" class="margin_left ">
-                                        <!-- Checklists -->
-                                        <div class="element_margin_text d_flex_start"
-                                            *ngFor="let item of question['data']['items']">
-                                            <div class="checkfield">
-                                            </div>
-                                            <p class="checkbox_item" [innerHTML]="item['text']"></p>
+                                    <div *ngFor="let question of testquestion['frage']['blocks'] let k = index">
+
+                                        <div class="preview_question_container" [innerHTML]="question['data']['text'] "
+                                            contenteditable="true">
+                                            <!-- Text -->
                                         </div>
-                                    </div>
 
-                                    <div class="element_margin_text" *ngIf="question['data']['file']">
-                                        <!-- Images -->
-                                        <div class="img_wrapper d_flex_start">
-                                            <div *ngIf="question['type'] === 'image'"
-                                                id="img_edit_wrapper{{ j }}{{ i }}{{ k }}"
-                                                (mouseover)="resizeImage(j, i, k)"
-                                                (mouseup)="resizeImageOnMouseUp(j, i, k)"
-                                                (mousedown)="checkHeightsInterval('start')"
-                                                (mouseup)="checkHeightsInterval('stop')"
-                                                (touchstart)="resizeImageOnTouchStart($event, j, i, k)"
-                                                (touchmove)="resizeImageOnTouchMove($event, j, i)"
-                                                (touchend)="resizeImageOnTouchEnd(j, i, k)"
-                                                (touchmove)="checkHeightOfAllPreviewQuestions(); setQuestionNumber(); getSquaresAndLines(j, i)"
-                                                class="img_edit_wrapper d_flex"
-                                                [ngStyle]="{'width': question['width'] ? question['width'] : '30%'}">
-                                                <img id="questionImage{{ j }}{{ i }}{{ k }}"
-                                                    class="preview_question_img"
-                                                    src="{{ question['data']['file']['url'] }}" alt="">
-                                                <div (click)="service.onEvent($event)"
-                                                    id="resizeImage{{ j }}{{ i }}{{ k }}"
-                                                    class="resize_image d_flex show_onHover">
-                                                    <span class="resize_image_line"></span>
+                                        <div *ngIf="question['type'] == 'checklist'" class="margin_left ">
+                                            <!-- Checklists -->
+                                            <div class="element_margin_text d_flex_start"
+                                                *ngFor="let item of question['data']['items']">
+                                                <div class="checkfield">
                                                 </div>
+                                                <p class="checkbox_item" [innerHTML]="item['text']"></p>
                                             </div>
+                                        </div>
 
-                                            <!-- ATTACHES -->
-                                            <div class="attaches d_flex_column opacity1_onHover"
-                                                *ngIf="question['type'] === 'attaches'">
-                                                <div class="d_flex">
-                                                    <img class="attached_icon" src="assets/attached.png" alt="">
-                                                    <a target="_blank" href="{{ question['data']['file']['url'] }}">
-                                                        Siehe Anhang {{ question['data']['title'] != '' ? '/ ' +
-                                                        question['data']['title'] : ''}}
-                                                    </a>
+                                        <div class="element_margin_text" *ngIf="question['data']['file']">
+                                            <!-- Images -->
+                                            <div class="img_wrapper d_flex_start">
+                                                <div *ngIf="question['type'] === 'image'"
+                                                    id="img_edit_wrapper{{ j }}{{ i }}{{ k }}"
+                                                    (mouseover)="resizeImage(j, i, k)"
+                                                    (mouseup)="resizeImageOnMouseUp(j, i, k)"
+                                                    (mousedown)="checkHeightsInterval('start')"
+                                                    (mouseup)="checkHeightsInterval('stop')"
+                                                    (touchstart)="resizeImageOnTouchStart($event, j, i, k)"
+                                                    (touchmove)="resizeImageOnTouchMove($event, j, i)"
+                                                    (touchend)="resizeImageOnTouchEnd(j, i, k)"
+                                                    (touchmove)="checkHeightOfAllPreviewQuestions(); setQuestionNumber(); getSquaresAndLines(j, i)"
+                                                    class="img_edit_wrapper d_flex"
+                                                    [ngStyle]="{'width': question['width'] ? question['width'] : '30%'}">
+                                                    <img id="questionImage{{ j }}{{ i }}{{ k }}"
+                                                        class="preview_question_img"
+                                                        src="{{ question['data']['file']['url'] }}" alt="">
+                                                    <div (click)="service.onEvent($event)"
+                                                        id="resizeImage{{ j }}{{ i }}{{ k }}"
+                                                        class="resize_image d_flex show_onHover">
+                                                        <span class="resize_image_line"></span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    <div class="preview_question_container"
-                                        *ngFor="let items of question['data']['items'] let i = index">
-                                        <!-- Lists -->
-                                        <div class="margin_left element_margin_text"
-                                            *ngIf="question['data']['style'] == 'ordered'">
-                                            <ol class="d_flex_start preview_lists">
-                                                <p class="ordered_list_number">{{i + 1}}.</p>
-                                                <p class="order_list_item" [innerHTML]="items"></p>
-                                            </ol>
-                                        </div>
-                                        <div class="margin_left element_margin_text"
-                                            *ngIf="question['data']['style'] == 'unordered'">
-                                            <ul class="preview_unordered_list">
-                                                <li [innerHTML]="items"></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <div class="preview_question_container element_margin_text"
-                                        *ngIf="question['data']['table']">
-                                        <!-- tables -->
-                                        <div [class.bold]="i == 0 && question['data']['withHeadings'] == true "
-                                            class="d_flex_start tableRow"
-                                            *ngFor="let position of question['data']['table']['length'] let i = index">
-                                            <div [ngStyle]="{'width.%': 100 / question['data']['table'][position].length }"
-                                                *ngFor="let tableItem of question['data']['table'][position]">
-                                                <div class="tableItem d_flex_start" [innerHTML]="tableItem">
+                                                <!-- ATTACHES -->
+                                                <div class="attaches d_flex_column opacity1_onHover"
+                                                    *ngIf="question['type'] === 'attaches'">
+                                                    <div class="d_flex">
+                                                        <img class="attached_icon" src="assets/attached.png" alt="">
+                                                        <a target="_blank" href="{{ question['data']['file']['url'] }}">
+                                                            Siehe Anhang {{ question['data']['title'] != '' ? '/ ' +
+                                                            question['data']['title'] : ''}}
+                                                        </a>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
 
+                                        <div class="preview_question_container"
+                                            *ngFor="let items of question['data']['items'] let i = index">
+                                            <!-- Lists -->
+                                            <div class="margin_left element_margin_text"
+                                                *ngIf="question['data']['style'] == 'ordered'">
+                                                <ol class="d_flex_start preview_lists">
+                                                    <p class="ordered_list_number">{{i + 1}}.</p>
+                                                    <p class="order_list_item" [innerHTML]="items"></p>
+                                                </ol>
+                                            </div>
+                                            <div class="margin_left element_margin_text"
+                                                *ngIf="question['data']['style'] == 'unordered'">
+                                                <ul class="preview_unordered_list">
+                                                    <li [innerHTML]="items"></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div class="preview_question_container element_margin_text"
+                                            *ngIf="question['data']['table']">
+                                            <!-- tables -->
+                                            <div [class.bold]="i == 0 && question['data']['withHeadings'] == true "
+                                                class="d_flex_start tableRow"
+                                                *ngFor="let position of question['data']['table']['length'] let i = index">
+                                                <div [ngStyle]="{'width.%': 100 / question['data']['table'][position].length }"
+                                                    *ngFor="let tableItem of question['data']['table'][position]">
+                                                    <div class="tableItem d_flex_start" [innerHTML]="tableItem">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
                                 </div>
                             </ng-container>
 
