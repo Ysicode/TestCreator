@@ -442,7 +442,7 @@
 
                     <!-- QUESTION AND SOLUTION TEST PREVIEW -->
                     <div id="question{{ j }}{{ i }}" class="question_wrapper d_flex_column"
-                    [class.dragged]="currentDragedPage == j && currentDragedQuestion == i"  [class.solution_wrapper]="sampleSolution" *ngFor="let testquestion of pages[0] let i = index"
+                    [class.dragged]="currentDragedPage == j && currentDragedQuestion == i" [class.solution_wrapper]="sampleSolution" *ngFor="let testquestion of pages[0] let i = index"
                         (drop)="dropQuestion($event, j, i)"  (dragover)="questionDragEnd($event, j, i)" (mouseover)="getCurrentQuestion(j, i)" (click)="getCurrentQuestion(j, i)"
                         [ngStyle]="{'height': testquestion['questionHeight'] && !sampleSolution ? testquestion['questionHeight'] : 'fit-content',
                         'min-height': testquestion['defaultHeight'] && !sampleSolution ? testquestion['defaultHeight'] + '%' : 'none'}">
@@ -462,9 +462,9 @@
                                 </div>
 
                                 <!-- *ngIf="j != 0 && test.pages[j - 1][0].length == 1 && i == 0" -->
-                                <button style="margin-right: 300px;"
+                                <!-- <button style="margin-right: 300px;"
                                     class="save_edited_question show_onHover d_flex">Verschieben|| {{
-                                    test.pages[j][0].length }}</button>
+                                    test.pages[j][0].length }}</button> -->
 
 
                                 <button *ngIf="data.currentUserID == testquestion['creatorId']"
@@ -484,8 +484,7 @@
 
                                     <div *ngFor="let question of testquestion['frage']['blocks'] let k = index">
 
-                                        <div class="preview_question_container" [innerHTML]="question['data']['text'] "
-                                            contenteditable="true">
+                                        <div class="preview_question_container" [innerHTML]="question['data']['text'] ">
                                             <!-- Text -->
                                         </div>
 

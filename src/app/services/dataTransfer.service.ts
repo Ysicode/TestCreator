@@ -292,15 +292,6 @@ export class dataTransferService {
         })
     }
 
-    // log(id: string) {
-    //     console.log(id);
-    // }
-
-    // logID(id: string) {
-    //     console.log(id)
-    // }
-
-
 
     //ADD NEW SCHOOL
     async addNewSchool(data: any) {

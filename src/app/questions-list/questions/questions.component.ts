@@ -166,7 +166,7 @@ export class QuestionsComponent implements OnInit {
     this.checkHeightsInterval('start');
     setTimeout(() => {
       this.checkHeightsInterval('stop');
-    }, 500);
+    }, 1000);
   }
 
   getTotalQuestionNumber() {
@@ -1107,12 +1107,7 @@ export class QuestionsComponent implements OnInit {
 
 
   questionOnDragStart(event: DragEvent, questionIndex: number, pageIndex: number) {
-
-    console.log(this.currentEditQuestion[1])
-
-
-    event.dataTransfer!.setData('text/plain', 'Dragging the element');
-    event.dataTransfer!.effectAllowed = 'move';
+    // Logic when dragging starts
   }
 
   questionDragEnd(event: DragEvent, pageIndex: number, questionIndex: number) {
@@ -1120,36 +1115,28 @@ export class QuestionsComponent implements OnInit {
 
     this.currentDragedQuestion = questionIndex;
     this.currentDragedPage = pageIndex;
-
-    console.log(this.currentDragedQuestion, this.currentDragedPage)
   }
 
   dropQuestion(event: DragEvent, newPageIndex: number, newQuestionIndex: number) {
     event.preventDefault();
-    console.log(newPageIndex, newQuestionIndex)
 
-    // let array = [1, 2, 3, 4, 5];
-    // const oldIndex = 2; // Index of the element to move
-    // const newIndex = 4; // New index for the element
-
-    // const element = array.splice(oldIndex, 1)[0];
-    // array = array.slice(0, newIndex).concat(element, array.slice(newIndex));
-
-    // console.log(array); 
-
-    const oldPageIndex = this.currentEditQuestion[0]; // Index of the element to move
+    const oldPageIndex = this.currentEditQuestion[0];
     const oldQuestionIndex = this.currentEditQuestion[1];
 
+    if (newPageIndex == Number(oldPageIndex)) { // Logic when its dragging on same page
+      const element = this.test.pages[oldPageIndex][0].splice(oldQuestionIndex, 1)[0];
 
-    const element = this.test.pages[oldPageIndex][0].splice(oldQuestionIndex, 1)[0];
+      this.test.pages[newPageIndex][0] = this.test.pages[newPageIndex][0].slice(0, newQuestionIndex).concat(element, this.test.pages[newPageIndex][0].slice(newQuestionIndex));
+    } else { // Logic when its dragging on another page
+      const itemToMove = this.test.pages[oldPageIndex][0].splice(this.currentEditQuestion[1], 1)[0];
 
-    this.test.pages[newPageIndex][0] = this.test.pages[newPageIndex][0].slice(0, newQuestionIndex).concat(element, this.test.pages[newPageIndex][0].slice(newQuestionIndex));
+      this.test.pages[newPageIndex][0].splice(newQuestionIndex, 0, itemToMove);
+    }
 
-
-      this.currentDragedQuestion = null;
-      this.currentDragedPage = null;
-      this.renderCurrentTest();
-
+    this.currentDragedQuestion = null;
+    this.currentDragedPage = null;
+    this.renderCurrentTest();
+    this.addCurrentTestToLocalStorage();
   }
 
 }
