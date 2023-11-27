@@ -15,7 +15,7 @@
                 <h2 id="choice_Subject">Für welches Schulfach soll die Aufgabe angelegt werden?</h2>
                 <div class="subject_btn_wrapper d_flex" *ngIf="loaded">
                     <div *ngIf="data.currentUserData.subjects == 0" class="d_flex_column">
-                        <p >{{ 'Es wurde noch kein Fach ausgewählt!' }}</p>
+                        <p>{{ 'Es wurde noch kein Fach ausgewählt!' }}</p>
                         <button routerLink="/account" class="subject_btn">Schulfach auswählen</button>
                     </div>
                     <div *ngFor="let button of data.currentUserData.subjects; let i = index">
@@ -32,7 +32,7 @@
                 <h2 id="choice_class">Für welche Klasse soll die Aufgabe angelegt werden? </h2>
                 <div class="subject_btn_wrapper d_flex" *ngIf="loaded">
                     <div *ngIf="data.currentUserData.classes == 0" class="d_flex_column">
-                        <p >{{ 'Es wurde noch keine Klasse ausgewählt!'}}</p>
+                        <p>{{ 'Es wurde noch keine Klasse ausgewählt!'}}</p>
                         <button routerLink="/account" class="subject_btn">Klasse auswählen</button>
                     </div>
                     <div *ngFor="let button of data.currentUserData.classes; let i = index">
@@ -40,44 +40,52 @@
                             (click)="choiceClass(button)">{{ button }}</button>
                     </div>
                 </div>
-                
+
                 <div class="section_separator margin_top_bottom"></div>
-              
-                <div class="d_flex subject_btn_wrapper"> 
-                    <button class="subject_btn" (click)="selectKind('standard'); multipleChoiceEditor = false" [class.selectedButton]="selectedKind == 'standard'">
-                        Standard 
+
+                <div class="d_flex subject_btn_wrapper">
+                    <button class="subject_btn" (click)="selectKind('standard'); multipleChoiceEditor = false"
+                        [class.selectedButton]="selectedKind == 'standard'">
+                        Standard
                     </button>
-                    <button class="subject_btn" (click)="selectKind('multipleChoice'); multipleChoiceEditor = true" [class.selectedButton]="selectedKind == 'multipleChoice'">
-                        Multiple Choice 
+                    <button class="subject_btn" (click)="selectKind('multipleChoice'); multipleChoiceEditor = true"
+                        [class.selectedButton]="selectedKind == 'multipleChoice'">
+                        Multiple Choice
                     </button>
-                </div>            
+                </div>
             </div>
         </div>
 
-        <div [class.d_none]="multipleChoiceEditor == false" #multiChoiceEditor class="editor_wrapper" (keyup)="alertService.alert && currentQuestion.blocks.length == 0 ? alertService.alert = false : null">
+        <div [class.d_none]="multipleChoiceEditor == false" #multiChoiceEditor class="editor_wrapper"
+            (keyup)="alertService.alert && currentQuestion.blocks.length == 0 ? alertService.alert = false : null">
             <div class="d_flex">
                 <h2 id="edit_question" class="editor_headline">Multiple Choice Aufgabe erstellen</h2>
                 <button class="tooltip_btn d_flex"
                     matTooltip="Hier können sie eine Multiple Choice Aufgabe erstellen. Die richtige Antwort muss angeklickt werden um später eine Musterlösung zu erstellen."
-                    matTooltipPosition="above"><img class="info_icon" crossorigin="anonymous" src="assets/info.png" alt=""></button>
+                    matTooltipPosition="above"><img class="info_icon" crossorigin="anonymous" src="assets/info.png"
+                        alt=""></button>
             </div>
         </div>
 
-        <div [class.d_none]="multipleChoiceEditor" #questionEditor class="editor_wrapper" (keyup)="alertService.alert &&  currentQuestion.blocks.length == 0 ? alertService.alert = false : null">
+        <div [class.d_none]="multipleChoiceEditor" #questionEditor class="editor_wrapper"
+            (keyup)="alertService.alert &&  currentQuestion.blocks.length == 0 ? alertService.alert = false : null">
             <div class="d_flex">
                 <h2 id="edit_question" class="editor_headline">Standard Aufgabe erstellen</h2>
                 <button class="tooltip_btn d_flex"
                     matTooltip="Hier können sie eine Aufgabe erstellen und sie später ihrem Test hinzufügen. - Die Größe eines Bildes, Tabellen usw. können später im Test bearbeitet werden"
-                    matTooltipPosition="above"><img class="info_icon" crossorigin="anonymous" src="assets/info.png" alt=""></button>
+                    matTooltipPosition="above"><img class="info_icon" crossorigin="anonymous" src="assets/info.png"
+                        alt=""></button>
             </div>
         </div>
 
-        <div [class.d_none]="multipleChoiceEditor" #answerEditor class="editor_wrapper" (keyup)="alertService.alert && currentAnswer.blocks.length == 0 ? alertService.alert = false : null">
+        <div [class.d_none]="multipleChoiceEditor" #answerEditor class="editor_wrapper"
+            (keyup)="alertService.alert && currentAnswer.blocks.length == 0 ? alertService.alert = false : null">
             <div class="d_flex">
                 <h2 id="edit_solution" class="editor_headline">Lösung für diese Aufgabe erstellen</h2>
                 <button class="tooltip_btn d_flex"
                     matTooltip="Für die Musterlösung können sie hier die Lösung für diese Aufgabe erstellen und später ihre Aufgaben mit Lösung anzeigen lassen"
-                    matTooltipPosition="above"><img class="info_icon" crossorigin="anonymous" src="assets/info.png" alt=""></button>
+                    matTooltipPosition="above"><img class="info_icon" crossorigin="anonymous" src="assets/info.png"
+                        alt=""></button>
             </div>
         </div>
 
@@ -88,25 +96,23 @@
                 <h2 id="difficulty">Schwierigkeit</h2>
                 <div class="d_flex subject_btn_wrapper">
                     <div>
-                        <button class="subject_btn"
-                            [class.selectedButton_leicht]="selectedDifficulty == 'Leicht'"
+                        <button class="subject_btn" [class.selectedButton_leicht]="selectedDifficulty == 'Leicht'"
                             (click)="selectDifficulty('Leicht')">Leicht</button>
                     </div>
                     <div>
-                        <button class="subject_btn"
-                            [class.selectedButton_mittel]="selectedDifficulty == 'Mittel'"
+                        <button class="subject_btn" [class.selectedButton_mittel]="selectedDifficulty == 'Mittel'"
                             (click)="selectDifficulty('Mittel')">Mittel</button>
                     </div>
                     <div>
-                        <button class="subject_btn"
-                            [class.selectedButton_schwer]="selectedDifficulty == 'Schwer'"
+                        <button class="subject_btn" [class.selectedButton_schwer]="selectedDifficulty == 'Schwer'"
                             (click)="selectDifficulty('Schwer')">Schwer</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <form class="questionForm" #questionForm="ngForm" (ngSubmit)="editMode ? updateQuestion(questionForm.value) : addQuestion(questionForm.value)">
+        <form class="questionForm" #questionForm="ngForm"
+            (ngSubmit)="editMode ? updateQuestion(questionForm.value) : addQuestion(questionForm.value)">
             <div class="d_flex_column">
                 <div class="d_flex section margin_top_zero">
                     <div class="d_flex_column rangbar_wrapper">
@@ -144,9 +150,12 @@
                 </div>
 
 
+               
+                <input *ngIf="editFromTest && data.currentUserID == editQuestion['creatorId']" name="saveDataFromTestCheckbox" type="checkbox" ngModel>
+                    Änderungen als Standard speichern (Datenbank)
+
                 <div class="d_flex save_btn_wrapper">
-                    <button type="button" class="btn_large is_cancel"
-                        (click)="closeEditComponent()">Abbrechen</button>
+                    <button type="button" class="btn_large is_cancel" (click)="closeEditComponent()">Abbrechen</button>
                     <button class="btn_large is_submit" type="submit">
                         {{editMode ? 'Änderungen Speichern' : 'Speichern'}}</button>
                 </div>

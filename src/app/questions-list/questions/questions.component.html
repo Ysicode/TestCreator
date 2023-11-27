@@ -2,8 +2,8 @@
 <app-header *ngIf="logedIn"></app-header>
 <!-- Edit Component -->
 <app-edit class="add_question_overlay" *ngIf="overlay"
-    (closeAddQuestionOverlay)="overlay = false; editQuestionMode = false;" [editQuestion]="questionToEdit"
-    [editMode]="editQuestionMode"></app-edit>
+    (closeAddQuestionOverlay)="overlay = false; editQuestionMode = false; editQuestionFromTest = false;" (editQuestionForLocalStorage)="saveEditQuestionInLocalStorage($event)" [editQuestion]="questionToEdit"
+    [editMode]="editQuestionMode" [editFromTest]="editQuestionFromTest"></app-edit>
 
 <app-spinner *ngIf="service.loading"></app-spinner>
 
@@ -472,7 +472,7 @@
                                 </button>
 
                                 <!-- Edit question from test -->
-                                <button *ngIf="data.currentUserID == testquestion['creatorId']"
+                                <button (click)="showEditOverlayFromTest(testquestion, j, i)"
                                     style="margin-right: 100px;" class="save_edited_question show_onHover d_flex">Bearbeiten</button>
 
                                 <!-- Save edit layout as default -->

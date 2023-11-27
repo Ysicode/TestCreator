@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { EditComponent } from 'src/app/add/edit/edit.component';
 import { AlertService } from 'src/app/services/alert.service';
@@ -28,6 +28,8 @@ export class QuestionsComponent implements OnInit {
   questionId: string;
   deleteQuestionID: string;
   editQuestionMode: Boolean = false;
+  editQuestionFromTest: Boolean = false;
+  @Input() editQuestionForLocalStorage: any;
 
   //multi used variables
   currentTestPoints: number = 0;
@@ -182,6 +184,11 @@ export class QuestionsComponent implements OnInit {
     await this.addStateToLocalStorage();
     localStorage.setItem("currentTest", JSON.stringify(this.states[this.stateIndex]));
     localStorage.setItem("addedQuestions", JSON.stringify(this.stateOfAddedQuestion[this.stateIndex]));
+  }
+
+  saveEditQuestionInLocalStorage(editedQuestionForLocalStorage: any) {
+    this.test.pages[editedQuestionForLocalStorage.pageIndex][0][editedQuestionForLocalStorage.questionIndex] = editedQuestionForLocalStorage;
+    this.addCurrentTestToLocalStorage();
   }
 
   async addStateToLocalStorage() {
@@ -1082,6 +1089,20 @@ export class QuestionsComponent implements OnInit {
       this.service.windowScrollTop();
     }, 500);
   }
+
+  showEditOverlayFromTest(questionData: any, j: number, i: number) {
+    questionData['pageIndex'] = j; // Add question and page Index to question => To edit the question in the test
+    questionData['questionIndex'] = i;
+    
+    this.questionToEdit = questionData;
+    this.editQuestionMode = true;
+    this.editQuestionFromTest = true;
+    setTimeout(() => {
+      this.overlay = true;
+      this.service.windowScrollTop();
+    }, 500);
+  }
+
 
   /**
    * This function is used to open the app-info-overlay to delete a question

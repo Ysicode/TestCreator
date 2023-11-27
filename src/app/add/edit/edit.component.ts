@@ -35,7 +35,9 @@ export class EditComponent implements OnInit, AfterViewInit {
 
   @Input() editQuestion: any;
   @Input() editMode: Boolean;
+  @Input() editFromTest: Boolean;
   @Output() closeAddQuestionOverlay = new EventEmitter<boolean>();
+  @Output() editQuestionForLocalStorage = new EventEmitter<any>();
 
   // EditorJS
   @ViewChild('questionEditor', { read: ElementRef, static: true })
@@ -101,8 +103,14 @@ export class EditComponent implements OnInit, AfterViewInit {
   async closeEditComponent() {
     await this.clearForm();
     this.closeAddQuestionOverlay.emit();
+
+    if (this.editFromTest) {
+      this.editQuestionForLocalStorage.emit(this.editQuestion);
+    }
     window.scrollTo(0, 0);
   }
+
+
 
   /**
    * This function is used to show alert with AlertService function when invalid form data is provided on submit
@@ -238,17 +246,31 @@ export class EditComponent implements OnInit, AfterViewInit {
    */
   async setForm() {
     if (this.editMode) {
-      this.form.setValue({
-        punktzahl: this.editQuestion.punktzahl,
-        keywords: this.editQuestion.keywords.toString(),
-        bearbeitungszeit: this.editQuestion.bearbeitungszeit,
-      });
+
       this.selectedSubjectButton = this.editQuestion.fach;
       this.selectedClassButton = this.editQuestion.klasse;
       this.selectedDifficulty = this.editQuestion.schwierigkeit;
+
       if (this.editQuestion.kindOf === 'multipleChoice') {
         this.selectedKind = 'multipleChoice';
         this.multipleChoiceEditor = true;
+      }
+
+      if (this.editFromTest) {
+        this.form.setValue({
+          punktzahl: this.editQuestion.punktzahl,
+          keywords: this.editQuestion.keywords.toString(),
+          bearbeitungszeit: this.editQuestion.bearbeitungszeit,
+          saveDataFromTestCheckbox: false
+        });
+      }
+
+      if (!this.editFromTest) {
+        this.form.setValue({
+          punktzahl: this.editQuestion.punktzahl,
+          keywords: this.editQuestion.keywords.toString(),
+          bearbeitungszeit: this.editQuestion.bearbeitungszeit,
+        });
       }
     } else {
       this.form.setValue({
@@ -296,11 +318,21 @@ export class EditComponent implements OnInit, AfterViewInit {
   * This function is used to clear all forms and selctions when the edit component closed
   */
   async clearForm() {
-    this.form.setValue({
-      punktzahl: '10',
-      keywords: '',
-      bearbeitungszeit: '7',
-    })
+    if (!this.editFromTest) {
+      this.form.setValue({
+        punktzahl: '10',
+        keywords: '',
+        bearbeitungszeit: '7',
+      })
+    }
+    if (this.editFromTest) {
+      this.form.setValue({
+        punktzahl: '10',
+        keywords: '',
+        bearbeitungszeit: '7',
+        saveDataFromTestCheckbox: false
+      })
+    }
     this.selectedSubjectButton = '';
     this.selectedClassButton = '';
     this.selectedKind = 'standard';
@@ -374,31 +406,85 @@ export class EditComponent implements OnInit, AfterViewInit {
     await this.saveEditorData();
     setTimeout(() => {
       if (this.validData()) {
-        this.loading = true;
-        const coll: any = doc(this.firestore, 'users', this.data.currentSchool, 'fragen', this.editQuestion.id);
-        updateDoc(coll, {
-          fach: this.selectedSubjectButton,
-          frage: this.currentQuestion,
-          antwort: this.currentAnswer,
-          schwierigkeit: this.selectedDifficulty,
-          klasse: this.selectedClassButton,
-          punktzahl: Number(questionFormData.punktzahl),
-          bearbeitungszeit: Number(questionFormData.bearbeitungszeit),
-          kindOf: this.selectedKind,
-          defaultHeight: '',
-          keywords: questionFormData.keywords.split(','),
-          lastEditDate: Date.now()
-        }).then(() => {
-          this.clearForm();
-          this.loading = false;
-          this.closeEditComponent();
-          this.multiChoiceEditor.clear();
-        }).then(() => {
-          this.questionEditor.clear();
-        }).then(() => {
-          this.answerEditor.clear();
-          this.editMode = false;
-        })
+
+        if (this.editFromTest) {
+          console.log(questionFormData.saveDataFromTestCheckbox);
+
+          this.editQuestion.antwort = this.currentAnswer;
+          this.editQuestion.bearbeitungszeit = Number(questionFormData.bearbeitungszeit);
+          this.editQuestion.fach = this.selectedSubjectButton;
+          this.editQuestion.frage = this.currentQuestion;
+          this.editQuestion.keywords = questionFormData.keywords.split(',');
+          this.editQuestion.kindOf = this.selectedKind;
+          this.editQuestion.klasse = this.selectedClassButton;
+          this.editQuestion.schwierigkeit = this.selectedDifficulty;
+
+          if (questionFormData.saveDataFromTestCheckbox) {
+            this.loading = true;
+            const coll: any = doc(this.firestore, 'users', this.data.currentSchool, 'fragen', this.editQuestion.id);
+            updateDoc(coll, {
+              fach: this.selectedSubjectButton,
+              frage: this.currentQuestion,
+              antwort: this.currentAnswer,
+              schwierigkeit: this.selectedDifficulty,
+              klasse: this.selectedClassButton,
+              punktzahl: Number(questionFormData.punktzahl),
+              bearbeitungszeit: Number(questionFormData.bearbeitungszeit),
+              kindOf: this.selectedKind,
+              defaultHeight: '',
+              keywords: questionFormData.keywords.split(','),
+              lastEditDate: Date.now()
+            }).then(() => {
+              this.clearForm();
+              this.loading = false;
+              this.closeEditComponent();
+              this.multiChoiceEditor.clear();
+            }).then(() => {
+              this.questionEditor.clear();
+            }).then(() => {
+              this.answerEditor.clear();
+              this.editMode = false;
+            })
+          }
+          if (!questionFormData.saveDataFromTestCheckbox) {
+            this.clearForm();
+            this.loading = false;
+            this.closeEditComponent();
+            this.multiChoiceEditor.clear();
+            this.questionEditor.clear();
+            this.answerEditor.clear();
+            this.editMode = false;
+          }
+
+        } else {
+          this.loading = true;
+          const coll: any = doc(this.firestore, 'users', this.data.currentSchool, 'fragen', this.editQuestion.id);
+          updateDoc(coll, {
+            fach: this.selectedSubjectButton,
+            frage: this.currentQuestion,
+            antwort: this.currentAnswer,
+            schwierigkeit: this.selectedDifficulty,
+            klasse: this.selectedClassButton,
+            punktzahl: Number(questionFormData.punktzahl),
+            bearbeitungszeit: Number(questionFormData.bearbeitungszeit),
+            kindOf: this.selectedKind,
+            defaultHeight: '',
+            keywords: questionFormData.keywords.split(','),
+            lastEditDate: Date.now()
+          }).then(() => {
+            this.clearForm();
+            this.loading = false;
+            this.closeEditComponent();
+            this.multiChoiceEditor.clear();
+          }).then(() => {
+            this.questionEditor.clear();
+          }).then(() => {
+            this.answerEditor.clear();
+            this.editMode = false;
+          })
+        }
+
+
       }
     }, 1000);
   }
