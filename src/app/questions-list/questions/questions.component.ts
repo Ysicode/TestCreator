@@ -273,7 +273,6 @@ export class QuestionsComponent implements OnInit {
         setTimeout(() => {
           this.getDefaultHeightsOfLastAddedQuestions(id);
           this.renderSquaresAndLinesOfQuestionsInTest();
-          console.log(this.addedToTest)
         }, 200)
         this.setTestInfo();
       }
@@ -495,6 +494,11 @@ export class QuestionsComponent implements OnInit {
     Array.from(document.getElementsByClassName('test_number')).forEach((number, index) => {
       number.innerHTML = (index + 1).toString();
     });
+  }
+
+  getQuestionNumber(j: number, i: number) {
+    let number = document.getElementById(`question_number${j}${i}`).innerHTML;
+    return number
   }
 
   getCurrentQuestion(pageIndex: number, pagePosition: number) {
