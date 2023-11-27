@@ -1250,6 +1250,7 @@ Styles für die Vorschau sektion
 .question_test {
     width: 100%;
     padding-bottom: 2.5%;
+
     .remove_from_test_btn {
         position: absolute;
         z-index: 10;
@@ -1275,9 +1276,8 @@ Styles für die Vorschau sektion
     .save_edited_question {
         position: absolute;
         z-index: 10;
-        width: 100px;
         font-size: 10px;
-        width: 166px;
+        padding: 5px 10px;
         height: 25px;
         background: none;
         top: 0;
@@ -1289,7 +1289,43 @@ Styles für die Vorschau sektion
             background: #e3e5e5;
         }
     }
+
+    .move_question {
+        position: absolute;
+        z-index: 10;
+        font-size: 10px;
+        padding: 2px 12px;
+        background: none;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border: none;
+
+        &:hover {
+            cursor: pointer;
+            background: #e3e5e5;
+        }
+
+        .move_up,
+        .move_down {
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-bottom: 12px solid #808080;
+            margin: 5px;
+        }
+        
+
+        .move_down {
+            border-top: 12px solid #808080;
+            border-bottom: none;
+        }
+        
+    }
 }
+
+
 
 .question_test_number {
     font-size: calc(100vw * 0.016);

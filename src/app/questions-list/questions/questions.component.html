@@ -379,7 +379,7 @@
         <!--  -->
         <div *ngIf="data.loaded" id="test_print" class="test_print" [class.opacity0]="!preview"
             style="position: relative;" (mouseup)="checkHeightsInterval('stop')">
-            <div  id="test_dinA4{{j}}" *ngFor="let pages of test['pages'] let j = index" class="test_dinA4 page_break">
+            <div id="test_dinA4{{j}}" *ngFor="let pages of test['pages'] let j = index" class="test_dinA4 page_break">
                 <div id="page_number">
                     <p style="margin-bottom: 0px;" class="page_number">{{j + 1}}/{{ test['pages'].length }}</p>
                 </div>
@@ -442,8 +442,10 @@
 
                     <!-- QUESTION AND SOLUTION TEST PREVIEW -->
                     <div id="question{{ j }}{{ i }}" class="question_wrapper d_flex_column"
-                    [class.dragged]="currentDragedPage == j && currentDragedQuestion == i" [class.solution_wrapper]="sampleSolution" *ngFor="let testquestion of pages[0] let i = index"
-                        (drop)="dropQuestion($event, j, i)"  (dragover)="questionDragEnd($event, j, i)" (mouseover)="getCurrentQuestion(j, i)" (click)="getCurrentQuestion(j, i)"
+                        [class.dragged]="currentDragedPage == j && currentDragedQuestion == i"
+                        [class.solution_wrapper]="sampleSolution" *ngFor="let testquestion of pages[0] let i = index"
+                        (drop)="dropQuestion($event, j, i)" (dragover)="questionDragEnd($event, j, i)"
+                        (mouseover)="getCurrentQuestion(j, i)" (click)="getCurrentQuestion(j, i)"
                         [ngStyle]="{'height': testquestion['questionHeight'] && !sampleSolution ? testquestion['questionHeight'] : 'fit-content',
                         'min-height': testquestion['defaultHeight'] && !sampleSolution ? testquestion['defaultHeight'] + '%' : 'none'}">
                         <div id="questionContent{{j}}{{i}}" class="question_test">
@@ -452,7 +454,7 @@
                                     <div class="question_test_number d_flex">
                                         {{!sampleSolution ? 'Aufgabe' : 'Lösung'}} <p class="test_number"
                                             id="question_number{{ j }}{{ i }}"></p>
-                                            
+
                                     </div>
 
                                 </div>
@@ -462,15 +464,23 @@
                                     </div>
                                 </div>
 
-                                <!-- *ngIf="j != 0 && test.pages[j - 1][0].length == 1 && i == 0" -->
-                                <button draggable="true" style="margin-right: 300px;"
-                                    class="save_edited_question show_onHover d_flex"> Aufgabe {{ getQuestionNumber(j,i)}} Verschieben</button>
+                                <!-- Move question in test -->
+                                <button draggable="true" class="move_question show_onHover d_flex_column">
+                                    <span class="move_up"></span>
+                                    Aufgabe {{ getQuestionNumber(j,i)}} Verschieben
+                                    <span class="move_down"></span>
+                                </button>
 
+                                <!-- Edit question from test -->
+                                <button *ngIf="data.currentUserID == testquestion['creatorId']"
+                                    style="margin-right: 100px;" class="save_edited_question show_onHover d_flex">Bearbeiten</button>
 
+                                <!-- Save edit layout as default -->
                                 <button *ngIf="data.currentUserID == testquestion['creatorId']"
                                     (click)="saveEditedQuestionAsDefault(j, i, testquestion['id'])"
-                                    style="margin-right: 40px;" class="save_edited_question show_onHover d_flex">Layout
-                                    als Standard speichern</button>
+                                    style="margin-right: 20px;" class="save_edited_question show_onHover d_flex">Speichern</button>
+
+                                <!-- Delete question from test -->
                                 <button id="{{ 'remove_btn' + i }}" (click)="removeFromTest(testquestion['id'])"
                                     class="remove_from_test_btn show_onHover d_flex"><img class="remove_icon"
                                         src="assets/x_icon.png" alt=""></button>
@@ -480,7 +490,7 @@
                             <ng-container *ngIf="!sampleSolution">
 
                                 <!-- //DRAGAble Content  Line wurde am Start hinzugefügt => EVTL. Probleme-->
-                                <div (dragstart)="questionOnDragStart($event, i, j)" >
+                                <div (dragstart)="questionOnDragStart($event, i, j)">
 
                                     <div *ngFor="let question of testquestion['frage']['blocks'] let k = index">
 
