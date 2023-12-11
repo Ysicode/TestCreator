@@ -41,7 +41,7 @@
                     </div>
                 </div>
 
-                <div class="section_separator margin_top_bottom"></div>
+                <div #scrollPositionOpenedFromTest class="section_separator margin_top_bottom"></div>
 
                 <div class="d_flex subject_btn_wrapper">
                     <button class="subject_btn" (click)="selectKind('standard'); multipleChoiceEditor = false"
@@ -151,8 +151,8 @@
 
 
                
-                <input *ngIf="editFromTest && data.currentUserID == editQuestion['creatorId']" name="saveDataFromTestCheckbox" type="checkbox" ngModel>
-                    Änderungen als Standard speichern (Datenbank)
+                <input class="checkbox_save" *ngIf="editFromTest && data.currentUserID == editQuestion['creatorId']" name="saveDataFromTestCheckbox" type="checkbox" ngModel>
+                    Änderungen nicht nur in diesem Test sondern auch in Aufgabenliste übernehmen
 
                 <div class="d_flex save_btn_wrapper">
                     <button type="button" class="btn_large is_cancel" (click)="closeEditComponent()">Abbrechen</button>

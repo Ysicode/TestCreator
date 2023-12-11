@@ -52,6 +52,9 @@ export class EditComponent implements OnInit, AfterViewInit {
   multiChoiceEditorElement: ElementRef;
   multiChoiceEditor: EditorJS;
 
+  // Scroll Position From Test
+  @ViewChild('scrollPositionOpenedFromTest') scrollPosition: ElementRef;
+
   Checklist = require('@editorjs/checklist');
   Marker = require('@editorjs/marker');
 
@@ -59,7 +62,6 @@ export class EditComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.loadData();
-    window.scrollTo(0, 0);
   }
 
   ngAfterViewInit(): void {
@@ -69,6 +71,13 @@ export class EditComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.setForm();
     }, 700);
+    if (this.editFromTest) {
+      this.scrollPosition.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      console.log('hello');
+      
+    } else {
+      window.scrollTo(0, 0);
+    }
   }
 
   /**
