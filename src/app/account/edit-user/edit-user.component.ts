@@ -148,8 +148,6 @@ export class EditUserComponent implements OnInit {
 
   checkinput() {
     this.checkbox.nativeElement.checked = true;
-    console.log('hello');
-    console.log(this.checkbox.nativeElement.checked)
   }
 
   showPassword() {

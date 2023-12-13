@@ -401,7 +401,7 @@ export class EditComponent implements OnInit, AfterViewInit {
           this.editMode = false;
         })
       }
-      console.log(this.currentQuestion, this.currentAnswer)
+      // console.log(this.currentQuestion, this.currentAnswer)
     }, 1000);
   }
 
@@ -416,7 +416,7 @@ export class EditComponent implements OnInit, AfterViewInit {
       if (this.validData()) {
 
         if (this.editFromTest) {
-          console.log(questionFormData.saveDataFromTestCheckbox);
+          // console.log(questionFormData.saveDataFromTestCheckbox);
 
           this.editQuestion.antwort = this.currentAnswer;
           this.editQuestion.bearbeitungszeit = Number(questionFormData.bearbeitungszeit);

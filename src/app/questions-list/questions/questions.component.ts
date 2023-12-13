@@ -121,8 +121,6 @@ export class QuestionsComponent implements OnInit {
 
   undoState() {
     if (this.stateIndex != 0) {
-      console.log('length', this.states.length);
-      console.log('index', this.stateIndex)
       this.stateIndex--;
       localStorage.setItem("currentTest", JSON.stringify(this.states[this.stateIndex]));
       localStorage.setItem("addedQuestions", JSON.stringify(this.stateOfAddedQuestion[this.stateIndex]));
@@ -135,8 +133,6 @@ export class QuestionsComponent implements OnInit {
 
   redoState() {
     if (this.stateIndex < this.states.length - 1) {
-      console.log('length', this.states.length);
-      console.log('index', this.stateIndex)
       this.stateIndex++;
       localStorage.setItem("currentTest", JSON.stringify(this.states[this.stateIndex]));
       localStorage.setItem("addedQuestions", JSON.stringify(this.stateOfAddedQuestion[this.stateIndex]));
@@ -561,7 +557,6 @@ export class QuestionsComponent implements OnInit {
   resizeQuestionOnMouseUp(pageIndex: number, pagePosition: number) {
     let question = this.element(`question${this.currentEditQuestion}`);
     this.test.pages[pageIndex][0][pagePosition]['questionHeight'] = question.style.height;
-    console.log(this.test.pages[pageIndex][0][pagePosition]['questionHeight'])
     this.addCurrentTestToLocalStorage();
   }
 
@@ -599,14 +594,12 @@ export class QuestionsComponent implements OnInit {
   resizeImageOnMouseUp(pageIndex: number, pagePosition: number, questionPosition: number) {
     let image = this.element(`img_edit_wrapper${this.currentEditImage}`);
     this.test.pages[pageIndex][0][pagePosition]['frage']['blocks'][questionPosition]['width'] = image.style.width;
-    console.log(this.test.pages[pageIndex][0][pagePosition])
     this.addCurrentTestToLocalStorage();
   }
   /////////////////////////
 
   saveEditedQuestionAsDefault(pageIndex: number, pagePosition: number, questionId: string) {
     let updatedQuestion = this.test.pages[pageIndex][0][pagePosition];
-    console.log(updatedQuestion)
     this.data.updateQuestion(updatedQuestion, questionId)
     this.alertService.showAlert('Hallo');
     this.alertService.alert = true;
@@ -712,12 +705,10 @@ export class QuestionsComponent implements OnInit {
       this.checkHeightsAndSetQuestionNumberInterval = setInterval(() => {
         this.checkHeightOfAllPreviewQuestions();
         this.setQuestionNumber();
-        console.log('Check Heights INterval START');
       }, 70)
     }
     if (mode === 'stop') {
       clearInterval(this.checkHeightsAndSetQuestionNumberInterval);
-      console.log('Check Heights INterval STOP');
     }
   }
 

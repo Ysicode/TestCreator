@@ -135,7 +135,6 @@ export class AddUserComponent implements AfterViewInit {
   }
 
   showPassword() {
-    console.log(this.passwordVisible)
     this.passwordVisible = !this.passwordVisible;
   }
 

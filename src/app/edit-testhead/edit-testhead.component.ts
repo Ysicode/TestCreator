@@ -44,7 +44,7 @@ export class EditTestheadComponent implements OnInit {
   }
 
   addData(data: any) {
-    const coll: any = doc(this.firestore, '/users/JonasWeiss/subusers/' + this.data.currentUserID);
+    const coll: any = doc(this.firestore, 'users', this.data.currentSchool, 'subusers', this.data.currentUserID);
     updateDoc(coll, {
       testhead: {
         schoolname: data.schoolname,

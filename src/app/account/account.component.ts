@@ -33,7 +33,7 @@ export class AccountComponent implements OnInit {
     await this.data.loadUSchoolData();
 
     setTimeout(() => {
-      console.log(this.data.loadedSubUserData);
+      // console.log(this.data.loadedSubUserData);
       this.loaded = true;
       this.loading = false;
     }, 500);

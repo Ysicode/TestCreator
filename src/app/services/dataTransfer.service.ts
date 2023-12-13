@@ -157,7 +157,6 @@ export class dataTransferService {
 
     // ADD SUBUSER
     async addNewSubUser(newUser: any) {
-        console.log(this.currentSchool, this.currentUserID);
         const coll: any = collection(this.firestore, 'users', this.currentSchool, 'subusers');
         setDoc(doc(coll), {
             email: newUser.email,
