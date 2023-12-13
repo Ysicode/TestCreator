@@ -29,7 +29,6 @@
         font-size: 17px;
         padding: 10px 30px 10px 30px;
         margin: 15px;
-
         &:hover {
             cursor: pointer;
             opacity: 0.8;
@@ -54,37 +53,6 @@
         .school_adress {
             font-size: 13px;
             margin: 5px;
-        }
-    }
-
-    .enabled {
-        opacity: 1 !important;
-    }
-
-    .disabled {
-        opacity: 0.3;
-
-        &.btn_is_blue {
-            &:hover {
-                opacity: 0.3 !important;
-            }
-        }
-    }
-
-    .school_found {
-        border: 2px solid rgb(80, 173, 108);
-    }
-
-    .btn--demo {
-        cursor: pointer;
-        margin-top: 30px;
-        border: none;
-        background: none;
-        text-decoration: underline;
-        text-transform: uppercase;
-
-        &:hover {
-            opacity: 0.8;
         }
     }
 }

@@ -62,7 +62,7 @@ export class dataTransferService {
             }
             querySnapshot.forEach((doc: any) => {
                 // doc.data() is never undefined for query doc snapshots
-                console.log('BINGO', doc.id, " => ", doc.data());
+                // console.log('BINGO', doc.id, " => ", doc.data());
                 this.currentUserID = doc.id;
                 this.currentUserData = doc.data();
                 login_successfull = true;
@@ -339,7 +339,7 @@ export class dataTransferService {
                         id: "LFgZlyNhHD",
                         type: "paragraph",
                         data: {
-                            text: "<b>Willkommen bei JOSI</b>"
+                            text: "<b>Willkommen</b>"
                         }
                     },
                     {
@@ -367,7 +367,7 @@ export class dataTransferService {
                         "id": "f0LnIWRHqE",
                         "type": "paragraph",
                         "data": {
-                            "text": "Hier wird die Antwort auf ihre Aufgabe angezeigt."
+                            "text": "Hier wird die Antwort auf eine Aufgabe angezeigt."
                         }
                     }
                 ],

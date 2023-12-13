@@ -117,4 +117,8 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  navigateDemo() {
+    this.router.navigate(['/demo']);
+  }
+
 }

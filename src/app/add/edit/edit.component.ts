@@ -73,7 +73,6 @@ export class EditComponent implements OnInit, AfterViewInit {
     }, 700);
     if (this.editFromTest) {
       this.scrollPosition.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      console.log('hello');
       
     } else {
       window.scrollTo(0, 0);

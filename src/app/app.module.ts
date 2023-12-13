@@ -27,6 +27,7 @@ import { AccountComponent } from './account/account.component';
 import { EditUserComponent } from './account/edit-user/edit-user.component';
 import { AddUserComponent } from './account/add-user/add-user.component';
 import { BacklogComponent } from './backlog/backlog.component';
+import { DemoComponent } from './login/demo/demo.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { BacklogComponent } from './backlog/backlog.component';
     AccountComponent,
     EditUserComponent,
     AddUserComponent,
-    BacklogComponent
+    BacklogComponent,
+    DemoComponent
   ],
   imports: [
     BrowserModule,

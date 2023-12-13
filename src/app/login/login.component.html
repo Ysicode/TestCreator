@@ -1,15 +1,16 @@
 <form>
     <div stopPropagation  class="login d_flex_column" style="z-index: 9999999;" (click)="removeAlertInformation()">
-        <div class="d_flex">
+        <!-- <div class="d_flex">
             <img class="logo_icon" src="assets/testcreator.png" alt="">
             <h1 class="logo d_flex margin_zero">TestCreator</h1>
-        </div>
+        </div> -->
         <h2>Login</h2>
     
         <input [class.school_found]="schoolFound" #school type="text" placeholder="Schulname" (input)="checkIfSchoolExists(school.value)">
         <input class="disabled"  [class.enabled]="schoolFound" #email type="email" placeholder="Email Adresse" disabled="true" (input)="checkIfAllInputsFilled(email.value, password.value)">
         <input class="disabled" [class.enabled]="schoolFound" #password type="password" placeholder="Passwort" disabled="true" (input)="checkIfAllInputsFilled(email.value, password.value)">
         <button class="btn_is_blue disabled" [class.enabled]="allInputsFilled" #loginBtn (click)="login(email.value, password.value)" disabled="true">Anmelden</button>
+        <button class="btn--demo" (click)="navigateDemo()">Demo starten</button>
     </div>
 </form>
 
