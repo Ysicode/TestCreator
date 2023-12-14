@@ -58,11 +58,11 @@ body {
 
 .filter_overlay_bg {
     width: 100%;
-            height: 100%;
-            position: fixed;
-            top: 0px;
-            background: none;
-            z-index: 99999999;
+    height: 100%;
+    position: fixed;
+    top: 0px;
+    background: none;
+    z-index: 99999999;
 }
 
 .filter_overlay {
@@ -770,21 +770,29 @@ style for rendered subjects
 }
 
 .dragged {
-      transition: all 300ms ease-in-out;
-      animation: color 5s infinite linear;
-      padding: 0px 15px;
-      transform: translateY(5px);
+    transition: all 300ms ease-in-out;
+    animation: color 5s infinite linear;
+    padding: 0px 15px;
+    transform: translateY(5px);
 
-      @keyframes color {
-        0%   { background: #ebebeb; }
-        25%  { background: #f8f6f6; }
-        50%  { background: #ebebeb; }
-        75%  { background: #f8f6f6; }
-        100%  { background: #ebebeb; }
-      }
+    @keyframes color {
+        0% {
+            background: #ebebeb;
+        }
+        25% {
+            background: #f8f6f6;
+        }
+        50% {
+            background: #ebebeb;
+        }
+        75% {
+            background: #f8f6f6;
+        }
+        100% {
+            background: #ebebeb;
+        }
+    }
 }
-
-
 
 /*
 Answer styles
@@ -952,8 +960,8 @@ Answer styles
     height: 65%;
     border-bottom-right-radius: 20px;
     border-top-right-radius: 20px;
-    background: #e1e1e1;
-    border-left: 1px solid grey;
+    background: var(--color-grey-light);
+    border-left: 1px solid var(--color-grey-light-darker);
 
     .search_close_icon {
         border-radius: 40px;
@@ -970,8 +978,8 @@ Answer styles
     position: fixed;
     bottom: 25px;
     box-shadow: 0 24px 24px -18px rgb(69 104 129 / 33%), 0 9px 45px 0 rgb(114 119 160 / 12%);
-    background: #e1e1e1;
-    border: 1px solid grey;
+    background: var(--color-grey-light);
+    border: 1px solid var(--color-grey-light-darker);
     width: 320px;
     height: 35px;
     border-radius: 50px;
@@ -992,7 +1000,7 @@ Answer styles
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #424949;
+    color: var(--color-grey-dark);
     height: 100%;
     width: 50%;
     border-radius: 50px;
@@ -1000,6 +1008,7 @@ Answer styles
     font-size: 14px;
     padding: 0px 30px 0px 30px;
     border: none;
+
     &:hover {
         cursor: pointer;
         background: #f3f1f1;
@@ -1012,7 +1021,7 @@ Answer styles
         justify-content: center;
         right: 10px;
         background: white;
-        border: 1px solid grey;
+        border: 1px solid var(--color-grey-light-darker);
         border-radius: 50%;
         height: 20px;
         width: 20px;
@@ -1251,59 +1260,58 @@ Styles für die Vorschau sektion
     width: 100%;
     padding-bottom: 2.5%;
 
-    .remove_from_test_btn {
+    .btn_action_wrapper {
         position: absolute;
-        z-index: 10;
-        width: 25px;
-        height: 25px;
-        background: none;
         top: 0;
         right: 0;
-        border: none;
-        object-fit: cover;
-        background: #ffcaca;
-        &:hover {
-            cursor: pointer;
-            border: 1.5px solid #fa5252;
-        }
+        z-index: 10;
 
-        .remove_icon {
-            width: 15px;
-            height: 15px;
+        .btn_action {
+            background: none;
+            border: none;
+            margin-left: 15px;
+            font-size: 10px;
+            height: 25px;
+            padding: 5px 10px;
+
+            &:hover {
+                cursor: pointer;
+                background: var(--color-grey-light);
+            }
+
+            &.remove {
+                width: 25px;
+                right: 0;
+                object-fit: cover;
+                background: #ffcaca;
+
+                &:hover {
+                    border: 1.5px solid #fa5252;
+                    background: #ffcaca;
+                }
+
+                .remove_icon {
+                    width: 15px;
+                    height: 15px;
+                }
+            }
         }
     }
 
-    .save_edited_question {
+    .btn_action_drag {
         position: absolute;
-        z-index: 10;
-        font-size: 10px;
-        padding: 5px 10px;
-        height: 25px;
-        background: none;
-        top: 0;
-        right: 40px;
-        border: none;
-
-        &:hover {
-            cursor: pointer;
-            background: #e3e5e5;
-        }
-    }
-
-    .move_question {
-        position: absolute;
-        z-index: 10;
-        font-size: 10px;
         padding: 2px 12px;
-        background: none;
         top: 50%;
+        z-index: 10;
         left: 50%;
-        transform: translate(-50%, -50%);
+        background: none;
+        font-size: 10px;
         border: none;
+        transform: translate(-50%, -50%);
 
         &:hover {
             cursor: pointer;
-            background: #e3e5e5;
+            background: var(--color-grey-light);
         }
 
         .move_up,
@@ -1312,20 +1320,16 @@ Styles für die Vorschau sektion
             height: 0;
             border-left: 12px solid transparent;
             border-right: 12px solid transparent;
-            border-bottom: 12px solid #808080;
+            border-bottom: 12px solid var(--color-grey-light-darker);
             margin: 5px;
         }
-        
 
         .move_down {
-            border-top: 12px solid #808080;
+            border-top: 12px solid var(--color-grey-light-darker);
             border-bottom: none;
         }
-        
     }
 }
-
-
 
 .question_test_number {
     font-size: calc(100vw * 0.016);
@@ -1712,6 +1716,42 @@ Styles für die Vorschau sektion
         border-right: 3px solid #fa5252;
         border-left: 3px solid #fa5252;
     }
+
+    .question_test {
+        .btn_action_wrapper {
+            .btn_action {
+                margin-left: 17px;
+                height: 20px;
+                padding: 5px 7px;
+    
+                &.remove {
+                    width: 20px;
+    
+                    .remove_icon {
+                        width: 13px;
+                        height: 13px;
+                    }
+                }
+            }
+        }
+    
+        .btn_action_drag {
+            padding: 2px 7px;
+    
+            .move_up,
+            .move_down {
+                border-left: 7px solid transparent;
+                border-right: 7px solid transparent;
+                border-bottom: 7px solid var(--color-grey-light-darker);
+                margin: 3px;
+            }
+    
+            .move_down {
+                border-top: 7px solid var(--color-grey-light-darker);
+                border-bottom: none;
+            }
+        }
+    }
 }
 
 @media (max-width: 450px) {
@@ -1734,6 +1774,16 @@ Styles für die Vorschau sektion
 
     .added_questions_empty_info {
         font-size: 13px;
+    }
+
+    .question_test {
+        .btn_action_wrapper {
+            background: white;
+        }
+    
+        .btn_action_drag {
+            display: none !important;
+        }
     }
 }
 
@@ -1845,7 +1895,6 @@ Styles für die Vorschau sektion
 
     .btn_fixed_fullwidth {
         width: 65%;
-     
     }
 }
 

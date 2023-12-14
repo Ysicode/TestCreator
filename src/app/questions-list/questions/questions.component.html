@@ -2,7 +2,8 @@
 <app-header *ngIf="logedIn"></app-header>
 <!-- Edit Component -->
 <app-edit class="add_question_overlay" *ngIf="overlay"
-    (closeAddQuestionOverlay)="overlay = false; editQuestionMode = false; editQuestionFromTest = false;" (editQuestionForLocalStorage)="saveEditQuestionInLocalStorage($event)" [editQuestion]="questionToEdit"
+    (closeAddQuestionOverlay)="overlay = false; editQuestionMode = false; editQuestionFromTest = false;"
+    (editQuestionForLocalStorage)="saveEditQuestionInLocalStorage($event)" [editQuestion]="questionToEdit"
     [editMode]="editQuestionMode" [editFromTest]="editQuestionFromTest"></app-edit>
 
 <app-spinner *ngIf="service.loading"></app-spinner>
@@ -464,26 +465,31 @@
                                     </div>
                                 </div>
 
+                                <div class="btn_action_wrapper d_flex">
+                                    <!-- Exchange question from test -->
+                                    <button class="btn_action show_onHover d_flex">Ersetzen</button>
+
+                                    <!-- Edit question from test -->
+                                    <button (click)="showEditOverlayFromTest(testquestion, j, i)"
+                                        class="btn_action show_onHover d_flex">Bearbeiten</button>
+
+                                    <!-- Save edit layout as default -->
+                                    <button *ngIf="data.currentUserID == testquestion['creatorId']"
+                                        (click)="saveEditedQuestionAsDefault(j, i, testquestion['id'])"
+                                        class="btn_action show_onHover d_flex">Speichern</button>
+
+                                    <!-- Delete question from test -->
+                                    <button id="{{ 'remove_btn' + i }}" (click)="removeFromTest(testquestion['id'])"
+                                        class="btn_action remove show_onHover d_flex"><img class="remove_icon"
+                                            src="assets/x_icon.png" alt=""></button>
+                                </div>
+
                                 <!-- Move question in test -->
-                                <button draggable="true" class="move_question show_onHover d_flex_column">
+                                <button draggable="true" class="btn_action_drag show_onHover d_flex_column">
                                     <span class="move_up"></span>
                                     Aufgabe {{ getQuestionNumber(j,i)}} Verschieben
                                     <span class="move_down"></span>
                                 </button>
-
-                                <!-- Edit question from test -->
-                                <button (click)="showEditOverlayFromTest(testquestion, j, i)"
-                                    style="margin-right: 100px;" class="save_edited_question show_onHover d_flex">Bearbeiten</button>
-
-                                <!-- Save edit layout as default -->
-                                <button *ngIf="data.currentUserID == testquestion['creatorId']"
-                                    (click)="saveEditedQuestionAsDefault(j, i, testquestion['id'])"
-                                    style="margin-right: 20px;" class="save_edited_question show_onHover d_flex">Speichern</button>
-
-                                <!-- Delete question from test -->
-                                <button id="{{ 'remove_btn' + i }}" (click)="removeFromTest(testquestion['id'])"
-                                    class="remove_from_test_btn show_onHover d_flex"><img class="remove_icon"
-                                        src="assets/x_icon.png" alt=""></button>
                             </div>
 
                             <!-- QUESTION -->
